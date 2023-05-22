@@ -1,0 +1,3 @@
+_local_env/
+*.egg-info
+__pycache__
