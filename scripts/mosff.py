@@ -14,9 +14,9 @@ soup=BeautifulSoup(page.text,'html.parser')
 
 @dataclass
 class Player:
-    name: str
-    is_capitain: bool
-    is_main: bool
+    """a class for parsing player data """
+    def __init__(self, player_html):
+        self._player_html=player_html
 
 class Players:
     """a class for interacting with players data in html,
@@ -33,6 +33,26 @@ class Players:
     @property
     def players(self):
         pass
+
+class Team:
+    "a class for holding team html_data and parsing it"
+
+    def __init__(self, main_team_html, reserve_team_html, trainers_html):
+        self._main_team_html=main_team_html
+        self._reserve_team_html=reserve_team_html
+        self._trainers_html=trainers_html
+
+    def _create_player_from_html(self, html, is_main=True):
+        return html
+    
+    def get_players(self):
+        players=[]
+        player_htmls=self._main_team_html.find_all("li", {"class":"structure__item"})
+        players.extend([self._create_player_from_html(html) for html in player_htmls])
+        return players
+
+
+
 
 class Match:
     """
@@ -68,10 +88,30 @@ class Match:
         collect data per team in this function"""
         protocol_tab=soup.find('div',id="match-tabs-protocol")
         divs_with_players=protocol_tab.find_all("div", {"class": "structure__unit"})
-        home_main_players=divs_with_players[0]
-        guest_main_players=divs_with_players[1]
-        main_reserve_players=divs_with_players[2]
+        home_team_main_players_div_index=0
+        home_team_reserve_players_div_index=2
+        home_team_trainers_div_index=4
+
+        guest_team_main_players_div_index=1
+        guest_team_reserve_players_div_index=3
+        guest_team_trainers_div_index=5
+
+        home_team=Team(
+            main_team_html=divs_with_players[home_team_main_players_div_index],
+            reserve_team_html=divs_with_players[home_team_reserve_players_div_index],
+            trainers_html=divs_with_players[home_team_trainers_div_index])
+        
+        guest_team=Team(
+            main_team_html=divs_with_players[guest_team_main_players_div_index],
+            reserve_team_html=divs_with_players[guest_team_reserve_players_div_index],
+            trainers_html=divs_with_players[guest_team_trainers_div_index])
+        
+        return home_team, guest_team
+        
 
 
 m=Match(page.text)
 print(m.team_names)
+
+players=m.get_teams()[0].get_players()
+print(players)
