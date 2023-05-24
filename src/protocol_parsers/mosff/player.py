@@ -105,4 +105,4 @@ class Player:
         return f'{self.name}'
     
     def __repr__(self):
-        return f'[{self.number}] {self.name}{" (к)" if self.is_capitain else ""}{" (в)" if self.is_goalkeeper else ""}{" "+"Ж"*self.yellow_cards if self.yellow_cards>0 else ""}{" "+"Г"*self.goals if self.goals>0 else ""} t={self.time_played(80)}'
+        return f'[{self.number}] {self.name}{" (к)" if self.is_capitain else ""}{" (в)" if self.is_goalkeeper else ""}{" "+"Ж"*self.yellow_cards if self.yellow_cards>0 else ""}{" "+"Г"*self.goals if self.goals>0 else ""}{" "+"А"*self.autogoals if self.autogoals>0 else ""} t={self.time_played(80)}'
