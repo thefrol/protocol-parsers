@@ -1,6 +1,8 @@
 from bs4 import BeautifulSoup
+import re
 
 from .team import Team
+from ..decorators import trim
 
 class Match:
     """
@@ -17,10 +19,15 @@ class Match:
     guest_team_reserve_players_div_index=3
     guest_team_trainers_div_index=5
 
+    round_pattern=r'(?P<round_number>\d)+ тур'
+
     def __init__(self, html_text, parser='html.parser'):
         _soup= BeautifulSoup(html_text,parser)
         
         self.divs_with_names=_soup.find_all("div", {"class":"structure__top-name"})[:2]
+        self.div_with_score=_soup.find("div", {"class":"match__score-main"})
+        self.a_with_round=_soup.find("a", {"class":"match__round"})
+        self.a_with_tournament=_soup.find("a", {"class":"match__tournament"})
 
         protocol_tab=_soup.find('div',id="match-tabs-protocol")
         self.divs_with_players=protocol_tab.find_all("div", {"class": "structure__unit"})
@@ -54,6 +61,38 @@ class Match:
             trainers_html=self.divs_with_players[self.home_team_trainers_div_index])
         
         return home_team
+    
+    @property
+    def scores(self):
+        try:
+            scores=[int(score.strip()) for score in self.div_with_score.text.split(':')]
+            return scores
+        except Exception as e:
+            print(f'cant get score {e}')
+            return [0,0]
+        
+    @property
+    def home_score(self):
+        return self.scores[0]
+    
+    @property
+    def guest_score(self):
+        return self.scores[1]
+    
+    @property
+    def round(self):
+        """Return round number from the tournament
+        6 тур - returns 6"""
+        m=re.search(self.round_pattern, self.a_with_round.text)
+        if m:
+            return m.group('round_number')
+        else:
+            return None
+        
+    @property
+    @trim
+    def tournament(self):
+        return self.a_with_tournament.text
     
     @property
     def guest_team(self):

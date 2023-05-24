@@ -16,6 +16,10 @@ if page.status_code != 200:
 
 m=Match(page.text)
 print(m.team_names)
+print(m.scores)
+print(m.round)
+print(m.tournament)
 
 print(m.home_team.players)
 print(m.guest_team.players)
+
