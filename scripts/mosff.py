@@ -1,8 +1,9 @@
 from bs4 import BeautifulSoup
 import requests
-from dataclasses import dataclass 
+import re
 
 URL='https://mosff.ru/match/34549' # a good match with cards, goals, changes
+#URL='https://mosff.ru/match/34858' # a match with autogoals
 
 
 page=requests.get(URL)
@@ -17,7 +18,57 @@ def trim(f):
         return f(*args,**kwargs).strip()
     return callee
 
-@dataclass
+class Event:
+    """class for working with event html data"""
+    regex_pattern=r'(?P<note>.*)(, (?P<minute>\d{1,2}).){1}$'
+
+    def __init__(self, event_html):
+        self._event_html=event_html
+
+        self._title=self._event_html['title']
+        self._svg_icon_href=self._event_html.svg.use['xlink:href'] # used to check what kind of event it is
+
+        result=re.search(pattern=self.regex_pattern, string=self._title)
+
+        self._minute=result.group('minute')
+        self.note=result.group('note')
+
+    @property
+    def is_yellow(self):
+        return "#yellow-card" in self._svg_icon_href 
+    
+    @property
+    def is_double_yellow(self):
+        """ in mosff second yellow is marked as double card"""
+        return "#double-card" in self._svg_icon_href 
+    
+    @property
+    def is_red_card(self):
+        return "#red-card" in self._svg_icon_href 
+    
+    @property
+    def is_goal(self):
+        return "#goal" in self._svg_icon_href 
+    
+    @property
+    def is_autogoal(self):
+        return "#own-goal" in self._svg_icon_href 
+    
+    @property
+    def is_substitute_in(self):
+        return "#sub-in" in self._svg_icon_href 
+    
+    @property
+    def is_substitute_out(self):
+        return "#sub-out" in self._svg_icon_href 
+    
+
+
+   
+    @property
+    def minute(self):
+        return int(self._minute)
+
 class Player:
     """a class for parsing player data """
     def __init__(self, player_html, is_main):
@@ -28,6 +79,9 @@ class Player:
         self._position_div=self._player_html.find('div',{'class':"structure__position"})
 
         self.is_main=is_main
+
+        self._events_htmls=self._player_html.find_all('li',{'class':"structure__event"}) or [] # so it wont be none
+        self.events=[Event(html) for html in self._events_htmls]
     
     
     @property
@@ -66,11 +120,60 @@ class Player:
             return False
         return True if '(вр)' in self._position_div.text else False
     
+    @property
+    def in_at(self):
+        """a time player got in"""
+        if self.is_main:
+            return 0
+        else:
+            for event in self.events:
+                if event.is_substitute_in:
+                    return event.minute
+        return None # not played
+    
+    @property
+    def out_at(self):
+        """a time player got out"""
+        for event in self.events:
+            if event.is_substitute_out:
+                return event.minute
+        return None # not came out or playted till end
+    
+    def time_played(self, match_time:int):
+        """time on field"""
+        if self.in_at is not None:
+            if self.out_at:
+                return self.out_at-self.in_at
+            else: # played till end
+                return match_time-self.in_at
+        else: # not played
+            return 0
+
+    
+    @property
+    def yellow_cards(self):
+        count=0
+        for event in self.events:
+            if event.is_double_yellow:
+                return 2
+            if event.is_yellow:
+                count=1
+        return count
+    
+    @property
+    def goals(self):
+        return sum([1 if event.is_goal else 0 for event in self.events])
+    
+    @property
+    def autogoals(self):
+        return sum([1 if event.is_autogoal else 0 for event in self.events])
+
+    
     def __str__(self):
         return f'{self.name}'
     
     def __repr__(self):
-        return f'[{self.number}] {self.name}{" (к)" if self.is_capitain else ""}{" (в)" if self.is_goalkeeper else ""}'
+        return f'[{self.number}] {self.name}{" (к)" if self.is_capitain else ""}{" (в)" if self.is_goalkeeper else ""}{" "+"Ж"*self.yellow_cards if self.yellow_cards>0 else ""}{" "+"Г"*self.goals if self.goals>0 else ""} t={self.time_played(80)}'
     
 
 
@@ -82,9 +185,6 @@ class Team:
         self._main_team_html=main_team_html
         self._reserve_team_html=reserve_team_html
         self._trainers_html=trainers_html
-
-    def _create_player_from_html(self, html, is_main=True):
-        return html
     
     @property
     def players(self):
@@ -161,7 +261,6 @@ class Match:
 
 m=Match(page.text)
 print(m.team_names)
-
 
 print(m.home_team.players)
 print(m.guest_team.players)
