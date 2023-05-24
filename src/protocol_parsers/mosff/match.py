@@ -20,6 +20,8 @@ class Match:
     guest_team_trainers_div_index=5
 
     round_pattern=r'(?P<round_number>\d)+ тур'
+    team_year_pattern=r'(?P<team_year>\d+) +г.р.'
+    tournament_year_pattern=r'\(.*(?P<tournament_year>\d{4})\)'
 
     def __init__(self, html_text, parser='html.parser'):
         _soup= BeautifulSoup(html_text,parser)
@@ -93,6 +95,26 @@ class Match:
     @trim
     def tournament(self):
         return self.a_with_tournament.text
+    
+    @property
+    def tournament_year(self):
+        """year when tournament hosted ex. 2023, 2024"""
+        m=re.search(self.tournament_year_pattern,self.tournament)
+        if m is None:
+            print('cant find tournament year')
+            return None
+        else:
+            return m.group('tournament_year')
+
+    @property
+    def team_year(self):
+        """year of born players ex. 2013, 2014"""
+        m=re.search(self.team_year_pattern,self.tournament)
+        if m is None:
+            print('cant find team year')
+            return None
+        else:
+            return m.group('team_year')
     
     @property
     def guest_team(self):
