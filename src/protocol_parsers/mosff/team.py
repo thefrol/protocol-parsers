@@ -1,4 +1,5 @@
 from .player import Player
+from ..decorators import trim
 import re
 
 class Team:
@@ -30,6 +31,7 @@ class Team:
                     yield event
     
     @property
+    @trim
     def name_without_year(self):
         'returns team name without year'
         m=re.fullmatch(self._team_name_pattern, self.name)
