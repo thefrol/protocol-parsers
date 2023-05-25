@@ -69,6 +69,8 @@ class Player:
         for event in self.events:
             if event.is_substitute_out:
                 return event.minute
+            if event.is_red_card or event.is_double_yellow:
+                return event.minute
         return None # not came out or playted till end
     
     def time_played(self, match_time:int):
@@ -90,7 +92,14 @@ class Player:
                 return 2
             if event.is_yellow:
                 count=1
-        return count
+        return 
+    
+    @property
+    def red_cards(self):
+        for event in self.events:
+            if event.is_red_card:
+                return 1
+        return 0
     
     @property
     def goals(self):
