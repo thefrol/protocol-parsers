@@ -1,6 +1,10 @@
 from protocol_parsers import MosffParser
 from pprint import pprint
 
-d=MosffParser('https://mosff.ru/match/34549').to_rbdata()
+
+#URL='https://mosff.ru/match/34549'
+URL='https://mosff.ru/match/34858'
+
+d=MosffParser(URL).to_rbdata()
 
 pprint(d)

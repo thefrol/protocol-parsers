@@ -1,7 +1,6 @@
 import re
 import requests
-from .mosff import Match
-from .mosff.team import Team
+from .mosff import Match, Team, Player
 from .rbdata import RbdataTounament
 
 def format_team_name(team:Team):
@@ -9,6 +8,12 @@ def format_team_name(team:Team):
         return team.name_without_year
     else:
         return f'{team.name_without_year} {team.team_year}'
+    
+def format_player_name(player:Player):
+    if player.name.first_name is not None:
+        return f'{player.name.first_name} {player.name.last_name}'
+    else:
+        return player.name.last_name
     
 
 class MosffParser:
@@ -54,7 +59,7 @@ class MosffParser:
         for player in self._match.home_team.players:
             new_player_dict={}
 
-            new_player_dict['name']=player.name #TODO first and second name
+            new_player_dict['name']=format_player_name(player)
             new_player_dict['image']=player.img_url
             new_player_dict['yellow_cards']=player.yellow_cards
             new_player_dict['red_cards']=player.red_cards
@@ -76,10 +81,10 @@ class MosffParser:
 
         result['guest_team_players']=guest_team_players=[]
 
-        for player in self._match.guest_team.players:
+        for player in self._match.guest_team.players: #TODO refactor cut out to func
             new_player_dict={}
 
-            new_player_dict['name']=player.name #TODO first and second name
+            new_player_dict['name']=format_player_name(player)
             new_player_dict['image']=player.img_url
             new_player_dict['yellow_cards']=player.yellow_cards
             new_player_dict['red_cards']=player.red_cards

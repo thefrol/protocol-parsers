@@ -1,6 +1,66 @@
 from ..decorators import trim
 from .event import Event
 
+class PlayerName:
+    """a players name can consist of 3 parts
+    fist name - optional
+    middle name - optional
+    last name - required"""
+    def __init__(self, name_text:str):
+        self._name_text=name_text
+        self._strings=name_text.split(' ')
+    @property
+    def names_count(self):
+        '''returns count of names Иванов Иван - 2, Иванов иван иванович -3'''
+        return len(self._strings)
+    @property
+    def first_name(self):
+        pass
+    @property
+    def middle_name(self):
+        pass
+    @property
+    def last_name(self):
+        pass
+
+class ImgAltName(PlayerName):
+    @property
+    @trim
+    def first_name(self):
+        if self.names_count>=2:
+            return self._strings[1]
+        else:
+            return None
+    @property
+    @trim
+    def middle_name(self):
+        if self.names_count>2:
+            return self._strings[2]
+        else:
+            return None
+    @property
+    @trim
+    def last_name(self):
+        return self._strings[0]
+
+class DivName(PlayerName):
+    @property
+    @trim
+    def first_name(self):
+        if self.names_count>1:
+            return self._strings[1]
+        else:
+            return None
+    @property
+    @trim
+    def middle_name(self):
+        return None
+    @property
+    @trim
+    def last_name(self):
+        return self._strings[0]    
+
+
 class Player:
     """a class for parsing player data """
     def __init__(self, player_html, is_main):
@@ -20,15 +80,15 @@ class Player:
     def text_name(self):
         "taken from div"
         name_div=self._player_html.find('div',{'class':"structure__name-text"})
-        return next(name_div.stripped_strings)
+        return DivName(next(name_div.stripped_strings))
 
     @property
-    def img_alt_name(self):
+    def img_alt_name(self)->PlayerName:
         """taken from img alt"""
-        return self._img['alt']
+        return ImgAltName(self._img['alt'])
 
     @property
-    def name(self):
+    def name(self)->PlayerName:
         return self.img_alt_name or self.text_name
     
     @property
