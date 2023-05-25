@@ -9,7 +9,7 @@ class Team:
         self._trainers_html=trainers_html
     
     @property
-    def players(self):
+    def players(self) -> list[Player]:
         players=[]
         main_player_htmls=self._main_team_html.find_all("li", {"class":"structure__item"})
         players.extend([Player(html, is_main=True) for html in main_player_htmls])
@@ -17,3 +17,10 @@ class Team:
         reserve_player_htmls=self._reserve_team_html.find_all("li", {"class":"structure__item"})
         players.extend([Player(html, is_main=False) for html in reserve_player_htmls])
         return players
+    
+    @property
+    def goal_events(self):
+        for player in self.players:
+            for event in player.events:
+                if event.is_goal:
+                    yield event
