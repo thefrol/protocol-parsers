@@ -1,8 +1,7 @@
 import re
 import requests
 from .mosff import Match
-from .mosff.event import Event
-from .mosff.player import Player
+from .rbdata import RbdataTounament
 
 
 
@@ -23,7 +22,11 @@ class MosffParser:
     def to_rbdata(self, match_time):
         result=dict()
 
-        #add league
+        result['tournament_name']=RbdataTounament(
+            team_year=self._match.team_year,
+            tournament_year=self._match.tournament_year).rbdata_name
+                
+        result['tournament_round']=self._match.round
 
         result['home_team_name']=self._match.home_team_name
         result['home_team_score']=self._match.home_score

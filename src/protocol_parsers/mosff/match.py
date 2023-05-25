@@ -97,25 +97,32 @@ class Match:
         return self.a_with_tournament.text
     
     @property
-    def tournament_year(self):
+    def tournament_year(self) -> int:
         """year when tournament hosted ex. 2023, 2024"""
         m=re.search(self.tournament_year_pattern,self.tournament)
         if m is None:
             print('cant find tournament year')
             return None
         else:
-            return m.group('tournament_year')
+            try:
+                return int(m.group('tournament_year'))
+            except Exception as e:
+                print(f'cant convert tournament year to int:{e}')
+                return None
 
     @property
-    def team_year(self):
+    def team_year(self) ->int:
         """year of born players ex. 2013, 2014"""
         m=re.search(self.team_year_pattern,self.tournament)
         if m is None:
             print('cant find team year')
             return None
         else:
-            return m.group('team_year')
-    
+            try:
+                return int(m.group('team_year'))
+            except Exception as e:
+                print(f'cant convert team year to int:{e}')
+                return None
     @property
     def guest_team(self):
         guest_team=Team(
