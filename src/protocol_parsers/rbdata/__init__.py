@@ -11,6 +11,7 @@ class RbdataTounament:
         tournament year - date when it passed"""
         self.team_year=team_year
         self.tournament_year=tournament_year
+        self.U_number=self.tournament_year-self.team_year # ex. U10, U11, U12
     
     @property
     def rbdata_name(self):
@@ -18,5 +19,17 @@ class RbdataTounament:
             print('cant create tournament name, one of parameters is none')
             return None
         #TODO check if strange data <0 >20
-        U_number=self.tournament_year-self.team_year
-        return f'MФФ ЛПМ U{U_number}({self.team_year})'
+        
+        return f'MФФ ЛПМ U{self.U_number}({self.team_year})'
+    
+    @property
+    def match_time(self):
+        'returns a match time played based on a league'
+        if self.U_number<11:
+            return 50
+        elif self.U_number<13:
+            return 60 
+        elif self.U_number<14:
+            return 70
+        else: # U15 and more
+            return 80

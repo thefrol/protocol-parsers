@@ -25,12 +25,17 @@ class MosffParser:
         
         self._match=Match(page.text)
 
-    def to_rbdata(self, match_time):
+    def to_rbdata(self, match_time=None):
         result=dict()
 
-        result['tournament_name']=RbdataTounament(
+        tournament=RbdataTounament(
             team_year=self._match.team_year,
-            tournament_year=self._match.tournament_year).rbdata_name
+            tournament_year=self._match.tournament_year)
+        
+        if match_time is None:
+            match_time=tournament.match_time # if not match time specified try to get match time from tournament data
+
+        result['tournament_name']=tournament.rbdata_name
                 
         result['tournament_round']=self._match.round
 
