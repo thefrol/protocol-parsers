@@ -83,7 +83,7 @@ class Player:
         else: # not played
             return 0
         
-    def played_interval(self, match_time:int):
+    def played_interval(self, match_time:int): #not used
         """returns interval when player was on the field [from, to] or None if player not played"""
         start=None
         end=None
@@ -96,6 +96,20 @@ class Player:
             return [start,end]
         else: # not played
             return None 
+        
+    def was_on_field(self, minute):
+        if self.in_at is None:
+            return False # player hasnt played
+        else:
+            if minute>= self.in_at:
+                if self.out_at is None:
+                    return True # plyed till end
+                if minute < self.out_at:
+                    return True # was changed
+                else:
+                    return False
+            else:
+                return False
 
     
     @property
