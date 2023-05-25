@@ -14,12 +14,9 @@ class RbdataTounament:
     
     @property
     def rbdata_name(self):
-<<<<<<< HEAD
         if self.team_year is None or self.tournament_year is None:
             print('cant create tournament name, one of parameters is none')
             return None
-=======
->>>>>>> db07c80578ed4583686eda874cb6627addb1b1bd
         #TODO check if strange data <0 >20
         U_number=self.tournament_year-self.team_year
         return f'MФФ ЛПМ U{U_number}({self.team_year})'

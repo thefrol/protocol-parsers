@@ -1,12 +1,16 @@
 from .player import Player
+import re
 
 class Team:
     "a class for holding team html_data and parsing it"
 
-    def __init__(self, main_team_html, reserve_team_html, trainers_html):
+    _team_name_pattern=r'(?P<team_name>.*) (?P<team_year>\d{4,20}) г.р.'
+
+    def __init__(self, main_team_html, reserve_team_html, trainers_html, name):
         self._main_team_html=main_team_html
         self._reserve_team_html=reserve_team_html
         self._trainers_html=trainers_html
+        self.name=name
     
     @property
     def players(self) -> list[Player]:
@@ -24,3 +28,24 @@ class Team:
             for event in player.events:
                 if event.is_goal:
                     yield event
+    
+    @property
+    def name_without_year(self):
+        'returns team name without year'
+        m=re.fullmatch(self._team_name_pattern, self.name)
+        if m:
+            return m.group('team_name')
+        else:
+            print('cant resolve team name with year. returning full name')
+            return self.home_team_name
+
+        
+    @property
+    def team_year(self):
+        'returns team year of birth'
+        m=re.fullmatch(self._team_name_pattern, self.name)
+        if m:
+            return m.group('team_year')
+        else:
+            print('cant resolve team year. returning None')
+            return None       

@@ -23,6 +23,7 @@ class Match:
     team_year_pattern=r'(?P<team_year>\d+) +г.р.'
     tournament_year_pattern=r'\(.*(?P<tournament_year>\d{4})\)'
 
+
     def __init__(self, html_text, parser='html.parser'):
         _soup= BeautifulSoup(html_text,parser)
         
@@ -50,6 +51,8 @@ class Match:
         'returns guest team name, parses whole html every call'
         return self.team_names[1]
     
+
+                    
     @property
     def home_team(self):
         """retrieves html data for team
@@ -60,9 +63,24 @@ class Match:
         home_team=Team(
             main_team_html=self.divs_with_players[self.home_team_main_players_div_index],
             reserve_team_html=self.divs_with_players[self.home_team_reserve_players_div_index],
-            trainers_html=self.divs_with_players[self.home_team_trainers_div_index])
+            trainers_html=self.divs_with_players[self.home_team_trainers_div_index],
+            name=self.home_team_name)
         
         return home_team
+    
+    @property
+    def guest_team(self):
+        """retrieves html data for team
+        in former html teams are separated in three blocks
+        main, reverse, and trainers
+        home and guest team lies in one div, so we need to separate then and 
+        collect data per team in this function"""
+        guest_team=Team(
+            main_team_html=self.divs_with_players[self.guest_team_main_players_div_index],
+            reserve_team_html=self.divs_with_players[self.guest_team_reserve_players_div_index],
+            trainers_html=self.divs_with_players[self.guest_team_trainers_div_index],
+            name=self.guest_team_name)
+        return guest_team
     
     @property
     def scores(self):
@@ -72,6 +90,7 @@ class Match:
         except Exception as e:
             print(f'cant get score {e}')
             return [0,0]
+
         
     @property
     def home_score(self):
@@ -123,10 +142,4 @@ class Match:
             except Exception as e:
                 print(f'cant convert team year to int:{e}')
                 return None
-    @property
-    def guest_team(self):
-        guest_team=Team(
-            main_team_html=self.divs_with_players[self.guest_team_main_players_div_index],
-            reserve_team_html=self.divs_with_players[self.guest_team_reserve_players_div_index],
-            trainers_html=self.divs_with_players[self.guest_team_trainers_div_index])
-        return guest_team
+

@@ -1,9 +1,15 @@
 import re
 import requests
 from .mosff import Match
+from .mosff.team import Team
 from .rbdata import RbdataTounament
 
-
+def format_team_name(team:Team):
+    if team.team_year is None:
+        return team.name_without_year
+    else:
+        return f'{team.name_without_year} {team.team_year}'
+    
 
 class MosffParser:
     """a class that gets a link and returns a json with needed data"""
@@ -28,15 +34,17 @@ class MosffParser:
                 
         result['tournament_round']=self._match.round
 
-        result['home_team_name']=self._match.home_team_name
+        result['home_team_name']=format_team_name(self._match.home_team)
         result['home_team_score']=self._match.home_score
 
-        result['guest_team_name']=self._match.guest_team_name
+        result['guest_team_name']=format_team_name(self._match.guest_team)
         result['guest_team_score']=self._match.guest_score
 
-        result['home_team_players']=home_team_players=[]
+        result['score']=f'{self._match.home_score}:{self._match.guest_score}'
 
         result['time_played']=match_time
+
+        result['home_team_players']=home_team_players=[]
 
         for player in self._match.home_team.players:
             new_player_dict={}
@@ -52,7 +60,7 @@ class MosffParser:
             new_player_dict['is_capitain']=player.is_capitain
             new_player_dict['is_goalkeeper']=player.is_goalkeeper
 
-            if player.is_goalkeeper: # count goals
+            if player.is_goalkeeper: # count goals #TODO transfer to player class with parents to team and match
                 goals_missed=0
                 for goal in self._match.guest_team.goal_events:
                     if player.was_on_field(goal.minute):
