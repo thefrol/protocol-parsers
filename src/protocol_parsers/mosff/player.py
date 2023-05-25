@@ -82,6 +82,20 @@ class Player:
                 return match_time-self.in_at
         else: # not played
             return 0
+        
+    def played_interval(self, match_time:int):
+        """returns interval when player was on the field [from, to] or None if player not played"""
+        start=None
+        end=None
+        if self.in_at is not None:
+            start=self.out_at
+            if self.out_at:
+                end=self.in_at
+            else: # played till end
+                end=match_time
+            return [start,end]
+        else: # not played
+            return None 
 
     
     @property
