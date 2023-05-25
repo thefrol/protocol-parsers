@@ -120,7 +120,7 @@ class Player:
                 return 2
             if event.is_yellow:
                 count=1
-        return 
+        return count
     
     @property
     def red_cards(self):
