@@ -1,5 +1,6 @@
 import re
 import requests
+import json
 from .mosff import Match, Team, Player
 from .rbdata import RbdataTounament
 
@@ -105,6 +106,10 @@ class MosffParser:
             guest_team_players.append(new_player_dict)
 
         return result
+    
+    def to_json(self, match_time=None)->str:
+        '''returns a json string formatted in style of rbdata'''
+        return json.dumps(self.to_rbdata(match_time),ensure_ascii=False)
 
 
 

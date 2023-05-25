@@ -5,6 +5,6 @@ from pprint import pprint
 #URL='https://mosff.ru/match/34549'
 URL='https://mosff.ru/match/34858'
 
-d=MosffParser(URL).to_rbdata()
+d=MosffParser(URL).to_json()
 
-pprint(d)
+print(d)
