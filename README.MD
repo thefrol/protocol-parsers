@@ -29,6 +29,9 @@
         'guest_team_name': 'Сокол 2013',
         'home_team_name': 'ФШМ 2013',
 
+        'home_team_id': 2044,
+        'guest_team_id': 2051
+
         'guest_team_players':  #состав команды хозяев
             [
                 {
@@ -39,6 +42,7 @@
                     'is_capitain': False, # игрок капитан
                     'is_goalkeeper': True, # игрок голкипер
                     'name': 'Иван Ничутин', # как зовут в формате имя-фамилия
+                    'id': 27649, # id в системе мосфф
                     'yellow_cards': 0 # количество желтых
                     'red_cards': 0, # количество красных
                     'time_played': 50, # время на поле
