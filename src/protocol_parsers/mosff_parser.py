@@ -87,12 +87,16 @@ class MosffParser:
 
             new_player_dict['name']=format_player_name(player)
             new_player_dict['image']=player.img_url
+            new_player_dict['id']=player.id
+
             new_player_dict['yellow_cards']=player.yellow_cards
             new_player_dict['red_cards']=player.red_cards
+
             new_player_dict['time_played']=player.time_played(match_time)
             new_player_dict['goals']=player.goals
             new_player_dict['autogoals']=player.autogoals
             new_player_dict['goals_missed']=0 # TODO
+
             new_player_dict['is_capitain']=player.is_capitain
             new_player_dict['is_goalkeeper']=player.is_goalkeeper
 

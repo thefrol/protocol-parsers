@@ -1,3 +1,5 @@
+import re
+
 from ..decorators import trim
 from .event import Event
 
@@ -63,12 +65,16 @@ class DivName(PlayerName):
 
 class Player:
     """a class for parsing player data """
+
+    _mosff_prefix='https://mosff.ru'
+    _mosff_id_pattern=r'/player/(?P<player_id>\d+)\Z'
     def __init__(self, player_html, is_main):
         self._player_html=player_html
 
         self._img=player_html.img
         self._number_div=self._player_html.find('div',{'class':"structure__number"})
         self._position_div=self._player_html.find('div',{'class':"structure__position"})
+        self._url_a=self._player_html.find('a',{'class':"structure__player"})
 
         self.is_main=is_main
 
@@ -94,6 +100,25 @@ class Player:
     @property
     def img_url(self):
         return self._img['src']
+    
+    @property
+    def relative_url(self):
+        '''a relative link to mosff website with player info'''
+        return self._url_a['href']
+    
+    @property
+    def full_url(self):
+        """a relative link to mosff website with player info"""
+        return self._mosff_prefix+self.relative_url
+    
+    @property
+    def id(self):
+        m=re.fullmatch(self._mosff_id_pattern,self.relative_url)
+        if m:
+            return int(m.group('player_id'))
+        else:
+            print('cant parse player id')
+            return None
     
     @property
     @trim
