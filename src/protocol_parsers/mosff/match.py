@@ -127,6 +127,20 @@ class Match:
         return guest_team
     
     @property
+    def teams(self):
+        'returns a list of Team objects: home+guest team'
+        return [self.home_team, self.guest_team]
+    
+    def get_opposing_team(self, for_team:Team):
+        'returns opposing team of for_team'
+        for team in self.teams:
+            if team != for_team:
+                return team
+        print('cant find opposing team')
+        return None
+
+    
+    @property
     def scores(self):
         try:
             scores=[int(score.strip()) for score in self.div_with_score.text.split(':')]
