@@ -1,6 +1,7 @@
 import re
 import requests
 import json
+from itertools import chain
 from .mosff import Match, Team, Player
 from .rbdata import RbdataTounament
 
@@ -62,7 +63,7 @@ class MosffParser:
             if player.is_goalkeeper: # count goals #TODO transfer to player class with parents to team and match
                 goals_missed=0
                 opposing_team=self._match.get_opposing_team(team)
-                for goal in opposing_team.goal_events:
+                for goal in chain(opposing_team.goal_events, team.autogoal_events):  # goals from opposing team + autogoals current team
                     if player.was_on_field(goal.minute):
                         goals_missed=goals_missed+1
                 new_player_dict['goals_missed']=goals_missed

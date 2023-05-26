@@ -31,6 +31,13 @@ class Team:
                     yield event
     
     @property
+    def autogoal_events(self):
+        for player in self.players:
+            for event in player.events:
+                if event.is_autogoal:
+                    yield event
+    
+    @property
     @trim
     def name_without_year(self):
         'returns team name without year'
