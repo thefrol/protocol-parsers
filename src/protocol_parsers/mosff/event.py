@@ -45,8 +45,25 @@ class Event:
         return "#sub-out" in self._svg_icon_href 
     
 
-
-   
+    @property
+    def type_(self)->str:
+        'returns event type one of the following, goal, autogoal, yellow-card, red-card, sub-in, sub-out, unknown'
+        event_type='unknown'
+        if self.is_autogoal:
+            event_type='autogoal'
+        elif self.is_goal:
+            event_type='goal'
+        elif self.is_yellow:
+            event_type='yellow-card'
+        elif self.is_double_yellow:
+            event_type='yellow-card'
+        elif self.is_red_card:
+            event_type='red-card'
+        elif self.is_substitute_in:
+            event_type='sub-in'
+        elif self.is_substitute_out:
+            event_type='sub-out'
+        return event_type
     @property
     def minute(self):
         return int(self._minute)

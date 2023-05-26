@@ -99,7 +99,15 @@ class MosffParser:
                     new_player_dict['relative_time_played']=player.out_at-player.in_at
                     #new_player_dict['relative_time_in']=player.in_at
                     #new_player_dict['relative_time_out']=player.out_at
-                
+            
+            #events
+            new_player_dict['events']=events=[]
+            for event in player.events:
+                new_event_dict={
+                    'time':event.minute,
+                    'type':event.type_
+                }
+                events.append(new_event_dict)
 
             result.append(new_player_dict)
         return result

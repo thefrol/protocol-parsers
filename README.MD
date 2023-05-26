@@ -51,6 +51,17 @@
                                               # если меньше нуля, то       time_played= match_time+relative_time_played
                     'time_in':0, # минута появления на поле, или none если на поле не выходил
                     'time_out':50 # минута ухода с поля или none если не играл
+
+                    'events':[
+                        {
+                            'time':20,  # время события
+                            'type':'yellow-card' # тип события
+                                                 # sub-in, sub-out - замены
+                                                 # yellow-card, red-card - карточки
+                                                 # goal, autogoal - голы и автоголы
+                        },
+                        {...}
+                    ]
                 },
                 {...},
             ] ,
