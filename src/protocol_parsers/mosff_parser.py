@@ -87,18 +87,18 @@ class MosffParser:
                 #not played
                 new_player_dict['relative_time_played']=None
                 #new_player_dict['relative_time_in']=None
-                #new_player_dict['relative_time_out']=None
+                new_player_dict['relative_time_out']=None
             else:
                 if player.out_at is None:
                     #played till end
                     new_player_dict['relative_time_played']=-player.in_at
-                    #new_player_dict['relative_time_in']=player.in_at
-                    #new_player_dict['relative_time_out']=0
+                    #new_player_dict['relative_time_in']=player.in_at if player.in_at>0 elsew
+                    new_player_dict['relative_time_out']=0
                 else:
                     #player subtituted or banned
                     new_player_dict['relative_time_played']=player.out_at-player.in_at
                     #new_player_dict['relative_time_in']=player.in_at
-                    #new_player_dict['relative_time_out']=player.out_at
+                    new_player_dict['relative_time_out']=player.out_at
             
             #events
             new_player_dict['events']=events=[]
