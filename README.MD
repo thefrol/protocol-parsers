@@ -48,7 +48,8 @@
 
                     'time_played': 50, # время на поле
                     'relative_time_played': 0 # относительное время если >0, то не зависит от времени матча,
-                                              # если меньше нуля, то       time_played= match_time+relative_time_played
+                                              # если меньше нуля, то time_played= match_time+relative_time_played
+                                              # none - игрок не играл, то есть вообще ноль
                     'time_in':0, # минута появления на поле, или none если на поле не выходил
                     'time_out':50 # минута ухода с поля или none если не играл
 
