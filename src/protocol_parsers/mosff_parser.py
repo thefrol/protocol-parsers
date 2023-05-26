@@ -78,6 +78,29 @@ class MosffParser:
                         goals_missed=goals_missed+1
                 new_player_dict['goals_missed']=goals_missed
 
+            #relative time
+            # if >0 not connected with total time
+            # <0 can be computed by adding match_time
+            # played_time= relative_played_time + match_time
+
+            if player.in_at is None:
+                #not played
+                new_player_dict['relative_time_played']=None
+                #new_player_dict['relative_time_in']=None
+                #new_player_dict['relative_time_out']=None
+            else:
+                if player.out_at is None:
+                    #played till end
+                    new_player_dict['relative_time_played']=-player.in_at
+                    #new_player_dict['relative_time_in']=player.in_at
+                    #new_player_dict['relative_time_out']=0
+                else:
+                    #player subtituted or banned
+                    new_player_dict['relative_time_played']=player.out_at-player.in_at
+                    #new_player_dict['relative_time_in']=player.in_at
+                    #new_player_dict['relative_time_out']=player.out_at
+                
+
             result.append(new_player_dict)
         return result
 
