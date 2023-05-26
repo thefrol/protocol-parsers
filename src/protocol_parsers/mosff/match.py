@@ -43,6 +43,10 @@ class Match:
 
         protocol_tab=_soup.find('div',id="match-tabs-protocol")
         self.divs_with_players=protocol_tab.find_all("div", {"class": "structure__unit"})
+
+        #lazy init of home team. !important we need to get the same object every time for comparison in match.opposing_team()
+        self._home_team=None
+        self._guest_team=None
         
 
     @property
@@ -104,13 +108,14 @@ class Match:
         main, reverse, and trainers
         home and guest team lies in one div, so we need to separate then and 
         collect data per team in this function"""
-        home_team=Team(
-            main_team_html=self.divs_with_players[self.home_team_main_players_div_index],
-            reserve_team_html=self.divs_with_players[self.home_team_reserve_players_div_index],
-            trainers_html=self.divs_with_players[self.home_team_trainers_div_index],
-            name=self.home_team_name)
+        if not self._home_team:
+            self._home_team=Team(
+                main_team_html=self.divs_with_players[self.home_team_main_players_div_index],
+                reserve_team_html=self.divs_with_players[self.home_team_reserve_players_div_index],
+                trainers_html=self.divs_with_players[self.home_team_trainers_div_index],
+                name=self.home_team_name)
         
-        return home_team
+        return self._home_team
     
     @property
     def guest_team(self):
@@ -119,12 +124,13 @@ class Match:
         main, reverse, and trainers
         home and guest team lies in one div, so we need to separate then and 
         collect data per team in this function"""
-        guest_team=Team(
-            main_team_html=self.divs_with_players[self.guest_team_main_players_div_index],
-            reserve_team_html=self.divs_with_players[self.guest_team_reserve_players_div_index],
-            trainers_html=self.divs_with_players[self.guest_team_trainers_div_index],
-            name=self.guest_team_name)
-        return guest_team
+        if not self._guest_team:
+            self._guest_team=Team(
+                main_team_html=self.divs_with_players[self.guest_team_main_players_div_index],
+                reserve_team_html=self.divs_with_players[self.guest_team_reserve_players_div_index],
+                trainers_html=self.divs_with_players[self.guest_team_trainers_div_index],
+                name=self.guest_team_name)
+        return self._guest_team
     
     @property
     def teams(self):
@@ -134,7 +140,7 @@ class Match:
     def get_opposing_team(self, for_team:Team):
         'returns opposing team of for_team'
         for team in self.teams:
-            if team != for_team:
+            if team is not for_team:
                 return team
         print('cant find opposing team')
         return None
@@ -200,4 +206,5 @@ class Match:
             except Exception as e:
                 print(f'cant convert team year to int:{e}')
                 return None
+
 
