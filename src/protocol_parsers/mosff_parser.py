@@ -53,12 +53,22 @@ class MosffParser:
 
             new_player_dict['yellow_cards']=player.yellow_cards
             new_player_dict['red_cards']=player.red_cards
-            new_player_dict['time_played']=player.time_played(self.match_time)
             new_player_dict['goals']=player.goals
             new_player_dict['autogoals']=player.autogoals
             new_player_dict['goals_missed']=0 # TODO
             new_player_dict['is_capitain']=player.is_capitain
             new_player_dict['is_goalkeeper']=player.is_goalkeeper
+
+            new_player_dict['time_played']=player.time_played(self.match_time)
+
+            if player.in_at is None:
+                #player never played
+                new_player_dict['time_in']=None
+                new_player_dict['time_out']=None
+            else:
+                #player played
+                new_player_dict['time_in']=player.in_at
+                new_player_dict['time_out']=player.out_at if player.out_at is not None else self.match_time
 
             if player.is_goalkeeper: # count goals #TODO transfer to player class with parents to team and match
                 goals_missed=0

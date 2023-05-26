@@ -139,7 +139,10 @@ class Player:
     
     @property
     def in_at(self):
-        """a time player got in"""
+        """a time player got in
+        
+        0 - from the start
+        None - never played"""
         if self.is_main:
             return 0
         else:
@@ -159,7 +162,9 @@ class Player:
         return None # not came out or playted till end
     
     def time_played(self, match_time:int):
-        """time on field"""
+        """time on field
+        
+        None - played till end or never played"""
         if self.in_at is not None:
             if self.out_at:
                 return self.out_at-self.in_at
