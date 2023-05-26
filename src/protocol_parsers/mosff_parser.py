@@ -47,9 +47,11 @@ class MosffParser:
 
         result['home_team_name']=format_team_name(self._match.home_team)
         result['home_team_score']=self._match.home_score
+        result['home_team_id']=self._match.home_team_id
 
         result['guest_team_name']=format_team_name(self._match.guest_team)
         result['guest_team_score']=self._match.guest_score
+        result['guest_team_id']=self._match.guest_team_id
 
         result['score']=f'{self._match.home_score}:{self._match.guest_score}'
 
@@ -62,6 +64,8 @@ class MosffParser:
 
             new_player_dict['name']=format_player_name(player)
             new_player_dict['image']=player.img_url
+            new_player_dict['id']=player.id
+
             new_player_dict['yellow_cards']=player.yellow_cards
             new_player_dict['red_cards']=player.red_cards
             new_player_dict['time_played']=player.time_played(match_time)

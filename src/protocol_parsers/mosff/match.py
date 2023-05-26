@@ -1,3 +1,10 @@
+"""
+need to know
+names like a, div, li, ul represents a html tag and its info within python code
+
+self.divs_with_names implies a collection of div tags, that stored names
+"""
+
 from bs4 import BeautifulSoup
 import re
 
@@ -22,12 +29,14 @@ class Match:
     round_pattern=r'(?P<round_number>\d)+ тур'
     team_year_pattern=r'(?P<team_year>\d+) +г.р.'
     tournament_year_pattern=r'\(.*(?P<tournament_year>\d{4})\)'
+    _team_id_pattern=r'/team/(?P<team_id>\d+)\Z'
 
 
     def __init__(self, html_text, parser='html.parser'):
         _soup= BeautifulSoup(html_text,parser)
         
         self.divs_with_names=_soup.find_all("div", {"class":"structure__top-name"})[:2]
+        self.a_with_urls=_soup.find_all("a", {"class":"match__team"})[:2]
         self.div_with_score=_soup.find("div", {"class":"match__score-main"})
         self.a_with_round=_soup.find("a", {"class":"match__round"})
         self.a_with_tournament=_soup.find("a", {"class":"match__tournament"})
@@ -39,8 +48,11 @@ class Match:
     @property
     def team_names(self) -> list[str]:
         "returns team names of given match"
+        if len(self.divs_with_names)<2:
+            print('error parsing team names')
+            return [None, None]
         return [name.string for name in self.divs_with_names]
-    
+        
     @property
     def home_team_name(self) -> str:
         'returns home team name, parses whole html every call'
@@ -51,7 +63,39 @@ class Match:
         'returns guest team name, parses whole html every call'
         return self.team_names[1]
     
-
+    @property
+    def team_relative_urls(self) -> list[str]:
+        "returns team urls of given match"
+        if len(self.a_with_urls)<2:
+            print('error parsing team names')
+            return [None, None]
+        return [a['href'] for a in self.a_with_urls]
+    
+    @property
+    def home_team_relative_url(self):
+        return self.team_relative_urls[0]
+    
+    @property
+    def guest_team_relative_url(self):
+        return self.team_relative_urls[1]
+    
+    @property
+    def home_team_id(self):
+        m=re.fullmatch(self._team_id_pattern,self.home_team_relative_url)
+        if m:
+            return int(m.group('team_id'))
+        else:
+            print('cant parse home team id')
+            return None
+        
+    @property
+    def guest_team_id(self):
+        m=re.fullmatch(self._team_id_pattern,self.guest_team_relative_url)
+        if m:
+            return int(m.group('team_id'))
+        else:
+            print('cant parse guest team id')
+            return None
                     
     @property
     def home_team(self):
