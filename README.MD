@@ -13,8 +13,15 @@
     print(protocol_data.to_rbdata()) # вывод формате питона
     print(protocol_data.to_json()) # вывод в формате json строки
 
+Парсинг игроков
+    from protocol_parsers import MosffPlayerParser
+
+    player=MosffPlayerParser('https://mosff.ru/player/2060')
+    print(protocol_data.to_rbdata()) # вывод формате питона
+
 # Формат вывода
 
+## Протокол МФФ
     {
 
         'tournament_name': 'MФФ ЛПМ U10(2013)', # название лиги
@@ -81,6 +88,30 @@
                 {...},
             ] ,
         'home_team_players': [...], #состав команды гостей
+    }
+## Игрок МФФ
+    {
+        'birth_date': '2006-06-30 00:00:00', # дата рождения в международ формате
+        'birth_date_dict':  # дата рождения в формате словаря
+                {
+                    'day': 30,
+                    'month': 6,
+                    'year': 2006}, 
+        'birth_date_raw': '30 июня 2006', # дата рождения как было написано на сайте
+
+        'name': 'Иван Ульянов', # имя в формате rbdata
+        'name_raw': 'Ульянов Иван Евгеньевич', # имя в формате rbdata
+
+        'role_raw': 'Вратарь', # амплуа как на сайте
+
+        'team_name': 'Савеловская 2006', # имя команды в формате rbdata
+        'team_name_raw': 'Савеловская 2006 г.р.', # имя команды как на сайте
+
+        'team_id': 374, # айди команды
+        'team_url': 'https://mosff.ru/team/374', # ссылка на команду
+        'team_url_raw': '/team/374', # ссылка на команду как было на сайте
+
+        'team_year': '2006' # год рождения игроков команды
     }
 
 # Тесты
