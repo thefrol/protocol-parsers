@@ -2,6 +2,7 @@
 link looks like this https://mosff.ru/player/2060"""
 
 import re
+from bs4 import BeautifulSoup
 
 from .player import ImgAltName #TODO rename FIO
 from ..decorators import trim, to_int
@@ -85,14 +86,19 @@ class MosffDate:
     @property
     def text(self):
         return self.__get_regexp_group('date_string')
+    
+    @property
+    def is_healthy(self):
+        return self.day is not None and self.month is not None and self.year is not None
 
 
 
 class PlayerPage:
 
     
-    def __init__(self, player_page_html):
-        self._player_page_html=player_page_html
+    def __init__(self, player_page_text,parser='html.parser'):
+
+        self._player_page_html=BeautifulSoup(player_page_text,parser)
         self.a_with_name=self._player_page_html.find("a", {"class":"profile__title"})
         li_with_properties=self._player_page_html.find("ul", {"class":"profile__list"}).find_all("li", {"class":"profile__item"})
         self.properties=PlayerPagePropertiesList(li_with_properties)
