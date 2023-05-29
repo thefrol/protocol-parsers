@@ -49,6 +49,18 @@ class PlayerPagePropertiesList:
             if item.is_birth_date:
                 return item
         return None
+    @property
+    def amplua(self):
+        for item in self._list:
+            if item.is_amplua:
+                return item
+        return None
+    @property
+    def team(self):
+        for item in self._list:
+            if item.is_team:
+                return item
+        return None
 
 class MosffDate:
     _date_pattern=r'(?P<date_string>(?P<day>\d+) (?P<month>\w+) (?P<year>\d+))\s?(\((?P<years_old>\d+) \w+\))'
@@ -91,7 +103,49 @@ class MosffDate:
     def is_healthy(self):
         return self.day is not None and self.month is not None and self.year is not None
 
+class MosffTeam: #TODO implement to team.py
+    _team_name_pattern=r'(?P<team_name>.*) (?P<team_year>\d{4,20}) г.р.' #TODO intersects with team.py
+    _team_id_pattern=r'/team/(?P<team_id>\d+)\Z'
+    def __init__(self, team_html_tag):
+        self._team_tag=team_html_tag
 
+    @property
+    def raw_name(self):
+        return self._team_tag.text
+    
+    @property
+    def name_without_year(self):
+        'returns team name without year'
+        m=re.fullmatch(self._team_name_pattern, self.raw_name)
+        if m:
+            return m.group('team_name')
+        else:
+            print('cant resolve team name with year. returning full name')
+            return self.raw_name
+
+    @property
+    def team_year(self):
+        'returns team year of birth'
+        m=re.fullmatch(self._team_name_pattern, self.raw_name)
+        if m:
+            return m.group('team_year')
+        else:
+            print('cant resolve team year. returning None')
+            return None  
+    @property
+    def relative_url(self):
+        return self._team_tag.a['href']
+    @property
+    def url(self):
+        return 'https://mosff.ru'+self.relative_url
+    @property
+    def team_id(self):
+        m=re.fullmatch(self._team_id_pattern,self.relative_url)
+        if m:
+            return int(m.group('team_id'))
+        else:
+            print('cant parse home team id')
+            return None        
 
 class PlayerPage:
 
@@ -110,5 +164,21 @@ class PlayerPage:
     @property
     def birth_date(self):
         return MosffDate(self.properties.birth_date.text)
+    
+    @property
+    def amplua(self):
+        property_= self.properties.amplua
+        if property_:
+            return property_.text
+        else:
+            return None
 
+    @property
+    def team(self):
+        property_=self.properties.team
+        if property_:
+            return MosffTeam(property_.value_tag)
+        else:
+            return None
+    
     

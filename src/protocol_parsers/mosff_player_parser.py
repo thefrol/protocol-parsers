@@ -3,7 +3,7 @@ import requests
 from datetime import datetime
 
 from .mosff.player_page import PlayerPage
-from .mosff_parser import format_player_name
+from .mosff_parser import format_player_name,format_team_name
 
 class MosffPlayerParser:
     """a class that gets a link and returns a json with needed data"""
@@ -43,4 +43,15 @@ class MosffPlayerParser:
 
         result['name']=format_player_name(self.player)
         result['name_raw']=self.player.a_with_name.text
+
+        result['role_raw']=self.player.amplua
+
+        result['team_id']=self.player.team.team_id
+        result['team_url']=self.player.team.url
+        result['team_url_raw']=self.player.team.relative_url
+
+        result['team_name']=format_team_name(team=self.player.team)
+        result['team_name_raw']=self.player.team.raw_name
+        result['team_year']=self.player.team.team_year
+        
         return result
