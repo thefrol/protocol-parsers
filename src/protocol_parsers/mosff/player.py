@@ -25,6 +25,12 @@ class PlayerName:
     def last_name(self):
         pass
 
+ #   def __str__(self):
+ #       return ' '.join([self.first_name,self.last_name])
+
+    def __repr__(self):
+        return f'<{self.__class__.__name__}{" "+self.first_name if self.first_name else ""} {self.last_name}>'
+
 class ImgAltName(PlayerName):
     @property
     @trim
