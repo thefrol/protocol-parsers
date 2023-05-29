@@ -46,7 +46,7 @@ class Team:
             return m.group('team_name')
         else:
             print('cant resolve team name with year. returning full name')
-            return self.home_team_name
+            return self.name
 
         
     @property
