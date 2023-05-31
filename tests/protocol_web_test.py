@@ -16,12 +16,12 @@ def count_team_goals(team, opposing_team):
 
 class MatchTest(unittest.TestCase):
     url=''
-    def setUp(self) -> None:
-        self.protocol:MosffParser=MosffParser(self.url)
-        self.match=self.protocol._match
-        self.home_team=self.match.home_team
-        self.guest_team=self.match.guest_team
-        return super().setUp()
+    @classmethod
+    def setUpClass(cls) -> None:
+        cls.protocol:MosffParser=MosffParser(cls.url)
+        cls.match=cls.protocol._match
+        cls.home_team=cls.match.home_team
+        cls.guest_team=cls.match.guest_team
     def find_by_name(self,name:str):
         strings=name.split(' ')
         if len(strings) !=2:
@@ -32,7 +32,7 @@ class MatchTest(unittest.TestCase):
         
         
 
-class MatchWithAutoGoals(MatchTest):
+class AutoGoals(MatchTest):
     '''Testing match with autogoals'''
     url='https://mosff.ru/match/34858'
     def test_scores(self):
@@ -40,15 +40,36 @@ class MatchWithAutoGoals(MatchTest):
         self.assertEqual(self.match.guest_score,2,'guest score error')
         self.assertEqual(count_team_goals(self.match.home_team,self.match.guest_team),7,'sum of players goals != team score @ home team')
         self.assertEqual(count_team_goals(self.match.guest_team,self.match.home_team),2,'sum of players goals != team score @ guest team')
-    def test_ids(self):
-        self.assertEqual(self.match.guest_team_id,2051,'guest team id failed')
-        self.assertEqual(self.match.home_team_id,2044,'home team id failed')
     def test_autogoals(self):
         self.assertEqual(self.match.guest_team.find_player_by_name('Алексей', 'Крылов').autogoals,1, 'У Крылова должен быть один автогол')
         self.assertEqual(self.match.guest_team.find_player_by_name('Матвей', 'Кирилин').autogoals,1, 'У Кирилина должен быть один автогол')
     def test_goals(self):
         self.assertEqual(self.find_by_name('Леонид Чемельков').goals,2,'Чемельков должен забить два')
         self.assertEqual(self.find_by_name('Марк Шкурин').goals,1,'Шкурин должен забить один')
+
+class Cards(MatchTest):
+    '''Testing match with autogoals'''
+    url='https://mosff.ru/match/34549'
+    def count_cards_at_team(self, team:str, card_type:str):
+        team=self.match.home_team if team=='home' else self.match.guest_team
+        counter=0
+        for player in team.players:
+            counter=counter + player.yellow_cards if card_type=='yellow' else player.red_cards
+        return counter
+    def test_total_cards(self):
+        self.assertEqual(self.count_cards_at_team('home','yellow'),1,'error in home team yellow cards')
+        self.assertEqual(self.count_cards_at_team('guest','yellow'),5,'error in guest team yellow cards')
+        self.assertEqual(self.count_cards_at_team('home','red'),0,'error in home team red cards')
+        self.assertEqual(self.count_cards_at_team('guest','red'),0,'error in guest team red cards')
+
+class MatchGlobalParams(MatchTest):
+    url='https://mosff.ru/match/34858'
+    def test_ids(self):
+        self.assertEqual(self.match.guest_team_id,2051,'guest team id failed')
+        self.assertEqual(self.match.home_team_id,2044,'home team id failed')
+    def test_names(self):
+        self.assertEqual(self.match.home_team_name, 'ФШМ 2013 г.р.','home team name error')
+        self.assertEqual(self.match.guest_team_name, 'Сокол 2013 г.р.','guest team name error')
 
         
 if __name__ == '__main__':
