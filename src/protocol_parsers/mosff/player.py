@@ -24,6 +24,9 @@ class PlayerName:
     @property
     def last_name(self):
         pass
+    @property
+    def raw_name(self):
+        return self._name_text
 
  #   def __str__(self):
  #       return ' '.join([self.first_name,self.last_name])

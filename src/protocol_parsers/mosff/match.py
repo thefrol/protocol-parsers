@@ -206,5 +206,10 @@ class Match:
             except Exception as e:
                 print(f'cant convert team year to int:{e}')
                 return None
+        
+    def find_by_name(self, first_name, last_name):
+        '''finds first player by name
+        searches home team first'''
+        return self.home_team.find_player_by_name(first_name,last_name) or self.guest_team.find_player_by_name(first_name,last_name)
 
 

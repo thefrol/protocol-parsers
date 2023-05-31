@@ -57,4 +57,12 @@ class Team:
             return m.group('team_year')
         else:
             print('cant resolve team year. returning None')
-            return None       
+            return None     
+
+    
+    def find_player_by_name(self, first_name:str,last_name:str):
+        '''finds first player with specified name or None'''
+        for player in self.players:
+            if player.name.first_name == first_name and player.name.last_name==last_name:
+                return player
+        return None
