@@ -123,6 +123,8 @@
 
 # Тесты
 
+    python -m unittest discover -s ./tests -p '*_test.py'    
+
 # Проблемы
 
 [ ] tournament id
