@@ -26,6 +26,7 @@
 
         'tournament_name': 'MФФ ЛПМ U10(2013)', # название лиги
         'tournament_round': '6', # раунд
+        'tournament_id': 484, # id турнира на сайте мосфф
         
         'score': '7:2', #счет в матче
         'home_team_score': 7,
@@ -125,8 +126,12 @@
 
     python -m unittest discover -s ./tests -p '*_test.py'    
 
+# Обновления
+
+### 05.06.2023
+Теперь с протоколом возвращается поле `tournament_id`
+
 # Проблемы
 
-[ ] tournament id
-[ ] players list
-[ ] error codes 499
+    [x] tournament id
+    [ ] players list

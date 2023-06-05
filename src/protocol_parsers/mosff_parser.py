@@ -116,8 +116,8 @@ class MosffParser:
         result=dict()
 
         result['tournament_name']=self.tournament.rbdata_name
-                
         result['tournament_round']=self._match.round
+        result['tournament_id']=self._match.tournament_id
 
         result['home_team_name']=format_team_name(self._match.home_team)
         result['home_team_score']=self._match.home_score

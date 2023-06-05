@@ -30,6 +30,7 @@ class Match:
     team_year_pattern=r'(?P<team_year>\d+) +г.р.'
     tournament_year_pattern=r'\(.*(?P<tournament_year>\d{4})\)'
     _team_id_pattern=r'/team/(?P<team_id>\d+)\Z'
+    _tournament_id_pattern=r'/tournament/(?P<tournament_id>\d+)\Z'
 
 
     def __init__(self, html_text, parser='html.parser'):
@@ -178,6 +179,23 @@ class Match:
     @trim
     def tournament(self):
         return self.a_with_tournament.text
+    
+    @property
+    def tournament_relative_url(self):
+        return self.a_with_tournament['href']
+    
+    @property
+    def tournament_url(self):
+        return 'https://mosff.ru'+self.tournament_relative_url
+    
+    @property
+    def tournament_id(self):
+        m=re.fullmatch(self._tournament_id_pattern,self.tournament_relative_url)
+        if m:
+            return int(m.group('tournament_id'))
+        else:
+            print('cant parse tournament id')
+            return None
     
     @property
     def tournament_year(self) -> int:
