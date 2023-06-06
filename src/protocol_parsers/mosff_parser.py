@@ -33,7 +33,7 @@ def format_date(match:Match):
         match_date_time=None
 
     return {
-        'utc_date':str(match_date_time),
+        'iso_string':str(match_date_time),
         'day':date_.day,
         'month':date_.month,
         'year':year,
