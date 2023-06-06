@@ -8,6 +8,6 @@ def to_int(f):
         try:
             return int(f(*args,**kwargs))
         except Exception as e:
-            print('cant convert to int {f.__name__}')
+            print(f'cant convert to int {f.__name__}')
             return None
     return callee
