@@ -1,7 +1,7 @@
 import re
 from abc import abstractmethod
 
-from ..decorators import trim, to_int
+from ..decorators import trim, to_int, lower
 
 class PageDate:
     """a class for parsing string from MAtch Page
@@ -50,11 +50,15 @@ class PageDate:
         return self.from_regex_group('day')
     
     @property
+    @lower
     def month_string(self):
-        return self.from_regex_group('month').lower()
+        return self.from_regex_group('month')
     
     @property
     def month(self):
+        if self.month_string is None:
+            print('month string is None')
+            return None
         if self.month_string[:3]:
             return self._months_dict[self.month_string[:3]]
         else:
@@ -67,11 +71,15 @@ class PageDate:
         return self.from_regex_group('year')
     
     @property
+    @lower
     def week_day_string(self):
-        return self.from_regex_group('week_day').lower()
+        return self.from_regex_group('week_day')
     
     @property
     def week_day(self):
+        if self.week_day_string is None:
+            print('week day string is None')
+            return None
         try:
             return self._weekday_list.index(self.week_day_string[:3])
         except ValueError:
