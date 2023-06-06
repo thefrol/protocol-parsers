@@ -5,7 +5,8 @@ import re
 from bs4 import BeautifulSoup
 
 from .player import ImgAltName #TODO rename FIO
-from ..decorators import trim, to_int
+from .date import PageDate
+from ..decorators import trim
 
 
 class PlayerPageProperty:
@@ -62,42 +63,12 @@ class PlayerPagePropertiesList:
                 return item
         return None
 
-class MosffDate:
-    _date_pattern=r'(?P<date_string>(?P<day>\d+) (?P<month>\w+) (?P<year>\d+))\s?(\((?P<years_old>\d+) \w+\))'
-    _months_list=['', 'янв', 'фев', 'мар', 'апр', 'май', 'июн', 'июл', 'авг', 'сен', 'окт', 'ноя', 'дек']
 
-    def __init__(self, date_string):
-        self._date_string=date_string
-        self._regexp_match=re.fullmatch(self._date_pattern,date_string)
 
-    def __get_regexp_group(self,name):
-        if self._regexp_match:
-            return self._regexp_match.group(name)
-        else:
-            return None
+class MosffDate(PageDate):
     @property
-    @to_int
-    def day(self):
-        return self.__get_regexp_group('day')
-    @property
-    def month_string(self):
-        return self.__get_regexp_group('month')
-    
-    @property
-    def month(self):
-        return self._months_list.index(self.month_string[:3])
-
-    @property
-    @to_int
-    def year(self):
-        return self.__get_regexp_group('year')
-    @property
-    @to_int
-    def years_old(self):
-        return self.__get_regexp_group('years_old')
-    @property
-    def text(self):
-        return self.__get_regexp_group('date_string')
+    def _date_pattern(self):
+        return r'(?P<date_string>(?P<day>\d+) (?P<month>\w+) (?P<year>\d+))\s?(\((?P<years_old>\d+) \w+\))'
     
     @property
     def is_healthy(self):

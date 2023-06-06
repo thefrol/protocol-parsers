@@ -13,10 +13,23 @@ Ulianov=PlayerData(
     raw_name='Ульянов Иван Евгеньевич',
 )
 
+Buludov=PlayerData(
+    url='https://mosff.ru/player/27653',
+    birth_date=(17,5,2013),
+    raw_name='Булудов Аристотель Робертович',
+)
+
+Chemelkov=PlayerData(
+    url='https://mosff.ru/player/28407',
+    birth_date=(4,5,2013),
+    raw_name='Чемельков Леонид Русланович',
+)
+
+
 from protocol_parsers import MosffPlayerParser
 
 class PlayerTest(unittest.TestCase):
-    players=[Ulianov]
+    players=[Ulianov,Buludov]
 
     def test_birth(self):
         for player in self.players:

@@ -33,7 +33,7 @@ class MosffPlayerParser:
             date_=None
         
 
-        result['birth_date_raw']=self.player.birth_date.text
+        result['birth_date_raw']=self.player.birth_date._date_string
         result['birth_date']=str(date_) if date_  else None
         result['birth_date_dict']={
             'day':birth_date_parsed.day,
