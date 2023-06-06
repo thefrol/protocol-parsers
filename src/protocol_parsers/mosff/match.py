@@ -9,7 +9,14 @@ from bs4 import BeautifulSoup
 import re
 
 from .team import Team
+from .date import PageDate
 from ..decorators import trim
+        
+class MatchPageDate(PageDate):
+    @property
+    def _date_pattern(self):
+        return r'(?P<day>\d+) (?P<month>\w+) / (?P<week_day>\w+) / (?P<hour>\d+):(?P<minute>\d+)'
+    
 
 class Match:
     """
@@ -41,6 +48,7 @@ class Match:
         self.div_with_score=_soup.find("div", {"class":"match__score-main"})
         self.a_with_round=_soup.find("a", {"class":"match__round"})
         self.a_with_tournament=_soup.find("a", {"class":"match__tournament"})
+        self.div_with_date=_soup.find("div", {"class":"match__date"})
 
         protocol_tab=_soup.find('div',id="match-tabs-protocol")
         self.divs_with_players=protocol_tab.find_all("div", {"class": "structure__unit"})
@@ -164,6 +172,10 @@ class Match:
     @property
     def guest_score(self):
         return self.scores[1]
+
+    @property
+    def date(self):
+        return MatchPageDate(self.div_with_date.text)
     
     @property
     def round(self):

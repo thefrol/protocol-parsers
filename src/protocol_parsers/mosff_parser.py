@@ -2,6 +2,9 @@ import re
 import requests
 import json
 from itertools import chain
+from datetime import datetime
+
+
 from .mosff import Match, Team, Player
 from .rbdata import RbdataTounament
 
@@ -16,6 +19,30 @@ def format_player_name(player:Player):
         return f'{player.name.first_name} {player.name.last_name}'
     else:
         return player.name.last_name
+    
+def format_date(match:Match):
+    date_=match.date
+    year=match.team_year
+    if year is None:
+        print('cant get year from tournamet, returning current year')
+        return datetime.now().year
+    if all([date_.day,date_.month,year]):
+        match_date_time=datetime(day=date_.day,month=date_.month,year=year,hour=date_.hour,minute=date_.minute)
+    else:
+        print('cant get match date')
+        match_date_time=None
+
+    return {
+        'utc_date':str(match_date_time),
+        'day':date_.day,
+        'month':date_.month,
+        'year':year,
+        'hour':date_.hour,
+        'minute':date_.minute
+    }
+
+
+        
 
 
     
@@ -133,6 +160,8 @@ class MosffParser:
 
         result['home_team_players']=self._format_team(self._match.home_team)
         result['guest_team_players']=self._format_team(self._match.guest_team)
+
+        result['date']=format_date(self._match)
 
         return result
     
