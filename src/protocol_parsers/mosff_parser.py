@@ -22,7 +22,7 @@ def format_player_name(player:Player):
     
 def format_date(match:Match):
     date_=match.date
-    year=match.team_year
+    year=match.tournament_year
     if year is None:
         print('cant get year from tournamet, returning current year')
         return datetime.now().year

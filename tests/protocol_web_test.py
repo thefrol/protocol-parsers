@@ -70,8 +70,9 @@ class MatchGlobalParams(MatchTest):
     def test_names(self):
         self.assertEqual(self.match.home_team_name, 'ФШМ 2013 г.р.','home team name error')
         self.assertEqual(self.match.guest_team_name, 'Сокол 2013 г.р.','guest team name error')
-    def test_tournament_id(self):
+    def test_tournament(self):
         self.assertEqual(self.match.tournament_id,484, 'tournament id failed to parse')
+        self.assertEqual(self.match.tournament_year,2023)
     def test_date(self):
         self.assertEqual(self.match.date.day,21)
         self.assertEqual(self.match.date.month,5)
