@@ -7,10 +7,11 @@ self.divs_with_names implies a collection of div tags, that stored names
 
 from bs4 import BeautifulSoup
 import re
+from datetime import datetime
 
 from .team import Team
 from .date import PageDate
-from ..decorators import trim
+from ..decorators import trim, to_int
         
 class MatchPageDate(PageDate):
     @property
@@ -180,7 +181,11 @@ class Match:
     @property
     def round(self):
         """Return round number from the tournament
-        6 тур - returns 6"""
+        6 тур - returns 6
+        
+        1/8 кубка - 1/8"""
+        if self.tournament_is_cup:
+            return '1/8'
         m=re.search(self.round_pattern, self.a_with_round.text)
         if m:
             return m.group('round_number')
@@ -208,28 +213,38 @@ class Match:
         else:
             print('cant parse tournament id')
             return None
-    
+        
+    @property
+    def tournament_is_cup(self):
+        '''returns True if match played in cup'''
+        return 'кубок' in self.tournament.lower()
+        
     @property
     def tournament_year(self) -> int:
         """year when tournament hosted ex. 2023, 2024"""
         m=re.search(self.tournament_year_pattern,self.tournament)
         if m is None:
-            print('cant find tournament year')
-            return None
+            print('cant find tournament year, falling back to current year')
+            return datetime.now().year
         else:
             try:
                 return int(m.group('tournament_year'))
             except Exception as e:
-                print(f'cant convert tournament year to int:{e}')
-                return None
+                print(f'cant convert tournament year to int:{e}, returning current year')
+                return datetime.now().year
 
     @property
+    @to_int
     def team_year(self) ->int:
         """year of born players ex. 2013, 2014"""
         m=re.search(self.team_year_pattern,self.tournament)
         if m is None:
-            print('cant find team year')
-            return None
+            print('cant find team year, falling back to year of teams')
+            if self.home_team.team_year or self.guest_team_year:
+                return self.home_team.team_year or self.guest_team_year
+            else:
+                print('year in teams cant be found')
+                return None
         else:
             try:
                 return int(m.group('team_year'))
