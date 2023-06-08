@@ -32,11 +32,11 @@ class RbdataTounament:
         if self.U_number is None:
             print('cant define match time, using standart')
             return 60
-        if self.U_number<11:
+        if self.U_number<=11:
             return 50
-        elif self.U_number<13:
+        elif self.U_number in [12,13]:
             return 60 
-        elif self.U_number<14:
+        elif self.U_number in [14]:
             return 70
         else: # U15 and more
             return 80
