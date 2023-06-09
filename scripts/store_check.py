@@ -1,4 +1,5 @@
 from protocol_parsers.decorators import store_first_output, new_store_first_output, fast_store_first_output, replace_store_first_output,id_store_first_output
+import functools
 import time
 
 class Cl:
@@ -34,6 +35,14 @@ class Cl:
     @id_store_first_output
     def id_store(self):
         return self.val
+    @property
+    @functools.cache
+    def cache_store(self):
+        return self.val
+    
+    @functools.cached_property
+    def pcache_store(self):
+        return self.val
     
     
 def run_1000_times(func):
@@ -47,11 +56,7 @@ def run_1000_times(func):
     
 c=Cl(1)
 b=Cl(2)
-c.replace_store
-c.fast_store
-c.new_store
-c.from_store
-c.id_store
+
 
 
 print(f'no store 1000 times = {run_1000_times(lambda: c.no_store)}')
@@ -60,4 +65,6 @@ print(f'fast store 1000 times = {run_1000_times(lambda: c.fast_store)}')
 print(f'from store 1000 times = {run_1000_times(lambda: c.from_store)}')
 print(f'replace store 1000 times = {run_1000_times(lambda: c.replace_store)}')
 print(f'id store 1000 times = {run_1000_times(lambda: c.id_store)}')
+print(f'cache store 1000 times = {run_1000_times(lambda: c.cache_store)}')
+print(f'cache property store 1000 times = {run_1000_times(lambda: c.pcache_store)}')
 
