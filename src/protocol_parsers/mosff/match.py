@@ -8,6 +8,7 @@ self.divs_with_names implies a collection of div tags, that stored names
 from bs4 import BeautifulSoup
 import re
 from datetime import datetime
+from functools import cached_property, cache
 
 from .team import Team
 from .date import PageDate
@@ -147,6 +148,7 @@ class Match:
         'returns a list of Team objects: home+guest team'
         return [self.home_team, self.guest_team]
     
+    @cache
     def get_opposing_team(self, for_team:Team):
         'returns opposing team of for_team'
         for team in self.teams:
@@ -233,7 +235,7 @@ class Match:
                 print(f'cant convert tournament year to int:{e}, returning current year')
                 return datetime.now().year
 
-    @property
+    @cached_property
     @to_int
     def team_year(self) ->int:
         """year of born players ex. 2013, 2014"""
