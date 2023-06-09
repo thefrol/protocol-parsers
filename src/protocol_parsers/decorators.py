@@ -32,6 +32,9 @@ def lower(f):
 
 
 def store_first_output(f): #TODO add with_name
+    """some sort of lazy initializer
+    stores the first value or the called method,
+    sloud me used for propetries only"""
     def callee(self, *args,**kwargs):
         if self.__dict__.get('__output_store__') is None:
             self.__dict__['__output_store__']={}
