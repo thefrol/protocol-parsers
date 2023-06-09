@@ -1,8 +1,10 @@
 import re
 
+from ..decorators import to_int
+
 class Event:
     """class for working with event html data"""
-    regex_pattern=r'(?P<note>.*)(, (?P<minute>\d{1,2}).){1}$'
+    regex_pattern=r'(?P<note>.*)(, (?P<minute>\d{1,2}).)?$'
 
     def __init__(self, event_html):
         self._event_html=event_html
@@ -11,8 +13,11 @@ class Event:
         self._svg_icon_href=self._event_html.svg.use['xlink:href'] # used to check what kind of event it is
 
         result=re.search(pattern=self.regex_pattern, string=self._title)
+        if 'minute' in result.groups(): #TODO some regex class to take params with defaults reg.get_group('minute', default=0)
+            self._minute=result.group('minute')
+        else:
+            self._minute=None
 
-        self._minute=result.group('minute')
         self.note=result.group('note')
 
     @property
@@ -65,5 +70,8 @@ class Event:
             event_type='sub-out'
         return event_type
     @property
+    @to_int
     def minute(self):
-        return int(self._minute)
+        if self._minute is None:
+            return 0
+        return self._minute
