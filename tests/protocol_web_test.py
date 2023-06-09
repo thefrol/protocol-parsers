@@ -80,6 +80,15 @@ class MatchGlobalParams(MatchTest):
         self.assertEqual(self.match.date.minute,30)
         self.assertEqual(self.match.date.week_day,7)
 
+class FancyProtocols(unittest.TestCase):
+    #TODO make some parsing exceptions
+    def test_no_minute_on_autogoal(self):
+        """this protocol lacks minute on autogoal event, so it failed earlier"""
+        url='https://mosff.ru/match/34540'
+        self.assertIsNotNone(MosffParser(url).to_rbdata(), 'data not found.')
+
+        
+
         
 if __name__ == '__main__':
     unittest.main()
