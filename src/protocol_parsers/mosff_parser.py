@@ -7,6 +7,7 @@ from datetime import datetime
 
 from .mosff import Match, Team, Player
 from .rbdata import RbdataTounament
+from .exceptions import TeamNotFound
 
 def format_team_name(team:Team):
     if team.team_year is None:
@@ -70,75 +71,79 @@ class MosffParser:
             self.match_time=self.tournament.match_time # if not match time specified try to get match time from tournament data
 
     def _format_team(self, team:Team):
-        result=[]
-        for player in team.players:
-            new_player_dict={}
+        try:
+            result=[]
+            for player in team.players:
+                new_player_dict={}
 
-            new_player_dict['name']=format_player_name(player)
-            new_player_dict['image']=player.img_url
-            new_player_dict['id']=player.id
-            new_player_dict['number']=player.number
+                new_player_dict['name']=format_player_name(player)
+                new_player_dict['image']=player.img_url
+                new_player_dict['id']=player.id
+                new_player_dict['number']=player.number
 
-            new_player_dict['yellow_cards']=player.yellow_cards
-            new_player_dict['red_cards']=player.red_cards
-            new_player_dict['goals']=player.goals
-            new_player_dict['autogoals']=player.autogoals
-            new_player_dict['goals_missed']=0 # TODO
-            new_player_dict['is_capitain']=player.is_capitain
-            new_player_dict['is_goalkeeper']=player.is_goalkeeper
+                new_player_dict['yellow_cards']=player.yellow_cards
+                new_player_dict['red_cards']=player.red_cards
+                new_player_dict['goals']=player.goals
+                new_player_dict['autogoals']=player.autogoals
+                new_player_dict['goals_missed']=0 # TODO
+                new_player_dict['is_capitain']=player.is_capitain
+                new_player_dict['is_goalkeeper']=player.is_goalkeeper
 
-            new_player_dict['time_played']=player.time_played(self.match_time)
+                new_player_dict['time_played']=player.time_played(self.match_time)
 
-            if player.in_at is None:
-                #player never played
-                new_player_dict['time_in']=None
-                new_player_dict['time_out']=None
-            else:
-                #player played
-                new_player_dict['time_in']=player.in_at
-                new_player_dict['time_out']=player.out_at if player.out_at is not None else self.match_time
-
-            if player.is_goalkeeper: # count goals #TODO transfer to player class with parents to team and match
-                goals_missed=0
-                opposing_team=self._match.get_opposing_team(team)
-                for goal in chain(opposing_team.goal_events, team.autogoal_events):  # goals from opposing team + autogoals current team
-                    if player.was_on_field(goal.minute):
-                        goals_missed=goals_missed+1
-                new_player_dict['goals_missed']=goals_missed
-
-            #relative time
-            # if >0 not connected with total time
-            # <0 can be computed by adding match_time
-            # played_time= relative_played_time + match_time
-
-            if player.in_at is None:
-                #not played
-                new_player_dict['relative_time_played']=None
-                #new_player_dict['relative_time_in']=None
-                new_player_dict['relative_time_out']=None
-            else:
-                if player.out_at is None:
-                    #played till end
-                    new_player_dict['relative_time_played']=-player.in_at
-                    #new_player_dict['relative_time_in']=player.in_at if player.in_at>0 elsew
-                    new_player_dict['relative_time_out']=0
+                if player.in_at is None:
+                    #player never played
+                    new_player_dict['time_in']=None
+                    new_player_dict['time_out']=None
                 else:
-                    #player subtituted or banned
-                    new_player_dict['relative_time_played']=player.out_at-player.in_at
-                    #new_player_dict['relative_time_in']=player.in_at
-                    new_player_dict['relative_time_out']=player.out_at
-            
-            #events
-            new_player_dict['events']=events=[]
-            for event in player.events:
-                new_event_dict={
-                    'time':event.minute,
-                    'type':event.type_
-                }
-                events.append(new_event_dict)
+                    #player played
+                    new_player_dict['time_in']=player.in_at
+                    new_player_dict['time_out']=player.out_at if player.out_at is not None else self.match_time
 
-            result.append(new_player_dict)
-        return result
+                if player.is_goalkeeper: # count goals #TODO transfer to player class with parents to team and match
+                    goals_missed=0
+                    opposing_team=self._match.get_opposing_team(team)
+                    for goal in chain(opposing_team.goal_events, team.autogoal_events):  # goals from opposing team + autogoals current team
+                        if player.was_on_field(goal.minute):
+                            goals_missed=goals_missed+1
+                    new_player_dict['goals_missed']=goals_missed
+
+                #relative time
+                # if >0 not connected with total time
+                # <0 can be computed by adding match_time
+                # played_time= relative_played_time + match_time
+
+                if player.in_at is None:
+                    #not played
+                    new_player_dict['relative_time_played']=None
+                    #new_player_dict['relative_time_in']=None
+                    new_player_dict['relative_time_out']=None
+                else:
+                    if player.out_at is None:
+                        #played till end
+                        new_player_dict['relative_time_played']=-player.in_at
+                        #new_player_dict['relative_time_in']=player.in_at if player.in_at>0 elsew
+                        new_player_dict['relative_time_out']=0
+                    else:
+                        #player subtituted or banned
+                        new_player_dict['relative_time_played']=player.out_at-player.in_at
+                        #new_player_dict['relative_time_in']=player.in_at
+                        new_player_dict['relative_time_out']=player.out_at
+                
+                #events
+                new_player_dict['events']=events=[]
+                for event in player.events:
+                    new_event_dict={
+                        'time':event.minute,
+                        'type':event.type_
+                    }
+                    events.append(new_event_dict)
+
+                result.append(new_player_dict)
+            return result
+        except TeamNotFound:
+            return []
+
 
     def to_rbdata(self):
         result=dict()
