@@ -1,3 +1,5 @@
 _local_env/
 *.egg-info
 __pycache__
+.prof*
+profiling*
