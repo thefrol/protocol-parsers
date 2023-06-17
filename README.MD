@@ -152,3 +152,4 @@
 
     [x] tournament id
     [ ] players list
+    [ ] add failed penalties to mosff
