@@ -7,7 +7,7 @@ def to_int(f):
     def callee(*args,**kwargs):
         try:
             return int(f(*args,**kwargs))
-        except Exception as e:
+        except ValueError as e:
             print(f'cant convert to int — {f.__name__}')
             return None
     return callee

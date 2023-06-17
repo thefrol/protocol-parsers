@@ -2,7 +2,7 @@ from typing import Callable
 from functools import cached_property,cache
 from ..decorators import trim, to_int, to_int_or_none
 import re
-from ..regex import Regex
+from ..regex import Regex, Regexes2
 
 @to_int
 def get_player_id(player_relative_url:str):
@@ -144,6 +144,10 @@ class MatchProtocolTabPlayer(TagMiner):
         game_goals_count=self.team.opposing_team.events._count(lambda event: (event.is_goal or event.is_penalty) and self.was_on_the_field_on(event.minute) )
         autogoals_count=self.team.events._count(lambda event: event.is_autogoal and self.was_on_the_field_on(event.minute) )
         return game_goals_count+autogoals_count
+    
+    @property
+    def goals(self):
+        return self.events.goals + self.events.penalties
         
     def __str__(self):
         return f'player: {self.number} {self.name} {self.relative_url}'
@@ -180,9 +184,9 @@ class Team:
         
     @cached_property
     def events(self)->'EventsList':
-        res=sum([player.events for player in self.opposing_team.players],start=EventsList())
-        #REMOVE DUPLICAES TODO
-        return EventsList(res)
+        array=sum([player.events for player in self.players],start=EventsList())
+        unique=set(array)
+        return EventsList(unique)
 
     
 class Event(TagMiner):
@@ -305,8 +309,27 @@ class EventsList(list[Event]):
                     return event
         return None
     
+class Tournament(TagMiner):
+    @cached_property
+    @trim
+    def name(self):
+        return self._find_tag('a',class_='match-promo__tournament').text
+    @cached_property
+    def relative_url(self):
+        return self._find_tag('a',class_='match-promo__tournament')['href']
+    @cached_property
+    @to_int
+    def id(self):
+        res=Regexes2(self.relative_url,r'/tournament/(?P<tournament_id>\d+)').tournament_id
+        return res
+
 class Promo(TagMiner):
-    pass
+    @cached_property
+    def score(self):
+        return self._find_tag('div',class_='match-promo__score-main').text
+    @cached_property
+    def tournament(self):
+        return Tournament(self._find_tag('div',class_='match-promo__tournament-wrapper'))
 
 class MatchPage(TagMiner):
     def _get_team(self, team_from) -> Team:
@@ -336,7 +359,7 @@ class MatchPage(TagMiner):
     
     @cached_property
     def promo(self):
-        return Promo(self._find_tag('section',_class='match-promo'))
+        return Promo(self._find_tag('section',class_='match-promo'))
     
     @property
     def score(self):

@@ -80,3 +80,26 @@ class Regexes:
         else:
             print(f'pattern "{pattern}" failed for string {string}')
             return None
+        
+class Regexes2:
+    def __init__(self,string,*patterns):
+        self._patterns=patterns
+        self._string=string
+
+        for group in self.match.groupdict():
+            self.__dict__[group]=self.get_group(group)
+    @cached_property
+    def match(self):
+        return first_true([re.search(pattern, self._string) for pattern in self._patterns],default=None)
+    def get_group(self,group:str, default=None):
+        if self.match is None:
+            return default
+        groupdict=self.match.groupdict()
+        if group not in self.match.groupdict():
+            print(f'returning {default} for group {group}. not found in results')
+            return default
+        return self.match.group(group) or default
+    @property
+    def is_ok(self):
+        return self.match is not None
+    

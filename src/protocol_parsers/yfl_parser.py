@@ -52,7 +52,7 @@ class YflParser(WebParser):
 
                 new_player_dict['yellow_cards']=player.events.yellow_cards
                 new_player_dict['red_cards']=player.events.red_cards
-                new_player_dict['goals']=player.events.goals
+                new_player_dict['goals']=player.goals
                 new_player_dict['autogoals']=player.events.autogoals
                 new_player_dict['goals_missed']=player.missed_goals
                 new_player_dict['is_capitain']=player.is_capitain
@@ -93,9 +93,9 @@ class YflParser(WebParser):
         result=dict()
         self.page:MatchPage=self.page
 
-        result['tournament_name']='************'
-        result['tournament_round']='************'
-        result['tournament_id']='************'
+        result['tournament_name']=self.page.promo.tournament.name
+        result['tournament_round']=None #TODO
+        result['tournament_id']=self.page.promo.tournament.id
 
         result['home_team_name']=self.page.home_team.name
         result['home_team_score']='*********************'
