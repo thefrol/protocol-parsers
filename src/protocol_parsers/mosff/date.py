@@ -1,7 +1,7 @@
 import re
 from abc import abstractmethod
 
-from ..decorators import trim, to_int, lower
+from ..decorators import trim, to_int, lower, to_int_or_none
 
 class PageDate:
     """a class for parsing string from MAtch Page
@@ -38,14 +38,14 @@ class PageDate:
             print(f'date string "{self._date_string}" is not matching regex pattern"{self._date_pattern}"')
             return None
         else:
-            if group_name in self._regex_match.groups():
+            if group_name not in self._regex_match.groupdict():
                 print(f'cant find group {group_name} in string "{self._date_string}" through regex pattern "{self._date_pattern}"')
                 return None
             else:
                 return self._regex_match.group(group_name)
 
     @property
-    @to_int
+    @to_int_or_none
     def day(self):
         return self.from_regex_group('day')
     
@@ -66,7 +66,7 @@ class PageDate:
             return None
         
     @property
-    @to_int
+    @to_int_or_none
     def year(self):
         return self.from_regex_group('year')
     
@@ -87,11 +87,11 @@ class PageDate:
             return None
 
     @property
-    @to_int
+    @to_int_or_none
     def hour(self):
         return self.from_regex_group('hour')
     
     @property
-    @to_int
+    @to_int_or_none
     def minute(self):
         return self.from_regex_group('minute')
