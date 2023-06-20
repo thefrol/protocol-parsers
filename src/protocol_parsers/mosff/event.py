@@ -1,7 +1,7 @@
 import re
 
 from ..decorators import to_int
-from ..regex import Regex
+from ..regex import Regex, Regexes
 
 class Event:
     """class for working with event html data"""
@@ -14,7 +14,7 @@ class Event:
         self._title=self._event_html['title']
         self._svg_icon_href=self._event_html.svg.use['xlink:href'] # used to check what kind of event it is
 
-        _regex:Regex=Regex.try_create(self.regex_pattern,self._title) or Regex(self.fallback_pattern,self._title)
+        _regex:Regexes=Regexes(self._title, self.regex_pattern, self.fallback_pattern)
         self.note=_regex.get_group('note','')
         self._minute=_regex.get_group('minute',0)
     

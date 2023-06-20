@@ -5,7 +5,7 @@ import re
 from bs4 import BeautifulSoup
 
 from .player import ImgAltName #TODO rename FIO
-from .date import PageDate
+from ..date import PageDate
 from ..decorators import trim
 
 

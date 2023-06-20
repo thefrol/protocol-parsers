@@ -7,9 +7,22 @@ def to_int(f):
     def callee(*args,**kwargs):
         try:
             return int(f(*args,**kwargs))
-        except Exception as e:
+        except ValueError as e:
             print(f'cant convert to int — {f.__name__}')
             return None
+    return callee
+
+def to_int_or_none(f):
+    def callee(*args,**kwargs):
+        call_result=f(*args,**kwargs)
+        if call_result is None:
+            return None
+        else:
+            try:
+                return int(call_result)
+            except Exception as e:
+                print(f'cant convert to int — {f.__name__}')
+                return None
     return callee
 
 def lower(f):

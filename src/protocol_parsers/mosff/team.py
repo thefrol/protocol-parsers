@@ -1,6 +1,9 @@
+import re
+from functools import cached_property, cache
+
 from .player import Player
 from ..decorators import trim
-import re
+
 
 class Team:
     "a class for holding team html_data and parsing it"
@@ -12,35 +15,31 @@ class Team:
         self._reserve_team_html=reserve_team_html
         self._trainers_html=trainers_html
         self.name=name
-        self._players=None
     
-    @property
+    @cached_property
     def players(self) -> list[Player]:
-        if self._players is None:
-            players=[]
-            main_player_htmls=self._main_team_html.find_all("li", {"class":"structure__item"})
-            players.extend([Player(html, is_main=True) for html in main_player_htmls])
-
-            reserve_player_htmls=self._reserve_team_html.find_all("li", {"class":"structure__item"})
-            players.extend([Player(html, is_main=False) for html in reserve_player_htmls])
-            self._players=players
-        return self._players
-    
-    @property
+        players=[]
+        main_player_htmls=self._main_team_html.find_all("li", {"class":"structure__item"})
+        players.extend([Player(html, is_main=True) for html in main_player_htmls])
+        reserve_player_htmls=self._reserve_team_html.find_all("li", {"class":"structure__item"})
+        players.extend([Player(html, is_main=False) for html in reserve_player_htmls])
+        return players
+        
+    @cached_property
     def goal_events(self):
         for player in self.players:
             for event in player.events:
                 if event.is_goal:
                     yield event
     
-    @property
+    @cached_property
     def autogoal_events(self):
         for player in self.players:
             for event in player.events:
                 if event.is_autogoal:
                     yield event
     
-    @property
+    @cached_property
     @trim
     def name_without_year(self):
         'returns team name without year'
@@ -52,7 +51,7 @@ class Team:
             return self.name
 
         
-    @property
+    @cached_property
     def team_year(self):
         'returns team year of birth'
         m=re.fullmatch(self._team_name_pattern, self.name)
@@ -62,7 +61,7 @@ class Team:
             print('cant resolve team year. returning None')
             return None     
 
-    
+    @cache
     def find_player_by_name(self, first_name:str,last_name:str):
         '''finds first player with specified name or None'''
         for player in self.players:

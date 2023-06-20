@@ -8,10 +8,12 @@ self.divs_with_names implies a collection of div tags, that stored names
 from bs4 import BeautifulSoup
 import re
 from datetime import datetime
+from functools import cached_property, cache
 
 from .team import Team
-from .date import PageDate
+from ..date import PageDate
 from ..decorators import trim, to_int
+from ..exceptions import TeamNotFound
         
 class MatchPageDate(PageDate):
     @property
@@ -118,14 +120,18 @@ class Match:
         main, reverse, and trainers
         home and guest team lies in one div, so we need to separate then and 
         collect data per team in this function"""
-        if not self._home_team:
-            self._home_team=Team(
-                main_team_html=self.divs_with_players[self.home_team_main_players_div_index],
-                reserve_team_html=self.divs_with_players[self.home_team_reserve_players_div_index],
-                trainers_html=self.divs_with_players[self.home_team_trainers_div_index],
-                name=self.home_team_name)
-        
-        return self._home_team
+        try:
+            if not self._home_team:
+                self._home_team=Team(
+                    main_team_html=self.divs_with_players[self.home_team_main_players_div_index],
+                    reserve_team_html=self.divs_with_players[self.home_team_reserve_players_div_index],
+                    trainers_html=self.divs_with_players[self.home_team_trainers_div_index],
+                    name=self.home_team_name)
+            
+            return self._home_team
+        except Exception as e:
+            print('no home team')
+            raise TeamNotFound()
     
     @property
     def guest_team(self):
@@ -134,19 +140,24 @@ class Match:
         main, reverse, and trainers
         home and guest team lies in one div, so we need to separate then and 
         collect data per team in this function"""
-        if not self._guest_team:
-            self._guest_team=Team(
-                main_team_html=self.divs_with_players[self.guest_team_main_players_div_index],
-                reserve_team_html=self.divs_with_players[self.guest_team_reserve_players_div_index],
-                trainers_html=self.divs_with_players[self.guest_team_trainers_div_index],
-                name=self.guest_team_name)
-        return self._guest_team
+        try:
+            if not self._guest_team:
+                self._guest_team=Team(
+                    main_team_html=self.divs_with_players[self.guest_team_main_players_div_index],
+                    reserve_team_html=self.divs_with_players[self.guest_team_reserve_players_div_index],
+                    trainers_html=self.divs_with_players[self.guest_team_trainers_div_index],
+                    name=self.guest_team_name)
+            return self._guest_team
+        except Exception as e:
+            print('no guest team')
+            raise TeamNotFound()
     
     @property
     def teams(self):
         'returns a list of Team objects: home+guest team'
         return [self.home_team, self.guest_team]
     
+    @cache
     def get_opposing_team(self, for_team:Team):
         'returns opposing team of for_team'
         for team in self.teams:
@@ -233,7 +244,7 @@ class Match:
                 print(f'cant convert tournament year to int:{e}, returning current year')
                 return datetime.now().year
 
-    @property
+    @cached_property
     @to_int
     def team_year(self) ->int:
         """year of born players ex. 2013, 2014"""

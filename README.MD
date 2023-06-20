@@ -152,3 +152,10 @@
 
     [x] tournament id
     [ ] players list
+    [ ] add failed penalties to mosff
+    [ ] penalties to output (to_rbdata)
+
+### две желтые в протоколах ЮФЛ
+В ЮФЛ после второй желтой игроку прописывается автоматичеки красная картчка. Как возвращшать
+yellow=2
+red=1 |0  на данный момент red=0 по аналогии с мофф
