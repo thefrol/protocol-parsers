@@ -120,7 +120,7 @@ class MatchProtocolTabPlayer(TagMiner):
                     if event.is_red_card:
                         time_sent_off=event.minute
                         return time_sent_off
-                    print(f'error with sent off time: sent off event not found {self}')
+                print(f'error with sent off time: sent off event not found {self}')
                 return time_sent_off
             else:
                 return subsitute_event.minute
