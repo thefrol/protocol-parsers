@@ -325,8 +325,11 @@ class EventsList(list[Event]):
 class Tournament(TagMiner):
     @cached_property
     @trim
-    def name(self):
+    def name_raw(self)->str:
         return self._find_tag('a',class_='match-promo__tournament').text
+    @property
+    def name(self):
+        return self.name_raw.split(' ')[0]
     @cached_property
     def relative_url(self):
         return self._find_tag('a',class_='match-promo__tournament')['href']
