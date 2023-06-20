@@ -1,7 +1,7 @@
 import re
 from abc import abstractmethod
 
-from ..decorators import trim, to_int, lower, to_int_or_none
+from .decorators import trim, to_int, lower, to_int_or_none
 
 class PageDate:
     """a class for parsing string from MAtch Page

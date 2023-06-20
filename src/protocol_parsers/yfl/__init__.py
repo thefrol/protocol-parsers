@@ -1,5 +1,7 @@
 from typing import Callable
 from functools import cached_property,cache
+
+from protocol_parsers.date import PageDate
 from ..decorators import trim, to_int, to_int_or_none
 import re
 from ..regex import Regex, Regexes2
@@ -357,7 +359,10 @@ class PromoTeam(TagMiner):
         return self._team_regex.get_group('tournment_id')
     
 
-    
+class PromoDate(PageDate):
+    @property
+    def _date_pattern(self):
+        return r'(?P<day>\d+) (?P<month>\w+) / (?P<week_day>\w+) / (?P<hour>\d+):(?P<minute>\d+)'   
 
 class Promo(TagMiner):
     @cached_property
@@ -389,10 +394,17 @@ class Promo(TagMiner):
         team_tag=wrapper.a
         return PromoTeam(team_tag)
 
-
     @cached_property
     def tournament(self):
         return Tournament(self._find_tag('div',class_='match-promo__tournament-wrapper'))
+    
+    @property
+    def date(self)->PromoDate:
+        date_tag=self._find_tag('div',class_='match-promo__date-time')
+        if date_tag is not None:
+            return PromoDate(date_tag.text)
+        else:
+            return None
 
 class MatchPage(TagMiner):
     def _get_team(self, team_from) -> Team:

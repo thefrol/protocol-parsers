@@ -11,7 +11,7 @@ from datetime import datetime
 from functools import cached_property, cache
 
 from .team import Team
-from .date import PageDate
+from ..date import PageDate
 from ..decorators import trim, to_int
 from ..exceptions import TeamNotFound
         
