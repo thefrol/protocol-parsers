@@ -114,16 +114,16 @@ class YflParser(WebParser):
         result=dict()
         self.page:MatchPage=self.page
 
-        result['tournament_name']=self.page.promo.tournament.name
+        result['tournament_name']=self.page.promo.tournament.name.replace("-","")
         result['tournament_round']=None #TODO
         result['tournament_id']=self.page.promo.tournament.id
         result['tournament_season']='2022/2023' #TODO if month>june season=current_year/next_year
 
-        result['home_team_name']=f'{self.page.home_team.name} {self.page.promo.tournament.name}'
+        result['home_team_name']=f'{self.page.home_team.name} {self.page.promo.tournament.name.replace("-","")}'
         result['home_team_score']=self.page.promo.home_score
         result['home_team_id']=self.page.promo.home_team.id
 
-        result['guest_team_name']=f'{self.page.guest_team.name} {self.page.promo.tournament.name}'
+        result['guest_team_name']=f'{self.page.guest_team.name} {self.page.promo.tournament.name.replace("-","")}'
         result['guest_team_score']=self.page.promo.guest_score
         result['guest_team_id']=self.page.promo.guest_team.id
 
