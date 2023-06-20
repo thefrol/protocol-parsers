@@ -51,7 +51,7 @@ class YflParser(WebParser):
                 new_player_dict['number']=player.number
 
                 new_player_dict['yellow_cards']=player.events.yellow_cards
-                new_player_dict['red_cards']=player.events.red_cards
+                new_player_dict['red_cards']=player.events.red_cards if player.events.yellow_cards<2 else 0
                 new_player_dict['goals']=player.goals
                 new_player_dict['autogoals']=player.events.autogoals
                 new_player_dict['goals_missed']=player.missed_goals
@@ -98,14 +98,14 @@ class YflParser(WebParser):
         result['tournament_id']=self.page.promo.tournament.id
 
         result['home_team_name']=self.page.home_team.name
-        result['home_team_score']='*********************'
-        result['home_team_id']='*********************'
+        result['home_team_score']=self.page.promo.home_score
+        result['home_team_id']=self.page.promo.home_team.id
 
         result['guest_team_name']=self.page.guest_team.name
-        result['guest_team_score']='************'
-        result['guest_team_id']='************'
+        result['guest_team_score']=self.page.promo.guest_score
+        result['guest_team_id']=self.page.promo.guest_team.id
 
-        result['score']='************'
+        result['score']=self.page.promo.score_raw_text
 
         result['time_played']=self.page.time_played
 

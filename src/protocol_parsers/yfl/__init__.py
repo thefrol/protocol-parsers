@@ -4,7 +4,7 @@ from ..decorators import trim, to_int, to_int_or_none
 import re
 from ..regex import Regex, Regexes2
 
-@to_int
+@to_int_or_none
 def get_player_id(player_relative_url:str):
     return Regex(pattern=r'/player/(?P<player_id>\d+)',
           string=player_relative_url).get_group('player_id')
@@ -31,6 +31,14 @@ class TagMiner:
                 return True
             current_tag=current_tag.parent
         return False
+    def get_param(self, attribute_name, default=None):
+        """safely returns html tag attribute value and fallbacks to default if param not found
+        self.get('href', 'no link')
+        #/player/12342"""
+        if attribute_name in self._html.attrs:
+            return self._html.attrs[attribute_name]
+        else:
+            return default
 
 
 class MatchProtocolTabPlayer(TagMiner):
@@ -79,6 +87,8 @@ class MatchProtocolTabPlayer(TagMiner):
     
     @property
     def time_in(self):
+        """A minute player entered field,
+        None if never played"""
         if self.is_main_player:
             return 0
         else:
@@ -90,6 +100,7 @@ class MatchProtocolTabPlayer(TagMiner):
             
     @property
     def time_out(self):
+        """A minute player left field"""
         match_duration=self.team._parent_match.time_played
         subsitute_event=self.events.find_sub_in(self.id)
         if subsitute_event is None and not self.was_sent_off:
@@ -197,7 +208,7 @@ class Event(TagMiner):
         raw_text=self._find_tag('div',class_='vertical-timeline__event-minute').text
         return Regex(pattern=self._minute_pattern, string=raw_text).get_group('minute',0)
     @cached_property
-    @to_int
+    @to_int_or_none
     def author_id(self):
         """id of author of event, goal and substitutions"""
         relative_url=self._find_tag('a',class_='vertical-timeline__event-author')['href']
@@ -322,11 +333,63 @@ class Tournament(TagMiner):
     def id(self):
         res=Regexes2(self.relative_url,r'/tournament/(?P<tournament_id>\d+)').tournament_id
         return res
+    
+class PromoTeam(TagMiner):
+    _team_pattern=r'/tournament/(?P<tournament_id>\d+)/teams/application\?team_id=(?P<team_id>\d+)'
+    @property
+    @trim
+    def name(self):
+        return self.get_param('title')
+    @property
+    @trim
+    def relative_url(self):
+        return self.get_param('href')
+    @property
+    def _team_regex(self):
+        return Regex(pattern=self._team_pattern,string=self.relative_url)
+    @property
+    @to_int
+    def id(self):
+        return self._team_regex.get_group('team_id')
+    @property
+    @to_int
+    def tournament_id(self):
+        return self._team_regex.get_group('tournment_id')
+    
+
+    
 
 class Promo(TagMiner):
     @cached_property
-    def score(self):
-        return self._find_tag('div',class_='match-promo__score-main').text
+    @trim
+    def score_raw_text(self)->str:
+        return self._find_tag('div',class_='match-promo__score-main').text.replace(' ','')
+    @cached_property
+    def scores(self)-> list[str]:
+        return self.score_raw_text.split(':')
+    @property
+    @to_int
+    def home_score(self)->int:
+        return self.scores[0]
+    
+    @property
+    @to_int
+    def guest_score(self)->int:
+        return self.scores[1]
+    
+    @cached_property
+    def home_team(self):
+        wrapper=self._find_tag('div', class_='match-promo__team-text--left')
+        team_tag=wrapper.a
+        return PromoTeam(team_tag)
+
+    @cached_property
+    def guest_team(self):
+        wrapper=self._find_tag('div', class_='match-promo__team-text--right')
+        team_tag=wrapper.a
+        return PromoTeam(team_tag)
+
+
     @cached_property
     def tournament(self):
         return Tournament(self._find_tag('div',class_='match-promo__tournament-wrapper'))
@@ -347,6 +410,9 @@ class MatchPage(TagMiner):
         
     @property
     def time_played(self):
+        """returns match duration based on a tournament name"""
+        if 'ЮФЛ-3' in self.promo.tournament.name:
+            return 80
         return 90
     
     @cached_property
