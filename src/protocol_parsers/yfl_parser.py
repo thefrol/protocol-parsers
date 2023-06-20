@@ -89,6 +89,27 @@ class YflParser(WebParser):
         except ValueError as e:
             print(f'parsing team {team.name} failed: {e}')
         return result
+    
+    def format_date(self):
+        date_=self.page.promo.date
+        #year=match.tournament_year
+        year=datetime.now().year #TODO get match year not current
+        if all([date_.day,date_.month,year]):
+            match_date_time=datetime(day=date_.day,month=date_.month,year=year,hour=date_.hour,minute=date_.minute)
+        else:
+            print('cant get match date')
+            match_date_time=None
+
+        return {
+            'iso_string':str(match_date_time) if match_date_time is not None else None,
+            'day':date_.day,
+            'month':date_.month,
+            'year':year,
+            'hour':date_.hour,
+            'minute':date_.minute
+        }
+    
+
     def to_rbdata(self):
         result=dict()
         self.page:MatchPage=self.page
@@ -112,7 +133,7 @@ class YflParser(WebParser):
         result['home_team_players']=self._format_team(self.page.home_team)
         result['guest_team_players']=self._format_team(self.page.guest_team)
 
-        result['date']="*****"
+        result['date']=self.format_date()
 
         return result
 
