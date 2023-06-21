@@ -51,6 +51,8 @@ class Regex:
             return None
 
 class Regexes:
+    """A class for trying multiple regex patterns on one string,
+    also can fallback to default values"""
     def __init__(self,string,*patterns):
         self._patterns=patterns
         self._string=string
