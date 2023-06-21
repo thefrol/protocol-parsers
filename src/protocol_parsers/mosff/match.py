@@ -14,7 +14,7 @@ from .team import Team
 from ..date import PageDate
 from ..decorators import trim, to_int
 from ..exceptions import TeamNotFound
-from ..regex import Regex
+from ..regex import Regex, Regexes
 
 @trim
 def format_cup_round(stage_name):
@@ -44,6 +44,20 @@ def format_cup_round(stage_name):
     
     #3 return full name
     return stage_name
+
+@to_int
+def format_tournament_year(tournament_name):
+        """tryes to extract year of tournament from name and fallbacks to current year"""
+        main_pattern=r'\(.*(?P<tournament_year>\d{4})\)'
+        fallback_pattern=r'[с|С]езон (?P<tournament_year>\d{4})'
+        lastchance_pattern=r'(?P<tournament_year>\d{4}) год.{1,5}'
+
+        m=Regexes(tournament_name,
+                   main_pattern,
+                   fallback_pattern,
+                   lastchance_pattern)
+        
+        return m.get_group('tournament_year',default=datetime.now().year)
         
 class MatchPageDate(PageDate):
     @property
@@ -68,7 +82,7 @@ class Match:
 
     round_pattern=r'(?P<round_number>\d)+ тур'
     team_year_pattern=r'(?P<team_year>\d+) +г.р.'
-    tournament_year_pattern=r'\(.*(?P<tournament_year>\d{4})\)'
+
     _team_id_pattern=r'/team/(?P<team_id>\d+)\Z'
     _tournament_id_pattern=r'/tournament/(?P<tournament_id>\d+)\Z'
 
@@ -266,16 +280,7 @@ class Match:
     @property
     def tournament_year(self) -> int:
         """year when tournament hosted ex. 2023, 2024"""
-        m=re.search(self.tournament_year_pattern,self.tournament)
-        if m is None:
-            print('cant find tournament year, falling back to current year')
-            return datetime.now().year
-        else:
-            try:
-                return int(m.group('tournament_year'))
-            except Exception as e:
-                print(f'cant convert tournament year to int:{e}, returning current year')
-                return datetime.now().year
+        return format_tournament_year(self.tournament)
 
     @cached_property
     @to_int

@@ -1,6 +1,6 @@
 import unittest
 
-from protocol_parsers.mosff.match import format_cup_round
+from protocol_parsers.mosff.match import format_cup_round, format_tournament_year
 from protocol_parsers.mosff.match import MatchPageDate
 
 class DateTest(unittest.TestCase):
@@ -14,7 +14,7 @@ class DateTest(unittest.TestCase):
         self.assertEqual(d.hour,12)
         self.assertEqual(d.minute,30)
 
-class FormatCupName(unittest.TestCase):
+class FormatCupRound(unittest.TestCase):
     def test_ro16(self):
         text='2009 г.р. (ПЛЕЙОФФ). 1/8 финала'
         self.assertEqual(format_cup_round(text),'1/8')
@@ -27,6 +27,22 @@ class FormatCupName(unittest.TestCase):
     def test_bad_ro16(self):
         text='2009 г.р. (ПЛЕЙОФФ). 1/7 фsнала'
         self.assertEqual(format_cup_round(text),'1/7 фsнала')
+
+class FormatCupYear(unittest.TestCase):
+    def test_cup_2023(self):
+        text='Кубок Москвы среди команд спортивных школ 2009, 2010 гг.р. сезон 2023 года'
+        self.assertEqual(format_tournament_year(text), 2023)
+    def test_cup_2022(self):
+        text='Кубок Москвы среди команд спортивных школ 2009, 2010 гг.р. сезон 2022 года'
+        self.assertEqual(format_tournament_year(text), 2022)
+        text='Кубок Москвы среди команд спортивных школ 2009, 2010 гг.р. сызон 2021 года'
+        self.assertEqual(format_tournament_year(text), 2021)
+    def test_championship(self):
+        text='Первенство Москвы по футболу среди команд спортшкол - Клубная лига 2012 г.р. (сезон 2023)'
+        self.assertEqual(format_tournament_year(text), 2023)
+        text='Первенство Москвы по футболу среди команд спортшкол - Клубная лига 2012 г.р. (сезон 2024)'
+        self.assertEqual(format_tournament_year(text), 2024)
+
 
 
 if __name__ == '__main__':
