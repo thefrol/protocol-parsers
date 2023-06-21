@@ -21,6 +21,13 @@ class FormatCupName(unittest.TestCase):
     def test_quaterfinal(self):
         text='2009 г.р. (ПЛЕЙОФФ). Четвертьфинал'
         self.assertEqual(format_cup_round(text),'1/4')
+    def test_bad_quaterfinal(self):
+        text='2009 г.р. (ПЛЕЙОФФ). Чыетвертьфинал'
+        self.assertEqual(format_cup_round(text),'Чыетвертьфинал')
+    def test_bad_ro16(self):
+        text='2009 г.р. (ПЛЕЙОФФ). 1/7 фsнала'
+        self.assertEqual(format_cup_round(text),'1/7 фsнала')
+
 
 if __name__ == '__main__':
     unittest.main()

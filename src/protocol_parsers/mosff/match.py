@@ -16,6 +16,7 @@ from ..decorators import trim, to_int
 from ..exceptions import TeamNotFound
 from ..regex import Regex
 
+@trim
 def format_cup_round(stage_name):
     #1 try find known patterns
     cup_text_variations={
@@ -36,9 +37,9 @@ def format_cup_round(stage_name):
             return cup_text_variations[key]
         
     #2 fallback to regexp
-    _pattern='\.(?P<stage_name>[^\.]+)'
+    _pattern='\.(?P<stage_name>[^.]+)\Z'
     match=Regex(_pattern,stage_name)
-    if match is not None:
+    if match.is_ok:
         return match.get_group('stage_name')
     
     #3 return full name
