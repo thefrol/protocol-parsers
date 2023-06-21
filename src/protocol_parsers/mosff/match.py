@@ -196,7 +196,7 @@ class Match:
         
         1/8 кубка - 1/8"""
         if self.tournament_is_cup:
-            return '1/8'
+            return '1/4'
         m=re.search(self.round_pattern, self.a_with_round.text)
         if m:
             return m.group('round_number')

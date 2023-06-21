@@ -11,7 +11,7 @@ print(long_description)
 
 setup(
     name='protocol_parsers',
-    version='0.2.0',
+    version='0.2.1',
     author='Dmitriy Frolenko',
     author_email='orangefrol@gmail.com',
     packages=find_packages(where='src'),
