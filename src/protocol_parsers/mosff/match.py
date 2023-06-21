@@ -14,6 +14,35 @@ from .team import Team
 from ..date import PageDate
 from ..decorators import trim, to_int
 from ..exceptions import TeamNotFound
+from ..regex import Regex
+
+def format_cup_round(stage_name):
+    #1 try find known patterns
+    cup_text_variations={
+        '1/256':'1/256',
+        '1/128':'1/128',
+        '1/64':'1/64',
+        '1/32':'1/32',
+        '1/16':'1/16',
+        '1/8':'1/8',
+        '1/4':'1/4',
+        '1/2':'1/2',
+        'Четвертьфинал':'1/4',
+        'Полуфинал':'1/2',
+        'Финал':'финал',
+    }
+    for key in cup_text_variations:
+        if key in stage_name:
+            return cup_text_variations[key]
+        
+    #2 fallback to regexp
+    _pattern='\.(?P<stage_name>[^\.]+)'
+    match=Regex(_pattern,stage_name)
+    if match is not None:
+        return match.get_group('stage_name')
+    
+    #3 return full name
+    return stage_name
         
 class MatchPageDate(PageDate):
     @property
@@ -195,13 +224,16 @@ class Match:
         6 тур - returns 6
         
         1/8 кубка - 1/8"""
+
+        stage_text=self.a_with_round.text
         if self.tournament_is_cup:
-            return '1/4'
-        m=re.search(self.round_pattern, self.a_with_round.text)
-        if m:
-            return m.group('round_number')
+            return format_cup_round(stage_name=stage_text)
         else:
-            return None
+            m=re.search(self.round_pattern, self.a_with_round.text)
+            if m:
+                return m.group('round_number')
+            else:
+                return None
         
     @property
     @trim
