@@ -6,6 +6,8 @@ class PlayerName:
     middle name - optional
     last name - required"""
     def __init__(self, name_text:str):
+        if name_text is None:
+            raise ValueError(f'text of a name cant be None in {self.__class__}')
         self._name_text=name_text
         self._strings=name_text.split(' ')
     @property
