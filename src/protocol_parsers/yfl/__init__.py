@@ -18,6 +18,7 @@ class TagMiner:
     def __init__(self, html):
         self._html=html
     def _find_tag(self, tag, class_):
+        ##TODO should return some metaclass, or we should have an error wrapper for this when getting text
         return self._html.find(tag,{'class':class_})
     def _find_all_tags(self, tag, class_):
         return self._html.find_all(tag,{'class':class_})

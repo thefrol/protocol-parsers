@@ -17,7 +17,7 @@ class PlayerName:
         return len(self._strings)
     @property
     def first_name(self):
-        pass
+        pass #TODO ADD errors of implementation
     @property
     def middle_name(self):
         pass
