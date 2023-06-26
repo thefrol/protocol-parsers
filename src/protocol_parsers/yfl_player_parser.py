@@ -38,12 +38,12 @@ class YflPlayerParser(WebParser):
 
         result['role_raw']=None
 
-        result['team_id']=None
-        result['team_url']=None
-        result['team_url_raw']=None
+        result['team_id']=page.team.team_id
+        result['team_url']=f'https://yflrussia.ru/{page.team.relative_url}'
+        result['team_url_raw']=page.team.relative_url
 
-        result['team_name']=None
-        result['team_name_raw']=None
-        result['team_year']=None
+        result['team_name']=f'{page.team.name} {page.team.league_name}'
+        result['team_name_raw']=page.team.name_raw
+        result['team_year']=page.team.league_name
         
         return result
