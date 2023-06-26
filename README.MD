@@ -154,6 +154,7 @@
     [ ] players list
     [ ] add failed penalties to mosff
     [ ] penalties to output (to_rbdata)
+    [ ] yfl season naming
 
 ### две желтые в протоколах ЮФЛ
 В ЮФЛ после второй желтой игроку прописывается автоматичеки красная картчка. Как возвращшать
