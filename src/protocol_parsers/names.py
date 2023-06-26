@@ -24,6 +24,15 @@ class PlayerName:
     @property
     def raw_name(self):
         return self._name_text
+    
+    @property
+    def format_basic(self):
+        """returns a basic tro part name
+        Иван Иванов"""
+        if self.first_name is not None:
+            return f'{self.first_name} {self.last_name}'
+        else:
+            return self.last_name
 
  #   def __str__(self):
  #       return ' '.join([self.first_name,self.last_name])
