@@ -4,7 +4,7 @@ link looks like this https://mosff.ru/player/2060"""
 import re
 from bs4 import BeautifulSoup
 
-from .player import ImgAltName #TODO rename FIO
+from .player import FioName #TODO rename FIO
 from ..date import PageDate
 from ..decorators import trim
 
@@ -130,7 +130,7 @@ class PlayerPage:
 
     @property
     def name(self):
-        return ImgAltName(self.a_with_name.text)
+        return FioName(self.a_with_name.text)
 
     @property
     def birth_date(self):
