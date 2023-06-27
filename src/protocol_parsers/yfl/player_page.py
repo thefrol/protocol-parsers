@@ -1,7 +1,7 @@
 import re
 from functools import cached_property
 
-from . import TagMiner
+from ..tagminer import TagMiner
 from ..regex import Regex
 from ..names import FioName
 from ..date import PageDate
