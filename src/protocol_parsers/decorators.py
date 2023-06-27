@@ -3,6 +3,15 @@ def trim(f):
         return f(*args,**kwargs).strip()
     return callee
 
+def trim_or_none(f):
+    def callee(*args,**kwargs):
+        value_to_trim=f(*args,**kwargs)
+        if value_to_trim is None:
+            return None
+        else:
+            return value_to_trim.strip()
+    return callee
+
 def to_int(f):
     def callee(*args,**kwargs):
         try:
