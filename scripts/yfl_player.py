@@ -5,6 +5,7 @@ import requests
 from protocol_parsers import YflPlayerParser
 
 url='https://yflrussia.ru/player/5070344' # ufl3
+url='https://yflrussia.ru/player/4609808' #acron
 
 page=YflPlayerParser(url)
 
