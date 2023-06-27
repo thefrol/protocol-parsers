@@ -35,6 +35,7 @@ class YflPlayerPageTeam(TagMiner):
     def league_name(self):
         return self.__name_regex.get_group('league_name').replace('-','')
     @property
+    @trim
     def name(self):
         return self.__name_regex.get_group('team_name')
     
