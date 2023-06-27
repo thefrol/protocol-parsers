@@ -8,6 +8,7 @@ from ..regex import Regex, Regexes2
 
 from ..tagminer import TagMiner
 from .player_page import PlayerPage
+from .team_page import TeamPage
 
 @to_int_or_none
 def get_player_id(player_relative_url:str):
