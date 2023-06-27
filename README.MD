@@ -139,6 +139,12 @@
 
 # Обновления
 
+### 27.06.23 
+добавлен парсинг игроков и команд ЮФЛ `YFLPlayerParser` и `YflTeamParser`
+
+### 20.06.23
+добавлен парсинг протоколв ЮФЛ `YflProtocolParser`
+
 ### 07.06.2023
 Добавлен номер игрока `number`
 
@@ -155,8 +161,14 @@
     [ ] add failed penalties to mosff
     [ ] penalties to output (to_rbdata)
     [ ] yfl season naming
+    [ ] image support on ufl and mff(teams, players)
 
 ### две желтые в протоколах ЮФЛ
 В ЮФЛ после второй желтой игроку прописывается автоматичеки красная картчка. Как возвращшать
 yellow=2
 red=1 |0  на данный момент red=0 по аналогии с мофф
+
+# Дорожная карта
+
+## 0.3 Рефакторинг
+Парсинг мосфф исползует класс `TagMiner`
