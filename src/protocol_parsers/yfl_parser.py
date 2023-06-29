@@ -2,6 +2,9 @@ from datetime import datetime
 
 from .webparser import WebParser
 from .yfl import MatchPage,Team
+from .date import format_season
+
+
 
 
 class YflParser(WebParser):
@@ -78,6 +81,7 @@ class YflParser(WebParser):
             'minute':date_.minute
         }
     
+   
 
     def to_rbdata(self):
         result=dict()
@@ -86,7 +90,7 @@ class YflParser(WebParser):
         result['tournament_name']=self.page.promo.tournament.name.replace("-","")
         result['tournament_round']=None #TODO
         result['tournament_id']=self.page.promo.tournament.id
-        result['tournament_season']='2022/2023' #TODO if month>june season=current_year/next_year
+        result['tournament_season']=format_season(self.page.promo.date.as_datetime) #TODO if month>june season=current_year/next_year
 
         result['home_team_name']=f'{self.page.home_team.name} {self.page.promo.tournament.name.replace("-","")}'
         result['home_team_score']=self.page.promo.home_score

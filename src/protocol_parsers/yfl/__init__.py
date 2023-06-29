@@ -1,5 +1,7 @@
 from typing import Callable
 from functools import cached_property,cache
+import datetime
+
 
 from protocol_parsers.date import PageDate
 from ..decorators import trim, to_int, to_int_or_none
@@ -340,6 +342,10 @@ class PromoTeam(TagMiner):
     
 
 class PromoDate(PageDate):
+    @property
+    def year(self):
+        """returning current year"""
+        return datetime.datetime.now().year
     @property
     def _date_pattern(self):
         return r'(?P<day>\d+) (?P<month>\w+) / (?P<week_day>\w+) / (?P<hour>\d+):(?P<minute>\d+)'   

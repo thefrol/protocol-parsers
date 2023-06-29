@@ -3,6 +3,8 @@ from abc import abstractmethod
 
 from .decorators import trim, to_int, lower, to_int_or_none
 
+from datetime import datetime
+
 class PageDate:
     """a class for parsing string from MAtch Page
     date is showed is such style
@@ -95,3 +97,21 @@ class PageDate:
     @to_int_or_none
     def minute(self):
         return self.from_regex_group('minute')
+    
+    @property
+    def as_datetime(self):
+        return datetime(year=self.year, month=self.month, day=self.day, hour=self.hour, minute=self.minute)
+    
+def format_season(date):
+        def is_old_system(date_):
+            """до июля 2023 года мы играли в система осень-весна, проверяем так ли это"""
+            return date_<datetime(2023,7,1)
+        if is_old_system(date):
+            if date.month>=7:
+                # текущий_год/следующий_год
+                return f'{date.year}/{date.year+1}'
+            else:
+                #предыдущий_год/следущий_год
+                return f'{date.year-1}/{date.year}'
+        else:
+            return f'{date.year}'
