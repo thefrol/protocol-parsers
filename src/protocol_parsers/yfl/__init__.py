@@ -135,7 +135,10 @@ class MatchProtocolTabPlayer(TagMiner):
         """returns true if played was on the field in this minute"""
         if not self.has_played:
             return False
-        return minute>=self.time_in and minute<self.time_out
+        if self.played_till_end:
+            return minute>=self.time_in #in case goal time was later than match ended or at last minute
+        else:
+            return minute>=self.time_in and minute<self.time_out
         
                 
     @property
