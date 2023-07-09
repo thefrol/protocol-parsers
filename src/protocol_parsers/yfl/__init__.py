@@ -83,7 +83,7 @@ class MatchProtocolTabPlayer(TagMiner):
     def time_out(self):
         """A minute player left field"""
         match_duration=self.team._parent_match.time_played
-        subsitute_event=self.events.find_sub_in(self.id)
+        subsitute_event=self.events.find_sub_out(self.id)
         if subsitute_event is None and not self.was_sent_off:
             return self.team._parent_match.time_played if self.has_played else None# never substituted
         else:
@@ -289,7 +289,7 @@ class EventsList(list[Event]):
         """returns event when current player left field"""
         for event in self:
             if event.is_substitute:
-                if event.author_id==player_id:
+                if event.assist_id==player_id:
                     return event
         return None
     
@@ -297,7 +297,7 @@ class EventsList(list[Event]):
         """returns event when current player entered field"""
         for event in self:
             if event.is_substitute:
-                if event.assist_id==player_id:
+                if event.author_id==player_id:
                     return event
         return None
     
