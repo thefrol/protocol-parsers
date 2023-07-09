@@ -16,22 +16,28 @@ class YflPlayerParser(WebParser):
 
         birth_date_parsed=page.birth_date
 
-        if birth_date_parsed.is_healthy:
+        if birth_date_parsed.is_healthy: #TODO looks ungly, needs refactor
             date_=datetime(
                 year=birth_date_parsed.year,
                 month=birth_date_parsed.month,
                 day=birth_date_parsed.day)
+
+            result['birth_date_raw']=page.birth_date._date_string
+            result['birth_date']=str(date_) if date_  else None
+            result['birth_date_dict']={
+                        'day':birth_date_parsed.day,
+                        'month':birth_date_parsed.month,
+                        'year':birth_date_parsed.year
+                        }
         else:
             date_=None
+
+            result['birth_date_raw']=None
+            result['birth_date']=None
+            result['birth_date_dict']=None
         
 
-        result['birth_date_raw']=page.birth_date._date_string
-        result['birth_date']=str(date_) if date_  else None
-        result['birth_date_dict']={
-            'day':birth_date_parsed.day,
-            'month':birth_date_parsed.month,
-            'year':birth_date_parsed.year
-        }
+
 
         result['name']=page.name.format_basic
         result['name_raw']=page.name_raw

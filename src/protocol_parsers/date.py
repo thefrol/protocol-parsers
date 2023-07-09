@@ -28,7 +28,10 @@ class PageDate:
             
     def __init__(self, date_string):
         self._date_string=date_string
-        self._regex_match=re.search(self._date_pattern,self._date_string)
+        if date_string is None:
+            self._regex_match=None
+        else:
+            self._regex_match=re.search(self._date_pattern,self._date_string) #TODO use Regex class
     
     @property
     @abstractmethod
