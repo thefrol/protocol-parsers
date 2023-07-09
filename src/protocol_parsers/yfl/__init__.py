@@ -176,6 +176,23 @@ class Team:
             result.append(new_player)
         return result
     
+    def find_by_name(self, name):
+        """returns a first player with a specified name,
+        searches part of name as well
+        case unsensitive
+        маЛютин -> Стас малютин"""
+        if name is None:
+            print(f'trying to search None name in team {self.name}, return None')
+            return None
+        name=name.lower()
+        for player in self.players:
+            player_name=player.name
+            if player_name is None: 
+                continue
+            player_name=player_name.lower()
+            if name in player_name:
+                return player
+    
     @property
     def opposing_team(self):
         if self is self._parent_match.home_team:
