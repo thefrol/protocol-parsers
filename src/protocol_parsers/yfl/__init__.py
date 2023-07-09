@@ -28,7 +28,6 @@ class MatchProtocolTabPlayer(TagMiner):
         self.events: EventsList=None
         self.team:Team=None
     @cached_property
-    @to_int
     @trim
     def number(self):
         return self._find_tag('span',class_='match-protocol__member-number').text
