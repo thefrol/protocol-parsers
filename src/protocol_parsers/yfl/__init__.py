@@ -111,11 +111,15 @@ class MatchProtocolTabPlayer(TagMiner):
         
     @property
     def time_on_field(self):
+        match_duration=self.team._parent_match.time_played
         if self.time_in is None:
             return 0
         else:
-            match_duration=self.team._parent_match.time_played
-            return match_duration - (self.time_out or 0) # if time out=None will substract 0
+            if self.has_played:
+                return self.time_out-self.time_in
+            else:
+                print('time_on_field business error')
+                return match_duration # if time out=None will substract 0
         
     @property
     def has_played(self):
