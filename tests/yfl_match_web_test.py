@@ -41,10 +41,16 @@ class BasicMatchTest(unittest.TestCase):
         self.assertEqual(self.page.promo.home_team.tournament_id,1031676)
         self.assertEqual(self.page.promo.tournament.name,'МФЛ')
 
+        self.assertEqual(self.page.promo.score_raw_text,'2:3')
+        self.assertEqual(self.page.promo.scores,['2','3'])
+        self.assertEqual(self.page.promo.home_score,2)
+        self.assertEqual(self.page.promo.guest_score,3)
+
         self.assertEqual(self.page.promo.date.as_datetime,datetime(2023,7,7,15,0),'wrong date')
 
     def test_team_tab(self):
         self.assertEqual(self.page.home_team.name,'Рубин')
+        
         self.assertEqual(self.page.guest_team.name,'ЦСКА')
 
     def test_business_logic(self):
@@ -99,7 +105,7 @@ class BasicMatchTest(unittest.TestCase):
     def test_events(self):
         self.assertEqual(self.page.events.yellow_cards, 7, 'total yellow cards is 7')
         self.assertEqual(self.page.home_team.events.yellow_cards, 2, 'home team yellow cards is 2')
-        self.assertEqual(self.page.guest_team.events.yellow_cards, 4, 'guest team yellow cards is 4, and one for trainer not counted') # without a trainer
+        self.assertEqual(self.page.guest_team.events.yellow_cards, 4, 'guest team yellow cards is 4, and one for trainer not counted') # without a trainer #TODO add staff
 
         self.assertEqual(self.page.events.goals,5,'totally 5 goals')
         self.assertEqual(self.page.home_team.events.goals,2) # TODO add to self check if events goals are not equal to toal goals from promo
