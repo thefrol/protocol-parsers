@@ -28,6 +28,7 @@ class MatchProtocolTabPlayer(TagMiner):
         self.events: EventsList=None
         self.team:Team=None
     @cached_property
+    @to_int
     @trim
     def number(self):
         return self._find_tag('span',class_='match-protocol__member-number').text
@@ -78,6 +79,11 @@ class MatchProtocolTabPlayer(TagMiner):
                 return None # never substituted
             else:
                 return subsitute_event.minute
+            
+    @property
+    def played_till_end(self):
+        subsitute_event=self.events.find_sub_out(self.id)
+        return subsitute_event is None and not self.was_sent_off
             
     @property
     def time_out(self):
