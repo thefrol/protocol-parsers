@@ -162,6 +162,7 @@
     [ ] penalties to output (to_rbdata)
     [x] yfl season naming
     [ ] image support on ufl and mff(teams, players)
+    [ ] yfl.TeamPromo.home_team and guest team, use more logical containers than just align text left and right. too complicated
 
 ### две желтые в протоколах ЮФЛ
 В ЮФЛ после второй желтой игроку прописывается автоматичеки красная картчка. Как возвращшать
@@ -175,8 +176,14 @@ red=1 |0  на данный момент red=0 по аналогии с мофф
 ## ~~0.2.4~~
 ~~ Сезоны ЮФЛ правильно рассчитываются ~~
 
-## 0.2.5 
+## 0.2.5
+фикс айдишников команд в юфл
+
+## 0.2.6
+тесты для yfl
+
+## 0.3
 Поддержка фото в парсинге игроков
 
-## 0.3 Рефакторинг
+## 0.4 Рефакторинг
 Парсинг мосфф исползует класс `TagMiner`

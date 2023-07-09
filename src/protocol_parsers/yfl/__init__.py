@@ -370,13 +370,13 @@ class Promo(TagMiner):
     
     @cached_property
     def home_team(self):
-        wrapper=self._find_tag('div', class_='match-promo__team-text--left')
+        wrapper=self._find_tag('div', class_='match-promo__team-text--right') ## the left-text means align left so right team aligns to left. need to change to something more logical
         team_tag=wrapper.a
         return PromoTeam(team_tag)
 
     @cached_property
     def guest_team(self):
-        wrapper=self._find_tag('div', class_='match-promo__team-text--right')
+        wrapper=self._find_tag('div', class_='match-promo__team-text--left') ## the left-text means align left so right team aligns to left. need to change to something more logical
         team_tag=wrapper.a
         return PromoTeam(team_tag)
 
