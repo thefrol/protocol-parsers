@@ -17,7 +17,7 @@ setup(
     packages=find_packages(where='src'),
     package_dir={"": "src"},
     install_requires=requirements, # лол без этой строчки он ругался на README.MD
-    #url='https://github.com/thefrol/...',
+    url='https://github.com/thefrol/protocol-parsers',
     long_description=long_description,
     long_description_content_type='text/markdown; variant=GFM',
     license="MIT"
