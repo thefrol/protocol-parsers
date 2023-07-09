@@ -103,6 +103,7 @@ class BasicMatchTest(unittest.TestCase):
         self.assertEqual(guest_team_bench_players_count,4,'must be 4 bench players at CSKA')
     
     def test_events(self):
+        """test of events data"""
         self.assertEqual(self.page.events.yellow_cards, 7, 'total yellow cards is 7')
         self.assertEqual(self.page.home_team.events.yellow_cards, 2, 'home team yellow cards is 2')
         self.assertEqual(self.page.guest_team.events.yellow_cards, 4, 'guest team yellow cards is 4, and one for trainer not counted') # without a trainer #TODO add staff
@@ -110,6 +111,64 @@ class BasicMatchTest(unittest.TestCase):
         self.assertEqual(self.page.events.goals,5,'totally 5 goals')
         self.assertEqual(self.page.home_team.events.goals,2) # TODO add to self check if events goals are not equal to toal goals from promo
         self.assertEqual(self.page.guest_team.events.goals,3)
+
+    def test_players(self):
+        """testing separate players, goals, cards, time played"""
+        lavrenkov=self.page.find_player_by_name('Артем Лавренков')
+
+        self.assertEqual(lavrenkov.goals,2)
+        self.assertEqual(lavrenkov.time_on_field,90)
+        self.assertEqual(lavrenkov.time_in,0)
+        self.assertEqual(lavrenkov.number,'68')
+        self.assertTrue(lavrenkov.is_main_player)
+        self.assertFalse(lavrenkov.is_goalkeeper)
+
+        golybin=self.page.find_player_by_name('Ренат Голыбин')
+
+        self.assertEqual(golybin.goals,1)
+        self.assertEqual(golybin.time_on_field,77)
+        self.assertEqual(golybin.time_in,0)
+        self.assertEqual(golybin.number,'47')
+        self.assertTrue(golybin.is_main_player)
+        self.assertFalse(golybin.is_goalkeeper)
+
+        sarraf=self.page.find_player_by_name('Максим Сарраф')
+
+        self.assertFalse(sarraf.has_played)
+        self.assertIsNone(sarraf.time_in)
+        self.assertEqual(sarraf.number,'70')
+        self.assertFalse(sarraf.is_main_player)
+        self.assertTrue(sarraf.is_goalkeeper)
+
+        capitain_rubin=self.page.find_player_by_name('Никита Билялютдинов')
+        self.assertTrue(capitain_rubin.is_capitain)
+        
+
+        pershin=self.page.find_player_by_name('Денис Першин')
+
+        self.assertEqual(pershin.number,'83')
+        self.assertEqual(pershin.events.yellow_cards,1)
+
+        shaih= self.page.find_player_by_name('Владимир Шайхутдинов')
+        self.assertEqual(shaih.missed_goals,2)
+        self.assertAlmostEqual(shaih.number,'86')
+        self.assertTrue(shaih.is_goalkeeper)
+        self.assertTrue(shaih.is_main_player)
+        self.assertFalse(shaih.is_capitain)
+
+        ismagilov= self.page.find_player_by_name('Артем Исмагилов')
+        self.assertEqual(ismagilov.missed_goals,3)
+        self.assertEqual(ismagilov.number,'99')
+
+    def test_consistency(self):
+        '''test of data, all names filled, all numbers filled and other'''
+        players=self.page.home_team.players+self.page.guest_team.players
+        for player in players:
+            self.assertGreater(int(player.number),0)
+            self.assertIsNotNone(player.name)
+
+        for event in self.page.events:
+            self.assertGreaterEqual(event.minute,0)
 
 
 if __name__ == '__main__':
