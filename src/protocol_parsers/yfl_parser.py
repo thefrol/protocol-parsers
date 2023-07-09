@@ -42,9 +42,22 @@ class YflParser(WebParser):
                 # played_time= relative_played_time + match_time
                 #TODO
 
-                new_player_dict['relative_time_played']=None
-                #new_player_dict['relative_time_in']=None
-                new_player_dict['relative_time_out']=None
+                if player.time_in is None:
+                    #not played
+                    new_player_dict['relative_time_played']=None
+                    #new_player_dict['relative_time_in']=None
+                    new_player_dict['relative_time_out']=None
+                else:
+                    if player.played_till_end:
+                        #played till end
+                        new_player_dict['relative_time_played']=-player.time_in
+                        #new_player_dict['relative_time_in']=player.in_at if player.in_at>0 elsew
+                        new_player_dict['relative_time_out']=0
+                    else:
+                        #player subtituted or banned
+                        new_player_dict['relative_time_played']=player.time_out-player.time_in ##TODO TESTS
+                        #new_player_dict['relative_time_in']=player.in_at
+                        new_player_dict['relative_time_out']=player.time_out
 
                   
                 #events #TODO
