@@ -338,7 +338,7 @@ class PromoTeam(TagMiner):
     @property
     @to_int
     def tournament_id(self):
-        return self._team_regex.get_group('tournment_id')
+        return self._team_regex.get_group('tournament_id')
     
 
 class PromoDate(PageDate):
