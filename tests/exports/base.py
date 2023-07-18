@@ -18,4 +18,8 @@ def load_dicts(file_name):
     return data, file_data
 
 def is_subset(big, small):
-    return small == big | small
+    """compares two dictinaries
+    True: small is subset of big AND all small values equall to big"""
+    if small != big | small:
+        return False
+    return big|small == big
