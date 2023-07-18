@@ -17,13 +17,16 @@ class Event(TagMiner):
     @cached_property
     @to_int_or_none
     def author_id(self):
-        """id of author of event, goal and substitutions"""
+        """id of author of event, goal and substitutions
+        
+        for substitutions author id - player went on field"""
         relative_url=self._find_tag('a',class_='vertical-timeline__event-author')['href']
         return get_player_id(relative_url)
     @cached_property
     @to_int_or_none
     def assist_id(self):
-        """id of author of event, goal and substitutions"""
+        """id of author of event, goal and substitutions
+        for substitutions assist id - player left field"""
         tag=self._find_tag('a',class_='vertical-timeline__event-assist')
         if tag is None:
             return None
