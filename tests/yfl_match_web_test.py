@@ -23,6 +23,17 @@ def count_players(team:Team, func:Callable):
             count=count+1
     return count
 
+
+def test_substitutions(test:unittest.TestCase, page:MatchPage):
+    for event in page.events:
+        if event.is_substitute:
+            player_left=page.find_player_by_id(event.assist_id)
+            player_entered=page.find_player_by_id(event.author_id)
+            test.assertEqual(player_left.sub_to_id, player_entered.id)
+            test.assertEqual(player_entered.sub_from_id,player_left.id)
+            test.assertIs(player_entered.sub_in_event,player_left.sub_out_event)
+            test.assertIs(player_entered.sub_in_event,event)
+
 class BasicMatchTest(unittest.TestCase):
     @classmethod
     def setUpClass(cls) -> None:
@@ -176,6 +187,7 @@ class BasicMatchTest(unittest.TestCase):
         self.assertEqual(savva.sub_from_id, kuznecov.id)
         self.assertEqual(kuznecov.sub_to_id, savva.id)
         self.assertEqual(savva.sub_in_event.minute, 71)
+        test_substitutions(self,self.page) # tests substitutions for full match
 
 
 if __name__ == '__main__':
