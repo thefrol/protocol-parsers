@@ -35,6 +35,30 @@ class YflParser(WebParser):
                 new_player_dict['time_in']=player.time_in
                 new_player_dict['time_out']=player.time_out
 
+                #substitutions
+                sub_in_event=player.sub_in_event
+                sub_from= team._parent_match.find_player_by_id(player.sub_from_id)
+                if sub_from is not None:
+                    new_player_dict['sub_from']={
+                        'id':sub_from.id,
+                        'number':sub_from.number,
+                        'minute':sub_in_event.minute
+                    }
+                else:
+                    new_player_dict['sub_from']=None
+
+                sub_out_event= player.sub_out_event
+                sub_to= team._parent_match.find_player_by_id(player.sub_to_id)
+                if sub_to is not None:
+                    new_player_dict['sub_to']={
+                        'id':sub_to.id,
+                        'number':sub_to.number,
+                        'minute':sub_out_event.minute
+                    }
+                else:
+                    new_player_dict['sub_to']=None
+
+
 
                 #relative time
                 # if >0 not connected with total time

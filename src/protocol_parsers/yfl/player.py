@@ -51,6 +51,45 @@ class MatchProtocolTabPlayer(TagMiner):
         return not self.is_substitute
     
     @property 
+    def sub_in_event(self):
+        """returns a event, when player subbed in
+        None if played from start"""
+        if self.is_main_player:
+            return None
+        else:
+            sub_event=self.events.find_sub_in(self.id)
+            if sub_event is None:
+                print('substitution event failure')
+                return None
+            return sub_event
+        
+    @property
+    def sub_from_id(self):
+        """returns id of player who was subbed by this player"""
+        if self.sub_in_event is not None:
+            return self.sub_in_event.assist_id
+        else:
+            return None
+            
+        
+    @property
+    def sub_out_event(self):
+        """returns a player id, who substituted this player
+        None if never substituted"""
+        sub_event=self.events.find_sub_out(self.id)
+        if sub_event is None:
+            return None
+        return sub_event
+
+    @property
+    def sub_to_id(self):
+        """returns id of player who subbed this player"""
+        if self.sub_out_event is not None:
+            return self.sub_out_event.author_id
+        else:
+            return None   
+    
+    @property 
     def is_goalkeeper(self):
         return 'вр' in self.raw_amplua.lower()
     
