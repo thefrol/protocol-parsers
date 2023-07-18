@@ -5,8 +5,12 @@ import json
 
 from protocol_parsers import Exporter
 
-url='https://yflrussia.ru/match/3409563'
-file_name='yfl_match_3409563.txt'
+
+url='https://mosff.ru/match/34549'
+#url='https://mosff.ru/match/38876' #CUP
+#url='https://mosff.ru/match/38860' #CUP 2009
+#url='https://mosff.ru/match/34540' #no minute for autogoals, add to tests
+file_name='mosff_match_34549.txt'
 args=[]
 kwargs={}
 

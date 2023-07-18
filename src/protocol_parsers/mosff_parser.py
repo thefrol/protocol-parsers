@@ -51,7 +51,7 @@ def format_date(match:Match):
 class MosffParser:
     """a class that gets a link and returns a json with needed data"""
     url_pattern=r'https://mosff.ru/match/\d+'
-    def __init__(self, url:str, match_time=None):
+    def __init__(self, url:str, html_text=None, match_time=None):
         if not re.fullmatch(self.url_pattern,url):
             print(f'seems like {url} is not from mosff')
         
