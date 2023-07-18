@@ -2,7 +2,7 @@ from pprint import pprint
 
 from protocol_parsers import Exporter
 
-url='https://yflrussia.ru/match/3409563'
+url='https://mosff.ru/player/2060'
 
 data=Exporter(url).to_rbdata()
 

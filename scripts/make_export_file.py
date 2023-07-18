@@ -6,11 +6,8 @@ import json
 from protocol_parsers import Exporter
 
 
-url='https://mosff.ru/match/34549'
-#url='https://mosff.ru/match/38876' #CUP
-#url='https://mosff.ru/match/38860' #CUP 2009
-#url='https://mosff.ru/match/34540' #no minute for autogoals, add to tests
-file_name='mosff_match_34549.txt'
+url='https://mosff.ru/player/2060'
+file_name='mosff_player_2060.txt'
 args=[]
 kwargs={}
 

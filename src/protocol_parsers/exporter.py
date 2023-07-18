@@ -8,7 +8,7 @@ from . import (
 parsers={
     'https://mosff.ru/match/':MosffParser,
     'https://mosff.ru/player/':MosffPlayerParser,
-    'https://mosff.ru/player/':MosffTeamParser,
+    'https://mosff.ru/team/':MosffTeamParser,
     'https://yflrussia.ru/match/': YflParser,
     'https://yflrussia.ru/player/': YflPlayerParser,
     'https://yflrussia.ru/team/': YflTeamParser,
