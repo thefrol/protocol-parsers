@@ -170,6 +170,13 @@ class BasicMatchTest(unittest.TestCase):
         for event in self.page.events:
             self.assertGreaterEqual(event.minute,0)
 
+    def test_subbing(self):
+        savva=self.page.find_player_by_name('Савва Пономарев')
+        kuznecov=self.page.find_player_by_name('Максим Кузнецов')
+        self.assertEqual(savva.sub_from_id, kuznecov.id)
+        self.assertEqual(kuznecov.sub_to_id, savva.id)
+        self.assertEqual(savva.sub_in_event.minute, 71)
+
 
 if __name__ == '__main__':
     unittest.main()
