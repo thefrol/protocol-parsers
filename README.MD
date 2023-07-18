@@ -156,6 +156,7 @@
 
 # Проблемы
 
+    [ ] https://mosff.ru/player/27840 игрок имеет две команды
     [x] tournament id
     [ ] players list
     [ ] add failed penalties to mosff
