@@ -4,7 +4,7 @@ from typing import Callable
 from protocol_parsers import YflParser
 from protocol_parsers.yfl  import MatchPage, Team
 from datetime import datetime
-import yfl_base
+import yfl_protocol.base as yfl_base
 #test time in, time out, time played
 # def lineup_status(lineup)
 #    return 'bench' if lineup['time_played'] == 0
