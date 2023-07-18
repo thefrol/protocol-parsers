@@ -54,7 +54,7 @@ class MatchProtocolTabPlayer(TagMiner):
     def sub_in_event(self):
         """returns a event, when player subbed in
         None if played from start"""
-        if self.is_main_player:
+        if self.is_main_player or not self.has_played:
             return None
         else:
             sub_event=self.events.find_sub_in(self.id)
