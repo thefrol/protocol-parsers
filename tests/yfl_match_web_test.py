@@ -4,6 +4,7 @@ from typing import Callable
 from protocol_parsers import YflParser
 from protocol_parsers.yfl  import MatchPage, Team
 from datetime import datetime
+import yfl_base
 #test time in, time out, time played
 # def lineup_status(lineup)
 #    return 'bench' if lineup['time_played'] == 0
@@ -34,12 +35,10 @@ def test_substitutions(test:unittest.TestCase, page:MatchPage):
             test.assertIs(player_entered.sub_in_event,player_left.sub_out_event)
             test.assertIs(player_entered.sub_in_event,event)
 
-class BasicMatchTest(unittest.TestCase):
-    @classmethod
-    def setUpClass(cls) -> None:
-        url='https://yflrussia.ru/match/3409563'
-        parser=YflParser(url)
-        cls.page:MatchPage=parser.page
+
+
+class BasicMatchTest(yfl_base.YFlMatch):
+    url='https://yflrussia.ru/match/3409563'
     def test_promo(self):
 
         self.page.promo.home_team.name
@@ -64,14 +63,7 @@ class BasicMatchTest(unittest.TestCase):
         
         self.assertEqual(self.page.guest_team.name,'ЦСКА')
 
-    def test_business_logic(self):
-        home_team=self.page.home_team
-        guest_team=self.page.guest_team
-        self.assertIs(home_team,guest_team.opposing_team,'home team calculates opposing team wrong')
-        self.assertIs(guest_team,home_team.opposing_team,'guest team calculates opposing team wrong')
 
-        self.assertIs(home_team._parent_match,self.page,'home team has wrong parent match')
-        self.assertIs(guest_team._parent_match,self.page,'guest team has wrong parent match')
 
     def test_main_and_bench(self):
         """counts players at main, subbed players and bench players"""
@@ -171,15 +163,7 @@ class BasicMatchTest(unittest.TestCase):
         self.assertEqual(ismagilov.missed_goals,3)
         self.assertEqual(ismagilov.number,'99')
 
-    def test_consistency(self):
-        '''test of data, all names filled, all numbers filled and other'''
-        players=self.page.home_team.players+self.page.guest_team.players
-        for player in players:
-            self.assertGreater(int(player.number),0)
-            self.assertIsNotNone(player.name)
 
-        for event in self.page.events:
-            self.assertGreaterEqual(event.minute,0)
 
     def test_subbing(self):
         savva=self.page.find_player_by_name('Савва Пономарев')
