@@ -3,7 +3,7 @@ import unittest
 from exports.base import load_dicts, is_subset, data_folder
 from protocol_parsers.regex import Regex
 
-
+#TODO test for errors on creation
 
 class BasicTest(unittest.TestCase):
     def test_protocols(self):
