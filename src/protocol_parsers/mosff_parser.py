@@ -139,6 +139,10 @@ class MosffParser:
                     }
                     events.append(new_event_dict)
 
+                #subtitutions #TODO
+                new_player_dict['sub_from']=None
+                new_player_dict['sub_to']=None
+
                 result.append(new_player_dict)
             return result
         except TeamNotFound:
