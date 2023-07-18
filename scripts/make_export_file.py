@@ -6,8 +6,8 @@ import json
 from protocol_parsers import Exporter
 
 
-url='https://mosff.ru/player/2062'
-file_name='mosff_player_2062.txt'
+url='https://mosff.ru/team/2046'
+file_name='mosff_team_2046.txt'
 args=[]
 kwargs={}
 

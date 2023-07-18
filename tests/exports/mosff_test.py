@@ -20,6 +20,10 @@ class BasicTest(unittest.TestCase):
         for file in find_files('mosff_player'):
             data,file_data=load_dicts(file.name)
             self.assertTrue(is_subset(data, file_data), f'error parsing saved file {file.name}')
+    def test_teams(self):
+        for file in find_files('mosff_team'):
+            data,file_data=load_dicts(file.name)
+            self.assertTrue(is_subset(data, file_data), f'error parsing saved file {file.name}')
 
 
 if __name__ == '__main__':
