@@ -52,15 +52,19 @@ class MosffParser:
     """a class that gets a link and returns a json with needed data"""
     url_pattern=r'https://mosff.ru/match/\d+'
     def __init__(self, url:str, html_text=None, match_time=None):
-        if not re.fullmatch(self.url_pattern,url):
-            print(f'seems like {url} is not from mosff')
-        
-        page=requests.get(url) 
+        if all([url, html_text]):
+            print(f'specified url and html_text in parser. url will be ignored')
+        if html_text is None:
+            if not re.fullmatch(self.url_pattern,url):
+                print(f'seems like {url} is not from mosff')
+            
+            page=requests.get(url) 
 
-        if page.status_code != 200:
-            raise ConnectionError('page not retrieved')
+            if page.status_code != 200:
+                raise ConnectionError('page not retrieved')
+            html_text=page.text
         
-        self._match=Match(page.text)
+        self._match=Match(html_text)
 
         self.tournament=RbdataTounament(
             team_year=self._match.team_year,

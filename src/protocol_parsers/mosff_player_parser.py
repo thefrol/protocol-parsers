@@ -8,16 +8,20 @@ from .mosff_parser import format_player_name,format_team_name
 class MosffPlayerParser:
     """a class that gets a link and returns a json with needed data"""
     url_pattern=r'https://mosff.ru/player/\d+'
-    def __init__(self, url:str):
-        if not re.fullmatch(self.url_pattern,url):
-            print(f'seems like {url} is not from mosff player page')
-        
-        page=requests.get(url) 
+    def __init__(self, url:str, html_text=None):
+        if all([url, html_text]):
+            print(f'specified url and html_text in parser. url will be ignored')
+        if html_text is None:
+            if not re.fullmatch(self.url_pattern,url):
+                print(f'seems like {url} is not from mosff player page')
+            
+            page=requests.get(url) 
 
-        if page.status_code != 200:
-            raise ConnectionError('page not retrieved')
+            if page.status_code != 200:
+                raise ConnectionError('page not retrieved')
+            html_text=page.text
         
-        self.player=PlayerPage(page.text)
+        self.player=PlayerPage(html_text)
 
     def to_rbdata(self):
         result={}
