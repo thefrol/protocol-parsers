@@ -175,6 +175,8 @@
 # Проблемы
 
     [ ] https://mosff.ru/player/27840 игрок имеет две команды
+    [ ] https://mosff.ru/player/2061 нет команды и фото
+    [ ] teams withut year
     [x] tournament id
     [ ] mosff substitute info(sub_from, sub_to)
     [ ] players list in team page parser
