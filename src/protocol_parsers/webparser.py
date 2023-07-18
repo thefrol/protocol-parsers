@@ -9,6 +9,8 @@ class WebParser:
     url_pattern=r'https://mosff.ru/match/\d+'
     page_class:type=None
     def __init__(self, url:str,html_text=None):
+        if all([url, html_text]):
+            print(f'specified url and html_text in parser. Url will be ignored')
         if html_text is None:
             if not re.fullmatch(self.url_pattern,url):
                 print(f'seems like {url} not fits url pattern{self.url_pattern}')
