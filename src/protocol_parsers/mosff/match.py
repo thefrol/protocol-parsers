@@ -288,7 +288,7 @@ class Match:
         """year of born players ex. 2013, 2014"""
         m=re.search(self.team_year_pattern,self.tournament)
         if m is None:
-            print('cant find team year, falling back to year of teams')
+            print('cant find team year in tournament title, falling back to year of teams')
             if self.home_team.team_year or self.guest_team_year:
                 return self.home_team.team_year or self.guest_team_year
             else:
