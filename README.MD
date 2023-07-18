@@ -167,7 +167,8 @@
 
     [ ] https://mosff.ru/player/27840 игрок имеет две команды
     [x] tournament id
-    [ ] players list
+    [ ] mosff substitute info(sub_from, sub_to)
+    [ ] players list in team page parser
     [ ] add failed penalties to mosff
     [ ] penalties to output (to_rbdata)
     [x] yfl season naming
