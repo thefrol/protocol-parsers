@@ -5,7 +5,7 @@ from .player import Player
 from ..decorators import trim
 
 
-class Team:
+class Team: #TODO rename to player list later
     "a class for holding team html_data and parsing it"
 
     _team_name_pattern=r'(?P<team_name>.*) (?P<team_year>\d{4,20}) г.р.'

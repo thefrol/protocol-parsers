@@ -58,7 +58,7 @@ def guest_players(block:PlayerBlock):
     return block.is_players and block.is_away_team
 
 
-class PlayerBlockList(list[PlayerBlock]):
+class PlayerBlockList(list[PlayerBlock]): #TODO create a tagminer list with some of this funcs
     def where(self, compare_func)-> PlayerBlock:
         return PlayerBlockList(block for block in self if compare_func(block))
     
