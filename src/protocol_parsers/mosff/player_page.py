@@ -1,10 +1,11 @@
 """a class for interacting with player web page on mosff website
 link looks like this https://mosff.ru/player/2060"""
 
-import re
 from functools import cached_property
 
-from..tagminer import TagMiner
+from ..decorators import to_int
+from ..regex import Regex
+from ..tagminer import TagMiner
 from .player import FioName #TODO rename FIO
 from ..date import PageDate
 from ..decorators import trim
@@ -82,36 +83,45 @@ class MosffTeam(TagMiner): #TODO implement to team.py
     @property
     def name_without_year(self):
         'returns team name without year'
-        m=re.fullmatch(self._team_name_pattern, self.raw_name)
-        if m:
-            return m.group('team_name')
-        else:
+        m=Regex(
+            pattern=self._team_name_pattern,
+            string=self.raw_name
+            )
+        if m.match is None:
             print('cant resolve team name with year. returning full name')
             return self.raw_name
+        return m.get_group('team_name')    
+            
 
     @property
     def team_year(self):
         'returns team year of birth'
-        m=re.fullmatch(self._team_name_pattern, self.raw_name)
-        if m:
-            return m.group('team_year')
-        else:
-            print('cant resolve team year. returning None')
-            return None  
+        m=Regex(
+            pattern=self._team_name_pattern,
+            string= self.raw_name
+            )
+        if m.match is None:
+            print('cant resolve team year')
+        return m.get_group('team_year')
+    
     @property
     def relative_url(self):
         return self.a['href']
+    
     @property
     def url(self):
         return 'https://mosff.ru'+self.relative_url
+    
     @property
+    @to_int
     def team_id(self):
-        m=re.fullmatch(self._team_id_pattern,self.relative_url)
-        if m:
-            return int(m.group('team_id'))
-        else:
+        m=Regex(
+            pattern=self._team_id_pattern,
+            string=self.relative_url
+            )
+        if m.match is None:
             print('cant parse home team id')
-            return None        
+        return m.get_group('team_id')
 
 class PlayerPage(TagMiner):
     """a class representing a html player page"""

@@ -6,7 +6,7 @@ from .player_page import MosffTeam
 class MosffTeamForTeamPage(MosffTeam):
     @property
     def raw_name(self):
-        return self._team_tag.a.text
+        return self._html.a.text
 
 class TeamPage(TagMiner):
     @cached_property
