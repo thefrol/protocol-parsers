@@ -7,14 +7,9 @@ from .webparser import WebParser
 from .mosff.team_page import TeamPage
 from .mosff_parser import format_player_name,format_team_name
 
-class MosffTeamParser(WebParser):
+class MosffTeamParser(WebParser[TeamPage]):
     """a class that gets a link and returns a json with needed data"""
     url_pattern=r'https://mosff.ru/team/\d+'
-    page_class=TeamPage
-
-    @property
-    def page(self)->TeamPage:
-        return self._page
 
     def to_rbdata(self):
         result={}

@@ -7,7 +7,7 @@ from .date import format_season
 
 
 
-class YflParser(WebParser):
+class YflParser(WebParser[MatchPage]):
     """a class that gets a link and returns a json with needed data"""
     url_pattern=r'https://yflrussia.ru/match/\d+'
     page_class=MatchPage
@@ -117,10 +117,6 @@ class YflParser(WebParser):
             'hour':date_.hour,
             'minute':date_.minute
         }
-    
-    @property
-    def page(self)->MatchPage:
-        return self._page
 
     def to_rbdata(self):
         result=dict()

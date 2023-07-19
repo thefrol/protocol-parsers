@@ -1,13 +1,16 @@
 import re
 import requests
 import json
+from typing import TypeVar, Generic, get_args
+
 from bs4 import BeautifulSoup
 from abc import abstractmethod
 
-class WebParser:
+TParser=TypeVar('TParser')
+
+class WebParser(Generic[TParser]):
     """a class that gets a link and returns a json with needed data"""
     url_pattern=r'https://mosff.ru/match/\d+'
-    page_class:type=None
     def __init__(self, url:str,html_text=None):
         if all([url, html_text]):
             print(f'specified url and html_text in parser. Url will be ignored')
@@ -22,13 +25,17 @@ class WebParser:
             html_text=page.text
             
         self._html=BeautifulSoup(html_text, 'html.parser')
-        self._page=self.page_class(self._html)
+        self._page:TParser=self.create_parser_instance(self._html)
+    def create_parser_instance(self,*args,**kwargs)->TParser:
+        """returns a new instance of TParser
+        passes args ang kwargs to __init__()"""
+        from .mosff import Match
+        base_generic_class=self.__orig_bases__[0]
+        parser_class_=get_args(base_generic_class)[0]
+        return parser_class_(*args,**kwargs)
     
     @property
-    def page(self):
-        """use this for anootation of page field
-        def page(self)-> Match:
-            return self._page"""
+    def page(self)->TParser:
         return self._page
     
     @abstractmethod

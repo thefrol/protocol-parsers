@@ -5,15 +5,9 @@ from datetime import datetime
 from .yfl import PlayerPage
 from .webparser import WebParser
 
-class YflPlayerParser(WebParser):
+class YflPlayerParser(WebParser[PlayerPage]):
     """a class that gets a link and returns a json with needed data"""
     url_pattern=r'https://yflrussia.ru/player/\d+'
-    page_class=PlayerPage
-
-    @property
-    def page(self)->PlayerPage:
-        return self._page
-
     def to_rbdata(self):
         result={}
         page:PlayerPage=self.page

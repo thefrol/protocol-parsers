@@ -51,7 +51,7 @@ def format_date(match:Match):
 
     
 
-class MosffParser(WebParser):
+class MosffParser(WebParser[Match]):
     """a class that gets a link and returns a json with needed data"""
     url_pattern=r'https://mosff.ru/match/\d+'
     page_class=Match
@@ -59,10 +59,6 @@ class MosffParser(WebParser):
         super().__init__(url=url, html_text=html_text)
 
         self.match_time=self.tournament.match_time # if not match time specified try to get match time from tournament data
-
-    @property
-    def page(self)->Match:
-        return self._page
 
     @cached_property
     def tournament(self):
