@@ -1,41 +1,40 @@
-import re
+from functools import cached_property
 
+from ..tagminer import TagMiner
 from ..names import PlayerName, TwoPartName, FioName
-from ..decorators import trim
+from ..decorators import to_int_or_none, trim, trim_or_none, to_int
 from .event import Event
+from ..regex import Regex
 
 
-
-
-class Player:
+class Player(TagMiner):
     """a class for parsing player data """
-
     _mosff_prefix='https://mosff.ru'
-    _mosff_id_pattern=r'/player/(?P<player_id>\d+)\Z'
-    def __init__(self, player_html, is_main):
-        self._player_html=player_html
 
-        self._img=player_html.img
-        self._number_div=self._player_html.find('div',{'class':"structure__number"})
-        self._position_div=self._player_html.find('div',{'class':"structure__position"})
-        self._url_a=self._player_html.find('a',{'class':"structure__player"})
-
+    def __init__(self, html, is_main):
+        super().__init__(html)
         self.is_main=is_main
 
-        self._events_htmls=self._player_html.find_all('li',{'class':"structure__event"}) or [] # so it wont be none
-        self.events=[Event(html) for html in self._events_htmls]
+    @cached_property
+    def events(self) -> list[Event]:
+        events_htmls=self._find_all_tags(class_='structure__event') or []
+        return [Event(html) for html in events_htmls]
     
+    @cached_property
+    def _img(self):
+        """returns a img tag, need for mining name data and photo"""
+        return self._find_tag('img')
     
-    @property
+    @cached_property
     def text_name(self):
         "taken from div"
-        name_div=self._player_html.find('div',{'class':"structure__name-text"})
+        name_div=self._find_tag('div',class_="structure__name-text")
         return TwoPartName(next(name_div.stripped_strings))
 
     @property
     def img_alt_name(self)->PlayerName:
         """taken from img alt"""
-        return FioName(self._img['alt'])
+        return FioName(self._img.get_param('alt'))
 
     @property
     def name(self)->PlayerName:
@@ -48,7 +47,7 @@ class Player:
     @property
     def relative_url(self):
         '''a relative link to mosff website with player info'''
-        return self._url_a['href']
+        return self._find_tag(class_="structure__player").href
     
     @property
     def full_url(self):
@@ -56,30 +55,36 @@ class Player:
         return self._mosff_prefix+self.relative_url
     
     @property
+    @to_int_or_none
     def id(self):
-        m=re.fullmatch(self._mosff_id_pattern,self.relative_url)
-        if m:
-            return int(m.group('player_id'))
-        else:
-            print('cant parse player id')
-            return None
+        mosff_id_pattern=r'/player/(?P<player_id>\d+)\Z' #TODO to settings file
+        return Regex(
+            pattern=mosff_id_pattern,
+            string=self.relative_url
+            ).get_group('player_id')
+
     
     @property
     @trim
     def number(self):
-        return self._number_div.text
+        return self._find_tag(class_="structure__number").no_verbose.text
+    
+    @property
+    @trim_or_none
+    def position(self):
+        return self._find_tag(class_="structure__position").no_verbose.text
     
     @property
     def is_capitain(self):
-        if self._position_div is None:
+        if self.position is None:
             return False
-        return True if '(к)' in self._position_div.text else False
+        return True if '(к)' in self.position else False
     
     @property
     def is_goalkeeper(self):
-        if self._position_div is None:
+        if self.position is None:
             return False
-        return True if '(вр)' in self._position_div.text else False
+        return True if '(вр)' in self.position else False
     
     @property
     def in_at(self):
