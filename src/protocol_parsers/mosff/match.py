@@ -10,11 +10,14 @@ import re
 from datetime import datetime
 from functools import cached_property, cache
 
+
 from .team import Team
+from .player_block import PlayerBlock
 from ..date import PageDate
 from ..decorators import trim, to_int
 from ..exceptions import TeamNotFound
 from ..regex import Regex, Regexes
+from ..tagminer import TagMiner
 
 @trim
 def format_cup_round(stage_name):
@@ -65,7 +68,7 @@ class MatchPageDate(PageDate):
         return r'(?P<day>\d+) (?P<month>\w+) / (?P<week_day>\w+) / (?P<hour>\d+):(?P<minute>\d+)'
     
 
-class Match:
+class Match(TagMiner):
     """
     A class for interacting with html data
     its like a data object, gets a raw hml
@@ -88,7 +91,9 @@ class Match:
 
 
     def __init__(self, html_text, parser='html.parser'):
-        _soup=html_text        
+        super().__init__(html_text)
+        _soup=self._html
+
         self.divs_with_names=_soup.find_all("div", {"class":"structure__top-name"})[:2]
         self.a_with_urls=_soup.find_all("a", {"class":"match__team"})[:2]
         self.div_with_score=_soup.find("div", {"class":"match__score-main"})
@@ -102,7 +107,11 @@ class Match:
         #lazy init of home team. !important we need to get the same object every time for comparison in match.opposing_team()
         self._home_team=None
         self._guest_team=None
-        
+    
+    @cached_property
+    def player_blocks(self):
+        block_tags=self._find_all_tags(class_='structure__unit')
+        return [PlayerBlock(block) for block in block_tags]
 
     @property
     def team_names(self) -> list[str]:
