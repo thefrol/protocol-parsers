@@ -47,6 +47,14 @@ class AutoGoals(MatchTest):
         self.assertEqual(self.find_by_name('Леонид Чемельков').goals,2,'Чемельков должен забить два')
         self.assertEqual(self.find_by_name('Марк Шкурин').goals,1,'Шкурин должен забить один')
 
+
+class AutoGoalsGoalKeeper(MatchTest):
+    '''Testing match with autogoals in goalkeeper'''
+    url='https://mosff.ru/match/34540'
+    def test_missed(self):
+        self.assertEqual(self.match.home_score,2,'Home score not right')
+        self.assertEqual(self.find_by_name('Фёдор Старостин').goals_missed,4,'Старостин пропустил четыре')
+
 class Cards(MatchTest):
     '''Testing match with autogoals'''
     url='https://mosff.ru/match/34549'

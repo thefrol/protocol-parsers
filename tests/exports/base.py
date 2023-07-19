@@ -29,3 +29,34 @@ def is_subset(big, small):
     if small != big | small:
         return False
     return big|small == big
+
+def unequal_params(a,b, indent=0):
+    error_strings=[]
+    if isinstance(a,dict) and isinstance(b,dict):
+        unequal=[k for k in b if k in a if b[k]!=a[k]]        
+        if unequal:
+            for k in unequal:
+                if isinstance(a[k],dict|list) and isinstance(b[k],dict|list):
+                    error_strings.append(f'in field "{k}"')
+                    error_strings.append(unequal_params(a[k],b[k],indent=indent+1))
+                else:
+                    error_strings.append(f"not equal:b['{k}']='{b[k]}'and a['{k}']='{a[k]}'")
+    elif isinstance(a,list) and isinstance(b,list):
+        if len(a) != len(b):
+            error_strings.append('arrays have different len')
+        else:
+            list_err=[]
+            for item in zip(a,b):
+                m,n=item
+                unequal=unequal_params(m,n, indent+1)
+                if unequal:
+                    list_err.append(unequal)
+            if list_err:
+                error_strings.append('in_array:')
+                error_strings.extend(list_err)
+    else:
+        if a!=b:
+            error_strings.append(f'{a}!={b}')
+        else:
+            return ''
+    return f'\n{"    "*indent}'.join(error_strings)
