@@ -96,7 +96,7 @@ class YflParser(WebParser):
                 result.append(new_player_dict)
 
         except ValueError as e:
-            print(f'parsing team {team.name} failed: {e}')
+            print(f'parsing players in team {team.name} failed: {e}')
         return result
     
     def format_date(self):
