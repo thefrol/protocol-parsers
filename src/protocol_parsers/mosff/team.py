@@ -10,21 +10,11 @@ class Team:
 
     _team_name_pattern=r'(?P<team_name>.*) (?P<team_year>\d{4,20}) г.р.'
 
-    def __init__(self, main_team_html, reserve_team_html, trainers_html, name):
-        self._main_team_html=main_team_html
-        self._reserve_team_html=reserve_team_html
-        self._trainers_html=trainers_html
+    def __init__(self, players:list[Player], name):
+        self.players=players
         self.name=name
     
-    @cached_property
-    def players(self) -> list[Player]:
-        players=[]
-        main_player_htmls=self._main_team_html.find_all("li", {"class":"structure__item"})
-        players.extend([Player(html, is_main=True) for html in main_player_htmls])
-        reserve_player_htmls=self._reserve_team_html.find_all("li", {"class":"structure__item"})
-        players.extend([Player(html, is_main=False) for html in reserve_player_htmls])
-        return players
-        
+      
     @cached_property
     def goal_events(self):
         for player in self.players:

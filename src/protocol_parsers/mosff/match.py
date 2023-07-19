@@ -12,7 +12,7 @@ from functools import cached_property, cache
 
 
 from .team import Team
-from .player_block import PlayerBlock
+from .player_block import PlayerBlock,PlayerBlockList
 from ..date import PageDate
 from ..decorators import trim, to_int
 from ..exceptions import TeamNotFound
@@ -68,20 +68,13 @@ class MatchPageDate(PageDate):
         return r'(?P<day>\d+) (?P<month>\w+) / (?P<week_day>\w+) / (?P<hour>\d+):(?P<minute>\d+)'
     
 
-class Match(TagMiner):
+class Match(TagMiner): #TODO extract a promo block
     """
     A class for interacting with html data
     its like a data object, gets a raw hml
     has properties and functions to return
     players, match data, score and others
     """
-    home_team_main_players_div_index=0
-    home_team_reserve_players_div_index=2
-    home_team_trainers_div_index=4
-
-    guest_team_main_players_div_index=1
-    guest_team_reserve_players_div_index=3
-    guest_team_trainers_div_index=5
 
     round_pattern=r'(?P<round_number>\d)+ тур'
     team_year_pattern=r'(?P<team_year>\d+) +г.р.'
@@ -111,7 +104,7 @@ class Match(TagMiner):
     @cached_property
     def player_blocks(self):
         block_tags=self._find_all_tags(class_='structure__unit')
-        return [PlayerBlock(block) for block in block_tags]
+        return PlayerBlockList([PlayerBlock(block) for block in block_tags])
 
     @property
     def team_names(self) -> list[str]:
@@ -165,44 +158,13 @@ class Match(TagMiner):
             print('cant parse guest team id')
             return None
                     
-    @property
+    @cached_property
     def home_team(self):
-        """retrieves html data for team
-        in former html teams are separated in three blocks
-        main, reverse, and trainers
-        home and guest team lies in one div, so we need to separate then and 
-        collect data per team in this function"""
-        try:
-            if not self._home_team:
-                self._home_team=Team(
-                    main_team_html=self.divs_with_players[self.home_team_main_players_div_index],
-                    reserve_team_html=self.divs_with_players[self.home_team_reserve_players_div_index],
-                    trainers_html=self.divs_with_players[self.home_team_trainers_div_index],
-                    name=self.home_team_name)
-            
-            return self._home_team
-        except Exception as e:
-            print('no home team')
-            raise TeamNotFound()
+        return Team(self.player_blocks.home_players, self.home_team_name)
     
-    @property
+    @cached_property
     def guest_team(self):
-        """retrieves html data for team
-        in former html teams are separated in three blocks
-        main, reverse, and trainers
-        home and guest team lies in one div, so we need to separate then and 
-        collect data per team in this function"""
-        try:
-            if not self._guest_team:
-                self._guest_team=Team(
-                    main_team_html=self.divs_with_players[self.guest_team_main_players_div_index],
-                    reserve_team_html=self.divs_with_players[self.guest_team_reserve_players_div_index],
-                    trainers_html=self.divs_with_players[self.guest_team_trainers_div_index],
-                    name=self.guest_team_name)
-            return self._guest_team
-        except Exception as e:
-            print('no guest team')
-            raise TeamNotFound()
+        return Team(self.player_blocks.guest_players, self.guest_team_name)
     
     @property
     def teams(self):
