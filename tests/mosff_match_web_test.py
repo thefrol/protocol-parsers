@@ -50,10 +50,11 @@ class AutoGoals(MatchTest):
 
 class AutoGoalsGoalKeeper(MatchTest):
     '''Testing match with autogoals in goalkeeper'''
+    #insane case
     url='https://mosff.ru/match/34540'
     def test_missed(self):
         self.assertEqual(self.match.home_score,2,'Home score not right')
-        self.assertEqual(self.find_by_name('Фёдор Старостин').goals_missed,4,'Старостин пропустил четыре')
+        self.assertEqual(self.find_by_name('Фёдор Старостин').goals_missed,4,'Старостин пропустил три плюс автогол')
 
 class Cards(MatchTest):
     '''Testing match with autogoals'''
