@@ -7,6 +7,12 @@ files_folder='data'
 here=pathlib.Path(__file__).parent
 data_folder=here / files_folder
 
+def find_files(prefix):
+    '''returns pathlib.Path objects for files with specified prefix in data folder'''
+    for file in data_folder.iterdir():
+        if file.name.startswith(prefix):
+              yield file
+
 def load_dicts(file_name):
     path = data_folder / file_name
     with open(path,'r') as f:

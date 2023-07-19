@@ -1,15 +1,7 @@
-
 import unittest
-from exports.base import load_dicts, is_subset, data_folder
-from protocol_parsers.regex import Regex
+from exports.base import load_dicts, is_subset, find_files
 
 #TODO test for errors on creation
-
-def find_files(prefix):
-    '''returns pathlib.Path objects for files with specified prefix in data folder'''
-    for file in data_folder.iterdir():
-        if file.name.startswith(prefix):
-              yield file
 
 class BasicTest(unittest.TestCase):
     def test_protocols(self):
