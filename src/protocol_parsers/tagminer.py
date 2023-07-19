@@ -1,4 +1,5 @@
 from typing import Callable
+import copy
 
 class TagMiner:
     """a basic class for working with tags, a wrapper for bs4 parser"""
@@ -7,6 +8,8 @@ class TagMiner:
             self._html=html._html
         else:
             self._html=html
+
+        self.verbose=True
     @property
     def is_empty(self):
         return self._html is None
@@ -47,7 +50,8 @@ class TagMiner:
         return [TagMiner(tag) for tag in found_tags]
     def tag_text(self):
         if self.is_empty:
-            print(f'getting text from empty Tagminer "{self}"')
+            if self.verbose:
+                print(f'getting text from empty Tagminer "{self}"')
             return None
         return self._html.text
     @property
@@ -56,7 +60,8 @@ class TagMiner:
     @property
     def href(self):
         if self.is_empty:
-            print(f'getting href from empty Tagminer {self}')
+            if self.verbose:
+                print(f'getting href from empty Tagminer {self}')
         return self.get_param('href')
     def find_in_parents(self, comparator:Callable, search_depth=10): 
         """Function for searching in parent tags
@@ -88,6 +93,19 @@ class TagMiner:
     @property
     def a(self):
         return self._html.a
+    
+    @property
+    def no_verbose(self):
+        """used when we want to use this object but without it verbosing for this action
+        like if sometimes obj.text shoots a warning and sometimes not, it could worn a 20-30 times a match
+        but thi warning is ok, so we use
+        obj.no_verbose.text instead of obj.text
+        
+        creates a copy of object so could take more time and memory"""
+        new_obj=copy.copy(self)
+        new_obj.verbose=False
+        return new_obj
+
 
 
 ##
