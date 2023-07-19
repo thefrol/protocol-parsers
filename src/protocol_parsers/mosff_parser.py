@@ -60,6 +60,10 @@ class MosffParser(WebParser):
 
         self.match_time=self.tournament.match_time # if not match time specified try to get match time from tournament data
 
+    @property
+    def page(self)->Match:
+        return self._page
+
     @cached_property
     def tournament(self):
         return RbdataTounament(

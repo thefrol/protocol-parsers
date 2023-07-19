@@ -10,6 +10,10 @@ class YflPlayerParser(WebParser):
     url_pattern=r'https://yflrussia.ru/player/\d+'
     page_class=PlayerPage
 
+    @property
+    def page(self)->PlayerPage:
+        return self._page
+
     def to_rbdata(self):
         result={}
         page:PlayerPage=self.page

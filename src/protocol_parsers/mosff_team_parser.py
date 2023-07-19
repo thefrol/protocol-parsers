@@ -12,6 +12,10 @@ class MosffTeamParser(WebParser):
     url_pattern=r'https://mosff.ru/team/\d+'
     page_class=TeamPage
 
+    @property
+    def page(self)->TeamPage:
+        return self._page
+
     def to_rbdata(self):
         result={}
         result['name']=format_team_name(self.page.team)

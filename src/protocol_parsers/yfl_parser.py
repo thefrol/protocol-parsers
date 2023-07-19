@@ -118,11 +118,13 @@ class YflParser(WebParser):
             'minute':date_.minute
         }
     
-   
+    @property
+    def page(self)->MatchPage:
+        return self._page
 
     def to_rbdata(self):
         result=dict()
-        self.page:MatchPage=self.page
+
 
         result['tournament_name']=self.page.promo.tournament.name.replace("-","")
         result['tournament_round']=None #TODO

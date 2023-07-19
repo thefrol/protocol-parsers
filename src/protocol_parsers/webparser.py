@@ -22,7 +22,14 @@ class WebParser:
             html_text=page.text
             
         self._html=BeautifulSoup(html_text, 'html.parser')
-        self.page:self.page_class=self.page_class(self._html)
+        self._page=self.page_class(self._html)
+    
+    @property
+    def page(self):
+        """use this for anootation of page field
+        def page(self)-> Match:
+            return self._page"""
+        return self._page
     
     @abstractmethod
     def to_rbdata(self):
