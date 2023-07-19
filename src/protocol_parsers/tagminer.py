@@ -11,20 +11,39 @@ class TagMiner:
     def is_empty(self):
         return self._html is None
     def _find_tag(self, tag=None, class_=None):
+        """finds first specified tag
+        if class= None searches for tags with any classes, 
+        unlike in Beatiful soup where when class=None
+        searches for tag with no specified classes and 
+        if class specified find() doesnt return it"""
         ##TODO should return some metaclass, or we should have an error wrapper for this when getting text
         #TODO _find_tag(self, class_,tag=None) for search as class
         if self.is_empty:
             print(f'searching an empty tag {self} for tag={tag} class={class_}')
             found_tag=None
         else:
-            found_tag=self._html.find(tag,{'class':class_})
+            if class_ is None:
+                found_tag=self._html.find(tag)
+            else:
+                found_tag=self._html.find(tag, class_=class_)
+
+            
         return TagMiner(found_tag)
     def _find_all_tags(self, tag=None, class_=None):
+        """finds all specified tags
+        if class= None searches for tags with any classes, 
+        unlike in Beatiful soup where when class=None
+        searches for tag with no specified classes and 
+        if class specified find() doesnt return it"""
+
         if self.is_empty:
             print(f'searching an empty tag {self} for tag={tag} class={class_}')
             found_tags=[]
         else:
-            found_tags=self._html.find_all(tag,{'class':class_})
+            if class_ is None:
+                found_tags=self._html.find_all(tag)
+            else:
+                found_tags=self._html.find_all(tag, class_=class_)
         return [TagMiner(tag) for tag in found_tags]
     def tag_text(self):
         if self.is_empty:
@@ -69,3 +88,8 @@ class TagMiner:
     @property
     def a(self):
         return self._html.a
+
+
+##
+# все могло быть проще, можно было просто расширть класс Beautiful soup
+# если бы я знал, что там тожно можно делать поиск по классу class_=...
