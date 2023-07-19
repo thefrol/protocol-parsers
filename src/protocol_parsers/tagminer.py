@@ -63,12 +63,15 @@ class TagMiner:
             if self.verbose:
                 print(f'getting href from empty Tagminer {self}')
         return self.get_param('href')
+    @property
+    def parent(self):
+        return TagMiner(self._html.parent)
     def find_in_parents(self, comparator:Callable, search_depth=10) -> 'TagMiner': 
         """Function for searching in parent tags
         ex. if one of parent tags has a class 'bar'
         find_in_parent_tags(lambda tag: 'bar' in tag['class'])
         returns Tagminer object"""
-        current_tag=self._html.parent
+        current_tag=self.parent
         for i in range(search_depth):
             if comparator(current_tag):
                 return current_tag

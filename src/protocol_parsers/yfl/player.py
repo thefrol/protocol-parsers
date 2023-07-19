@@ -45,7 +45,7 @@ class MatchProtocolTabPlayer(TagMiner):
     @cached_property
     def is_substitute(self):
         """returns true if this player was a substitute, false if was a main player"""
-        return self.find_in_parents(lambda tag: 'match-protocol__substitutes' in tag['class'])
+        return self.find_in_parents(lambda tag: tag.has_class('match-protocol__substitutes')) is not None
     @property
     def is_main_player(self):
         return not self.is_substitute
