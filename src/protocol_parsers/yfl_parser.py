@@ -12,92 +12,92 @@ class YflParser(WebParser):
     url_pattern=r'https://yflrussia.ru/match/\d+'
     page_class=MatchPage
     def _format_team(self, team:Team):
-        try:
             result=[]
             for player in team.players:
-                new_player_dict={}
+                try:
+                    new_player_dict={}
 
-                new_player_dict['name']=player.name
-                new_player_dict['image']=None
-                new_player_dict['id']=player.id
-                new_player_dict['number']=player.number
+                    new_player_dict['name']=player.name
+                    new_player_dict['image']=None
+                    new_player_dict['id']=player.id
+                    new_player_dict['number']=player.number
 
-                new_player_dict['yellow_cards']=player.events.yellow_cards
-                new_player_dict['red_cards']=player.events.red_cards if player.events.yellow_cards<2 else 0
-                new_player_dict['goals']=player.goals
-                new_player_dict['autogoals']=player.events.autogoals
-                new_player_dict['goals_missed']=player.missed_goals
-                new_player_dict['is_capitain']=player.is_capitain
-                new_player_dict['is_goalkeeper']=player.is_goalkeeper
+                    new_player_dict['yellow_cards']=player.events.yellow_cards
+                    new_player_dict['red_cards']=player.events.red_cards if player.events.yellow_cards<2 else 0
+                    new_player_dict['goals']=player.goals
+                    new_player_dict['autogoals']=player.events.autogoals
+                    new_player_dict['goals_missed']=player.missed_goals
+                    new_player_dict['is_capitain']=player.is_capitain
+                    new_player_dict['is_goalkeeper']=player.is_goalkeeper
 
-                new_player_dict['time_played']=player.time_on_field
+                    new_player_dict['time_played']=player.time_on_field
 
-                new_player_dict['time_in']=player.time_in
-                new_player_dict['time_out']=player.time_out
+                    new_player_dict['time_in']=player.time_in
+                    new_player_dict['time_out']=player.time_out
 
-                #substitutions
-                sub_in_event=player.sub_in_event
-                sub_from= team._parent_match.find_player_by_id(player.sub_from_id)
-                if sub_from is not None:
-                    new_player_dict['sub_from']={
-                        'id':sub_from.id,
-                        'number':sub_from.number,
-                        'minute':sub_in_event.minute
-                    }
-                else:
-                    new_player_dict['sub_from']=None
-
-                sub_out_event= player.sub_out_event
-                sub_to= team._parent_match.find_player_by_id(player.sub_to_id)
-                if sub_to is not None:
-                    new_player_dict['sub_to']={
-                        'id':sub_to.id,
-                        'number':sub_to.number,
-                        'minute':sub_out_event.minute
-                    }
-                else:
-                    new_player_dict['sub_to']=None
-
-
-
-                #relative time
-                # if >0 not connected with total time
-                # <0 can be computed by adding match_time
-                # played_time= relative_played_time + match_time
-                #TODO
-
-                if player.time_in is None:
-                    #not played
-                    new_player_dict['relative_time_played']=None
-                    #new_player_dict['relative_time_in']=None
-                    new_player_dict['relative_time_out']=None
-                else:
-                    if player.played_till_end:
-                        #played till end
-                        new_player_dict['relative_time_played']=-player.time_in
-                        #new_player_dict['relative_time_in']=player.in_at if player.in_at>0 elsew
-                        new_player_dict['relative_time_out']=0
+                    #substitutions
+                    sub_in_event=player.sub_in_event
+                    sub_from= team._parent_match.find_player_by_id(player.sub_from_id)
+                    if sub_from is not None:
+                        new_player_dict['sub_from']={
+                            'id':sub_from.id,
+                            'number':sub_from.number,
+                            'minute':sub_in_event.minute
+                        }
                     else:
-                        #player subtituted or banned
-                        new_player_dict['relative_time_played']=player.time_out-player.time_in ##TODO TESTS
-                        #new_player_dict['relative_time_in']=player.in_at
-                        new_player_dict['relative_time_out']=player.time_out
+                        new_player_dict['sub_from']=None
 
-                  
-                #events #TODO
-                new_player_dict['events']=events=[]
-                # for event in player.events:
-                #     new_event_dict={
-                #         'time':event.minute,
-                #         'type':event.type_
-                #     }
-                #     events.append(new_event_dict)
+                    sub_out_event= player.sub_out_event
+                    sub_to= team._parent_match.find_player_by_id(player.sub_to_id)
+                    if sub_to is not None:
+                        new_player_dict['sub_to']={
+                            'id':sub_to.id,
+                            'number':sub_to.number,
+                            'minute':sub_out_event.minute
+                        }
+                    else:
+                        new_player_dict['sub_to']=None
 
-                result.append(new_player_dict)
 
-        except ValueError as e:
-            print(f'parsing players in team {team.name} failed: {e}')
-        return result
+
+                    #relative time
+                    # if >0 not connected with total time
+                    # <0 can be computed by adding match_time
+                    # played_time= relative_played_time + match_time
+                    #TODO
+
+                    if player.time_in is None:
+                        #not played
+                        new_player_dict['relative_time_played']=None
+                        #new_player_dict['relative_time_in']=None
+                        new_player_dict['relative_time_out']=None
+                    else:
+                        if player.played_till_end:
+                            #played till end
+                            new_player_dict['relative_time_played']=-player.time_in
+                            #new_player_dict['relative_time_in']=player.in_at if player.in_at>0 elsew
+                            new_player_dict['relative_time_out']=0
+                        else:
+                            #player subtituted or banned
+                            new_player_dict['relative_time_played']=player.time_out-player.time_in ##TODO TESTS
+                            #new_player_dict['relative_time_in']=player.in_at
+                            new_player_dict['relative_time_out']=player.time_out
+
+                    
+                    #events #TODO
+                    new_player_dict['events']=events=[]
+                    # for event in player.events:
+                    #     new_event_dict={
+                    #         'time':event.minute,
+                    #         'type':event.type_
+                    #     }
+                    #     events.append(new_event_dict)
+
+                    result.append(new_player_dict)
+
+                except ValueError as e:
+                        print(f'parsing players in team {team.name} failed, player {player}: {e}')
+            return result
     
     def format_date(self):
         date_=self.page.promo.date

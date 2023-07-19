@@ -40,7 +40,7 @@ class MatchProtocolTabPlayer(TagMiner):
     @property
     def is_capitain(self):
         capitain_tag=self._find_tag('span',class_='match-protocol__member-captain')
-        return capitain_tag is not None
+        return not capitain_tag.is_empty
     
     @cached_property
     def is_substitute(self):

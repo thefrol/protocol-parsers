@@ -20,7 +20,8 @@ class Event(TagMiner):
         """id of author of event, goal and substitutions
         
         for substitutions author id - player went on field"""
-        relative_url=self._find_tag('a',class_='vertical-timeline__event-author')['href']
+        tag=self._find_tag('a',class_='vertical-timeline__event-author')
+        relative_url=tag['href']
         return get_player_id(relative_url)
     @cached_property
     @to_int_or_none
@@ -28,18 +29,14 @@ class Event(TagMiner):
         """id of author of event, goal and substitutions
         for substitutions assist id - player left field"""
         tag=self._find_tag('a',class_='vertical-timeline__event-assist')
-        if tag is None:
+        if tag.is_empty:
             return None
         relative_url=tag['href']
         return get_player_id(relative_url)
     @cached_property
     @trim
     def raw_text(self):
-        tag=self._find_tag('div',class_='event-item')
-        if tag is None:
-            return None
-        else:
-            return tag.get('title')
+        return self._find_tag('div',class_='event-item').get_param('title')
         
     def __str__(self):
         return f"event {self.author_id} {self.assist_id} {self.raw_text}"
