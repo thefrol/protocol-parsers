@@ -13,6 +13,7 @@ class MosffPlayerParser(WebParser):
     url_pattern=r'https://mosff.ru/player/\d+'
     page_class=PlayerPage
     def to_rbdata(self):
+        self.page:PlayerPage=self.page
         result={}
 
         birth_date_parsed=self.page.birth_date
@@ -35,7 +36,7 @@ class MosffPlayerParser(WebParser):
         }
 
         result['name']=format_player_name(self.page)
-        result['name_raw']=self.page.a_with_name.text
+        result['name_raw']=self.page.name.raw_name
 
         result['role_raw']=self.page.amplua
 
