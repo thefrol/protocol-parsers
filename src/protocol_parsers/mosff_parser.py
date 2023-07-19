@@ -3,11 +3,14 @@ import requests
 import json
 from itertools import chain
 from datetime import datetime
+from functools import cached_property
 
+from bs4 import BeautifulSoup
 
 from .mosff import Match, Team, Player
 from .rbdata import RbdataTounament
 from .exceptions import TeamNotFound
+from .webparser import WebParser
 
 def format_team_name(team:Team):
     if team.team_year is None:
@@ -48,31 +51,20 @@ def format_date(match:Match):
 
     
 
-class MosffParser:
+class MosffParser(WebParser):
     """a class that gets a link and returns a json with needed data"""
     url_pattern=r'https://mosff.ru/match/\d+'
+    page_class=Match
     def __init__(self, url:str, html_text=None, match_time=None):
-        if all([url, html_text]):
-            print(f'specified url and html_text in parser. url will be ignored')
-        if html_text is None:
-            if not re.fullmatch(self.url_pattern,url):
-                print(f'seems like {url} is not from mosff')
-            
-            page=requests.get(url) 
+        super().__init__(url=url, html_text=html_text)
 
-            if page.status_code != 200:
-                raise ConnectionError('page not retrieved')
-            html_text=page.text
-        
-        self._match=Match(html_text)
+        self.match_time=self.tournament.match_time # if not match time specified try to get match time from tournament data
 
-        self.tournament=RbdataTounament(
-            team_year=self._match.team_year,
-            tournament_year=self._match.tournament_year)
-        
-        self.match_time=match_time
-        if self.match_time is None:
-            self.match_time=self.tournament.match_time # if not match time specified try to get match time from tournament data
+    @cached_property
+    def tournament(self):
+        return RbdataTounament(
+            team_year=self.page.team_year,
+            tournament_year=self.page.tournament_year)
 
     def _format_team(self, team:Team):
         try:
@@ -106,7 +98,7 @@ class MosffParser:
 
                 if player.is_goalkeeper: # count goals #TODO transfer to player class with parents to team and match
                     goals_missed=0
-                    opposing_team=self._match.get_opposing_team(team)
+                    opposing_team=self.page.get_opposing_team(team)
                     for goal in chain(opposing_team.goal_events, team.autogoal_events):  # goals from opposing team + autogoals current team
                         if player.was_on_field(goal.minute):
                             goals_missed=goals_missed+1
@@ -157,25 +149,25 @@ class MosffParser:
         result=dict()
 
         result['tournament_name']=self.tournament.rbdata_name
-        result['tournament_round']=self._match.round
-        result['tournament_id']=self._match.tournament_id
+        result['tournament_round']=self.page.round
+        result['tournament_id']=self.page.tournament_id
 
-        result['home_team_name']=format_team_name(self._match.home_team)
-        result['home_team_score']=self._match.home_score
-        result['home_team_id']=self._match.home_team_id
+        result['home_team_name']=format_team_name(self.page.home_team)
+        result['home_team_score']=self.page.home_score
+        result['home_team_id']=self.page.home_team_id
 
-        result['guest_team_name']=format_team_name(self._match.guest_team)
-        result['guest_team_score']=self._match.guest_score
-        result['guest_team_id']=self._match.guest_team_id
+        result['guest_team_name']=format_team_name(self.page.guest_team)
+        result['guest_team_score']=self.page.guest_score
+        result['guest_team_id']=self.page.guest_team_id
 
-        result['score']=f'{self._match.home_score}:{self._match.guest_score}'
+        result['score']=f'{self.page.home_score}:{self.page.guest_score}'
 
         result['time_played']=self.match_time
 
-        result['home_team_players']=self._format_team(self._match.home_team)
-        result['guest_team_players']=self._format_team(self._match.guest_team)
+        result['home_team_players']=self._format_team(self.page.home_team)
+        result['guest_team_players']=self._format_team(self.page.guest_team)
 
-        result['date']=format_date(self._match)
+        result['date']=format_date(self.page)
 
         return result
     

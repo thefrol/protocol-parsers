@@ -5,7 +5,7 @@ names like a, div, li, ul represents a html tag and its info within python code
 self.divs_with_names implies a collection of div tags, that stored names
 """
 
-from bs4 import BeautifulSoup
+
 import re
 from datetime import datetime
 from functools import cached_property, cache
@@ -88,8 +88,7 @@ class Match:
 
 
     def __init__(self, html_text, parser='html.parser'):
-        _soup= BeautifulSoup(html_text,parser)
-        
+        _soup=html_text        
         self.divs_with_names=_soup.find_all("div", {"class":"structure__top-name"})[:2]
         self.a_with_urls=_soup.find_all("a", {"class":"match__team"})[:2]
         self.div_with_score=_soup.find("div", {"class":"match__score-main"})
