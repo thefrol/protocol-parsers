@@ -4,11 +4,11 @@ class TagMiner:
     """a basic class for working with tags, a wrapper for bs4 parser"""
     def __init__(self, html):
         self._html=html
-    def _find_tag(self, tag, class_):
+    def _find_tag(self, tag=None, class_=None):
         ##TODO should return some metaclass, or we should have an error wrapper for this when getting text
         #TODO _find_tag(self, class_,tag=None) for search as class
         return self._html.find(tag,{'class':class_})
-    def _find_all_tags(self, tag, class_):
+    def _find_all_tags(self, tag=None, class_=None):
         return self._html.find_all(tag,{'class':class_})
     def tag_text(self):
         return self._html.text
