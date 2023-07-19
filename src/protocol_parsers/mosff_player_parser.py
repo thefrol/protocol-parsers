@@ -2,31 +2,20 @@ import re
 import requests
 from datetime import datetime
 
+from bs4 import BeautifulSoup
+
+from .webparser import WebParser
 from .mosff.player_page import PlayerPage
 from .mosff_parser import format_player_name,format_team_name
 
-class MosffPlayerParser:
+class MosffPlayerParser(WebParser):
     """a class that gets a link and returns a json with needed data"""
     url_pattern=r'https://mosff.ru/player/\d+'
-    def __init__(self, url:str, html_text=None):
-        if all([url, html_text]):
-            print(f'specified url and html_text in parser. url will be ignored')
-        if html_text is None:
-            if not re.fullmatch(self.url_pattern,url):
-                print(f'seems like {url} is not from mosff player page')
-            
-            page=requests.get(url) 
-
-            if page.status_code != 200:
-                raise ConnectionError('page not retrieved')
-            html_text=page.text
-        
-        self.player=PlayerPage(html_text)
-
+    page_class=PlayerPage
     def to_rbdata(self):
         result={}
 
-        birth_date_parsed=self.player.birth_date
+        birth_date_parsed=self.page.birth_date
 
         if birth_date_parsed.is_healthy:
             date_=datetime(
@@ -37,7 +26,7 @@ class MosffPlayerParser:
             date_=None
         
 
-        result['birth_date_raw']=self.player.birth_date._date_string
+        result['birth_date_raw']=self.page.birth_date._date_string
         result['birth_date']=str(date_) if date_  else None
         result['birth_date_dict']={
             'day':birth_date_parsed.day,
@@ -45,17 +34,17 @@ class MosffPlayerParser:
             'year':birth_date_parsed.year
         }
 
-        result['name']=format_player_name(self.player)
-        result['name_raw']=self.player.a_with_name.text
+        result['name']=format_player_name(self.page)
+        result['name_raw']=self.page.a_with_name.text
 
-        result['role_raw']=self.player.amplua
+        result['role_raw']=self.page.amplua
 
-        result['team_id']=self.player.team.team_id
-        result['team_url']=self.player.team.url
-        result['team_url_raw']=self.player.team.relative_url
+        result['team_id']=self.page.team.team_id
+        result['team_url']=self.page.team.url
+        result['team_url_raw']=self.page.team.relative_url
 
-        result['team_name']=format_team_name(team=self.player.team)
-        result['team_name_raw']=self.player.team.raw_name
-        result['team_year']=self.player.team.team_year
+        result['team_name']=format_team_name(team=self.page.team)
+        result['team_name_raw']=self.page.team.raw_name
+        result['team_year']=self.page.team.team_year
         
         return result

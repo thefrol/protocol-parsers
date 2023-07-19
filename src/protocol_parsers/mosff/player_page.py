@@ -2,7 +2,6 @@
 link looks like this https://mosff.ru/player/2060"""
 
 import re
-from bs4 import BeautifulSoup
 
 from .player import FioName #TODO rename FIO
 from ..date import PageDate
@@ -123,7 +122,7 @@ class PlayerPage:
     
     def __init__(self, player_page_text,parser='html.parser'):
 
-        self._player_page_html=BeautifulSoup(player_page_text,parser)
+        self._player_page_html=player_page_text
         self.a_with_name=self._player_page_html.find("a", {"class":"profile__title"})
         li_with_properties=self._player_page_html.find("ul", {"class":"profile__list"}).find_all("li", {"class":"profile__item"})
         self.properties=PlayerPagePropertiesList(li_with_properties)
