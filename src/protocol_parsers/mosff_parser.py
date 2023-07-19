@@ -58,11 +58,7 @@ class MosffParser(WebParser):
     def __init__(self, url:str, html_text=None, match_time=None):
         super().__init__(url=url, html_text=html_text)
 
-        self.match_time=match_time
-        if self.match_time is None:
-            self.match_time=self.tournament.match_time # if not match time specified try to get match time from tournament data
-
-        self.page:Match=self.page # for good annotation
+        self.match_time=self.tournament.match_time # if not match time specified try to get match time from tournament data
 
     @cached_property
     def tournament(self):
