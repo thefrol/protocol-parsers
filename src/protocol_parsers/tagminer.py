@@ -22,7 +22,7 @@ class TagMiner:
     def _find_all_tags(self, tag=None, class_=None):
         if self.is_empty:
             print(f'searching an empty tag {self} for tag={tag} class={class_}')
-            found_tags=[None]
+            found_tags=[]
         else:
             found_tags=self._html.find_all(tag,{'class':class_})
         return [TagMiner(tag) for tag in found_tags]
