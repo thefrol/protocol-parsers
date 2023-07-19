@@ -10,6 +10,7 @@ class TagMiner:
             self._html=html
 
         self.verbose=True
+        self.health_check()
     @property
     def is_empty(self):
         return self._html is None
@@ -116,6 +117,10 @@ class TagMiner:
     
     def has_class(self, class_:str):
         return class_ in self.html_classes
+    
+    def health_check(self):
+        """called on creation to check if tagminer is healty and log some info if needed"""
+        return True
 
 
 
