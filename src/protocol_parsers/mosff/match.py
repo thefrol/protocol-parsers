@@ -10,6 +10,8 @@ import re
 from datetime import datetime
 from functools import cached_property, cache
 
+from protocol_parsers.mosff.promo import Promo
+
 
 from .team import Team
 from .player_block import PlayerBlock,PlayerBlockList
@@ -100,6 +102,10 @@ class Match(TagMiner): #TODO extract a promo block
         #lazy init of home team. !important we need to get the same object every time for comparison in match.opposing_team()
         self._home_team=None
         self._guest_team=None
+
+    @cached_property
+    def promo(self):
+        return Promo(self._find_tag('section',class_='match'))
     
     @cached_property
     def player_blocks(self):
@@ -179,25 +185,6 @@ class Match(TagMiner): #TODO extract a promo block
                 return team
         print('cant find opposing team')
         return None
-
-    
-    @property
-    def scores(self):
-        try:
-            scores=[int(score.strip()) for score in self.div_with_score.text.split(':')]
-            return scores
-        except Exception as e:
-            print(f'cant get score {e}')
-            return [0,0]
-
-        
-    @property
-    def home_score(self):
-        return self.scores[0]
-    
-    @property
-    def guest_score(self):
-        return self.scores[1]
 
     @property
     def date(self):

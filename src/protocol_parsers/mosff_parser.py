@@ -157,14 +157,14 @@ class MosffParser(WebParser):
         result['tournament_id']=self.page.tournament_id
 
         result['home_team_name']=format_team_name(self.page.home_team)
-        result['home_team_score']=self.page.home_score
+        result['home_team_score']=self.page.promo.score.home
         result['home_team_id']=self.page.home_team_id
 
         result['guest_team_name']=format_team_name(self.page.guest_team)
-        result['guest_team_score']=self.page.guest_score
+        result['guest_team_score']=self.page.promo.score.guest
         result['guest_team_id']=self.page.guest_team_id
 
-        result['score']=f'{self.page.home_score}:{self.page.guest_score}'
+        result['score']=self.page.promo.score.text
 
         result['time_played']=self.match_time
 

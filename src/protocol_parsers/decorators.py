@@ -3,6 +3,16 @@ def trim(f):
         return f(*args,**kwargs).strip()
     return callee
 
+def remove_spaces(f):
+    def callee(*args,**kwargs):
+        string:str=f(*args,**kwargs)
+        if not isinstance(string, str):
+            print(f'function {f.__name__} returned a non str value: {string}')
+            if 'replace' not in string.__dict__:
+                return ValueError(f'cant remove spaces from {string}')
+        return string.replace(' ','')
+    return callee
+
 def trim_or_none(f):
     def callee(*args,**kwargs):
         value_to_trim=f(*args,**kwargs)
