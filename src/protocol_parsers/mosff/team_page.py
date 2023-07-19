@@ -1,4 +1,3 @@
-from bs4 import BeautifulSoup
 from .player_page import MosffTeam
 
 class MosffTeamForTeamPage(MosffTeam):
@@ -10,9 +9,8 @@ class TeamPage:
 
     
     def __init__(self, team_page_text,parser='html.parser'):
-
-        self._player_page_html=BeautifulSoup(team_page_text,parser)
-        self.div_with_name=self._player_page_html.find("div", {"class":"figure-head__wrapper"})
+        self._html=team_page_text
+        self.div_with_name=self._html.find("div", {"class":"figure-head__wrapper"})
     
     @property
     def team(self):
