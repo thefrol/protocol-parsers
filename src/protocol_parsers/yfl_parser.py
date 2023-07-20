@@ -132,10 +132,12 @@ class YflParser(WebParser[MatchPage]):
         result['home_team_name']=f'{self.page.home_team.name} {self.page.promo.tournament.name.replace("-","")}'
         result['home_team_score']=self.page.promo.home_score
         result['home_team_id']=self.page.promo.home_team.id
+        result['home_team_image_url']=None #TODO
 
         result['guest_team_name']=f'{self.page.guest_team.name} {self.page.promo.tournament.name.replace("-","")}'
         result['guest_team_score']=self.page.promo.guest_score
         result['guest_team_id']=self.page.promo.guest_team.id
+        result['guest_team_image_url']=None
 
         result['score']=self.page.promo.score_raw_text
 
