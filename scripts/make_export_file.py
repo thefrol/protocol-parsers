@@ -7,8 +7,8 @@ import pkg_resources
 from protocol_parsers import Exporter
 
 
-url='https://yflrussia.ru/match/3061996'
-file_name='yfl_match_3061996.txt'
+url='https://yflrussia.ru/match/3409563'
+file_name='yfl_match_3409563_new.txt'
 args=[]
 kwargs={}
 
