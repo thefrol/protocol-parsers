@@ -83,6 +83,10 @@ class TagMiner:
         self.get('href', 'no link')
         #/player/12342
         verbose: if True -> show warning on fallback to default"""
+        if self.is_empty:
+            if self.verbose:
+                print(f'cant get param "{attribute_name}" from empty Tagminer. returning default: {default}')
+            return default
         if attribute_name in self._html.attrs:
             return self._html.attrs[attribute_name]
         else:
@@ -121,6 +125,12 @@ class TagMiner:
     def health_check(self):
         """called on creation to check if tagminer is healty and log some info if needed"""
         return True
+    
+    def __or__(self, other):
+        if self.is_empty:
+            return other
+        else:
+            return self
 
 TMiner=TypeVar('TMiner',bound=TagMiner)
 
