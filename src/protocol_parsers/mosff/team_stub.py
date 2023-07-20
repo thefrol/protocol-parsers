@@ -28,6 +28,7 @@ class MosffTeam(TeamStub, TagMiner):
         return self.__regex.get_group('team_name')
         
     @cached_property
+    @to_int_or_none
     def year(self):
         'returns team year of birth'
         return self.__regex.get_group('team_year')

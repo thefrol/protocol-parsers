@@ -20,7 +20,7 @@ def format_player_name(player:Player):
     
 def format_date(match:Match):
     date_=match.date
-    year=match.tournament_year
+    year=match.tournament.year
     if year is None:
         print('cant get year from tournamet, returning current year')
         return datetime.now().year
@@ -66,9 +66,10 @@ class MosffParser(WebParser[Match]):
 
     @cached_property
     def tournament(self):
+        team_year=self.page.promo.home_team.year or self.page.promo.guest_team.year or self.page.tournament.year
         return RbdataTounament(
-            team_year=self.page.team_year,
-            tournament_year=self.page.tournament_year)
+            team_year=team_year,
+            tournament_year=self.page.tournament.year)
 
     def _format_team(self, team:Team):
         try:
@@ -153,10 +154,10 @@ class MosffParser(WebParser[Match]):
         result=dict()
 
         result['tournament_name']=self.tournament.rbdata_name
-        result['tournament_round']=self.page.round
+        result['tournament_round']=self.page.tournament.round
         result['tournament_round_id']=None #TODO?
         result['tournament_round_url']=None
-        result['tournament_id']=self.page.tournament_id
+        result['tournament_id']=self.page.tournament.id
 
         result['home_team_name']=self.page.promo.home_team.name
         result['home_team_score']=self.page.promo.score.home
