@@ -188,8 +188,9 @@
 
     [ ] https://mosff.ru/player/27840 игрок имеет две команды
     [ ] https://mosff.ru/player/2061 нет команды и фото
-    [ ] teams withut year
+    [ ] teams without year
     [x] tournament id
+    [ ] Кубок МФФ - вовсе не кубок, например
     [ ] mosff substitute info(sub_from, sub_to)
     [ ] players list in team page parser
     [ ] add failed penalties to mosff
