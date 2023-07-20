@@ -8,9 +8,8 @@ from ..decorators import trim
 class Team: #TODO rename to player list later
     "a class for holding team html_data and parsing it"
 
-    def __init__(self, players:list[Player], name):
+    def __init__(self, players:list[Player]):
         self.players=players
-        self.name=name
     
       
     @cached_property

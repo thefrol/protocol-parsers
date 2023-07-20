@@ -112,65 +112,14 @@ class Match(TagMiner): #TODO extract a promo block
         block_tags=self._find_all_tags(class_='structure__unit')
         return PlayerBlockList([PlayerBlock(block) for block in block_tags])
 
-    @property
-    def team_names(self) -> list[str]:
-        "returns team names of given match"
-        if len(self.divs_with_names)<2:
-            print('error parsing team names')
-            return [None, None]
-        return [name.string for name in self.divs_with_names]
-        
-    @property
-    def home_team_name(self) -> str:
-        'returns home team name, parses whole html every call'
-        return self.team_names[0]
-
-    @property
-    def guest_team_name(self) -> str:
-        'returns guest team name, parses whole html every call'
-        return self.team_names[1]
-    
-    @property
-    def team_relative_urls(self) -> list[str]:
-        "returns team urls of given match"
-        if len(self.a_with_urls)<2:
-            print('error parsing team names')
-            return [None, None]
-        return [a['href'] for a in self.a_with_urls]
-    
-    @property
-    def home_team_relative_url(self):
-        return self.team_relative_urls[0]
-    
-    @property
-    def guest_team_relative_url(self):
-        return self.team_relative_urls[1]
-    
-    @property
-    def home_team_id(self):
-        m=re.fullmatch(self._team_id_pattern,self.home_team_relative_url)
-        if m:
-            return int(m.group('team_id'))
-        else:
-            print('cant parse home team id')
-            return None
-        
-    @property
-    def guest_team_id(self):
-        m=re.fullmatch(self._team_id_pattern,self.guest_team_relative_url)
-        if m:
-            return int(m.group('team_id'))
-        else:
-            print('cant parse guest team id')
-            return None
-                    
+ 
     @cached_property
     def home_team(self):
-        return Team(self.player_blocks.home_players, self.home_team_name)
+        return Team(self.player_blocks.home_players)
     
     @cached_property
     def guest_team(self):
-        return Team(self.player_blocks.guest_players, self.guest_team_name)
+        return Team(self.player_blocks.guest_players)
     
     @property
     def teams(self):
