@@ -13,6 +13,6 @@ def home_players(block:PlayerBlock):
 
 p=MosffParser(URL)
 b=p.page.player_blocks.home_players
-print(p.page._find_tag(class_='match__team match__team--right').text)
+#print(p.page._find_tag(class_='match__team match__team--right').text)
 
 pprint(b)

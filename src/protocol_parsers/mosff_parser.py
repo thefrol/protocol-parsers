@@ -54,11 +54,21 @@ def format_date(match:Match):
 class MosffParser(WebParser[Match]):
     """a class that gets a link and returns a json with needed data"""
     url_pattern=r'https://mosff.ru/match/\d+'
-    page_class=Match
-    def __init__(self, url:str, html_text=None, match_time=None):
-        super().__init__(url=url, html_text=html_text)
+    _match_time=None
 
-        self.match_time=self.tournament.match_time # if not match time specified try to get match time from tournament data
+    @property
+    def match_time(self):
+        if self._match_time is None:
+            return self.tournament.match_time
+        else:
+            return self._match_time
+    
+    @match_time.setter
+    def match_time(self,value):
+        if value<=0:
+            print(f'match time must be >0, attemping to set {value}.Ignoring')
+            return
+        self._match_time=value
 
     @cached_property
     def tournament(self):

@@ -8,6 +8,7 @@ from pprint import pprint
 URL='https://mosff.ru/match/34540' #no minute for autogoals, add to tests
 
 
-d=MosffParser(URL).to_rbdata()
+d=MosffParser(URL)
+d.match_time=90
 
-pprint(d)
+pprint(d.to_rbdata())
