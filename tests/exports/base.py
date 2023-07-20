@@ -40,7 +40,7 @@ def unequal_params(a,b, indent=0):
                     error_strings.append(f'in field "{k}"')
                     error_strings.append(unequal_params(a[k],b[k],indent=indent+1))
                 else:
-                    error_strings.append(f"not equal:b['{k}']='{b[k]}'and a['{k}']='{a[k]}'")
+                    error_strings.append(f"not equal:b['{k}']={b[k]} and a['{k}']={a[k]}")
     elif isinstance(a,list) and isinstance(b,list):
         if len(a) != len(b):
             error_strings.append('arrays have different len')
