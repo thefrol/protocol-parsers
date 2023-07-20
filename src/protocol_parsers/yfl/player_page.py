@@ -64,3 +64,7 @@ class PlayerPage(TagMiner):
     def team(self):
         return YflPlayerPageTeam(self._find_tag('tr',class_='table__team-total'))
     
+    @cached_property
+    def image_url(self):
+        return self._find_tag(class_='player-promo__img').get_param('src')
+    

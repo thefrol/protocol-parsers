@@ -40,6 +40,8 @@ class YflPlayerParser(WebParser[PlayerPage]):
         result['name']=page.name.format_basic
         result['name_raw']=page.name_raw
 
+        result['image_url']=page.image_url
+
         result['role_raw']=None
 
         result['team_id']=page.team.team_id

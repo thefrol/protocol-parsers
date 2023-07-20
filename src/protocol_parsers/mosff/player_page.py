@@ -113,5 +113,9 @@ class PlayerPage(TagMiner):
             return PlayerTeam(property_.value_tag)
         else:
             return None
+        
+    @cached_property
+    def image_url(self):
+        return self._find_tag(class_='profile__img').get_param('src')
     
     

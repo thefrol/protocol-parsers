@@ -36,6 +36,8 @@ class MosffPlayerParser(WebParser[PlayerPage]):
         result['name']=format_player_name(self.page)
         result['name_raw']=self.page.name.raw_name
 
+        result['image_url']=self.page.image_url
+
         result['role_raw']=self.page.amplua
 
         result['team_id']=self.page.team.id
