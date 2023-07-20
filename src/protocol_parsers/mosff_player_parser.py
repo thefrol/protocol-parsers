@@ -44,6 +44,6 @@ class MosffPlayerParser(WebParser[PlayerPage]):
 
         result['team_name']=self.page.team.name
         result['team_name_raw']=self.page.team.raw_name
-        result['team_year']=self.page.team.year
+        result['team_year']=str(self.page.team.year) #TODO remove str(), used for tests
         
         return result
