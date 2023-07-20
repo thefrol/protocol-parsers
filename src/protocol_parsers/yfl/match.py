@@ -4,7 +4,7 @@ import datetime
 
 
 from protocol_parsers.date import PageDate
-from ..decorators import trim, to_int, to_int_or_none
+from ..decorators import trim, to_int, to_int_or_none, trim_or_none
 import re
 from ..regex import Regex, Regexes2
 
@@ -32,6 +32,64 @@ class Tournament(TagMiner):
     def id(self):
         res=Regexes2(self.relative_url,r'/tournament/(?P<tournament_id>\d+)').tournament_id
         return res
+    
+    @cached_property
+    def match_day(self):
+        return (MatchDay(self._find_tag(class_='match-promo__tour'))
+                | Tour(self._find_tag(class_='match-promo__round')))
+    
+class Tour(TagMiner):
+    @cached_property
+    @trim_or_none
+    def name_raw(self):
+        return self.text
+
+    @property
+    def number(self):
+        return self.name_raw
+    @property
+    def relative_url(self):
+        return self.get_param('href')
+    @property
+    @to_int_or_none
+    def id(self):
+        if self.relative_url is None:
+            print('cant get match day id, href is None')
+            return None
+        return Regex(
+            pattern=r'/tournament/(\d+)/tables\?round_id=(?P<tour_id>\d+)',
+            string=self.relative_url
+        ).get_group('tour_id')
+    
+class MatchDay(TagMiner):
+    @cached_property
+    @trim_or_none
+    def name_raw(self):
+        return self.text
+    @property
+    @to_int_or_none
+    def number(self):
+        if self.name_raw is None:
+            print('cant get match day number, name raw is None')
+            return None
+        return Regex(
+            pattern='(?P<match_day>\d+) тур',
+            string=self.name_raw
+        ).get_group('match_day')
+    @property
+    def relative_url(self):
+        return self.get_param('href')
+    @property
+    @to_int_or_none
+    def id(self):
+        if self.relative_url is None:
+            print('cant get match day id, href is None')
+            return None
+        return Regex(
+            pattern=r'/tournament/(\d+)/calendar\?round_id=(?P<match_day_id>\d+)',
+            string=self.relative_url
+        ).get_group('match_day_id')
+    
     
 class PromoTeam(TagMiner):
     _team_pattern=r'/tournament/(?P<tournament_id>\d+)/teams/application\?team_id=(?P<team_id>\d+)'

@@ -123,7 +123,9 @@ class YflParser(WebParser[MatchPage]):
 
 
         result['tournament_name']=self.page.promo.tournament.name.replace("-","")
-        result['tournament_round']=None #TODO
+        result['tournament_round']=self.page.promo.tournament.match_day.number
+        result['tournament_round_id']=self.page.promo.tournament.match_day.id #TODO
+        result['tournament_round_url']=self.page.promo.tournament.match_day.relative_url
         result['tournament_id']=self.page.promo.tournament.id
         result['tournament_season']=format_season(self.page.promo.date.as_datetime) #TODO if month>june season=current_year/next_year
 

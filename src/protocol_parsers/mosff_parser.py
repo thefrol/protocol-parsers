@@ -160,6 +160,8 @@ class MosffParser(WebParser[Match]):
 
         result['tournament_name']=self.tournament.rbdata_name
         result['tournament_round']=self.page.round
+        result['tournament_round_id']=None #TODO?
+        result['tournament_round_url']=None
         result['tournament_id']=self.page.tournament_id
 
         result['home_team_name']=format_team_name(self.page.home_team)
