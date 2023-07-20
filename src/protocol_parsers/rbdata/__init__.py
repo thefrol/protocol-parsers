@@ -25,7 +25,7 @@ class RbdataTounament:
             return None
         #TODO check if strange data <0 >20
         
-        return f'MФФ ЛПМ U{self.U_number}({self.team_year})' if self.is_cup else f'Кубок МФФ U{self.U_number}({self.team_year})'
+        return f'MФФ ЛПМ U{self.U_number}({self.team_year})' if not self.is_cup else f'Кубок МФФ U{self.U_number}({self.team_year})'
     
     @property
     def match_time(self):
