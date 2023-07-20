@@ -9,7 +9,7 @@ from ..tagminer import TagMiner
 from .player import FioName #TODO rename FIO
 from ..date import PageDate
 from ..decorators import trim
-from .promo import PromoTeam
+from .team_stub import MosffTeam
 
 
 class PlayerPageProperty(TagMiner):
@@ -74,8 +74,9 @@ class MosffDate(PageDate):
     def is_healthy(self):
         return self.day is not None and self.month is not None and self.year is not None
 
-class MosffTeam(PromoTeam): #TODO implement to team.py
+class PlayerTeam(MosffTeam): #TODO implement to team.py
     @property
+    @trim
     def name_raw(self):
         return self.text
  
@@ -109,7 +110,7 @@ class PlayerPage(TagMiner):
     def team(self):
         property_=self.properties.team
         if property_:
-            return MosffTeam(property_.value_tag)
+            return PlayerTeam(property_.value_tag)
         else:
             return None
     

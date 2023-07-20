@@ -1,15 +1,21 @@
 from functools import cached_property
 
 from ..tagminer import TagMiner
-from .player_page import MosffTeam
+from .team_stub import MosffTeam
+from ..decorators import trim
 
-class MosffTeamForTeamPage(MosffTeam):
+class TeamPageTeam(MosffTeam):
     @property
-    def raw_name(self):
-        return self._html.a.text
+    @trim
+    def name_raw(self):
+        return self._find_tag(class_='figure-head__title').text
+    
+    @property
+    def relative_url(self):
+        return self.a['href']
 
 class TeamPage(TagMiner):
     @cached_property
     def team(self):
         tag=self._find_tag(class_="figure-head__wrapper")
-        return MosffTeamForTeamPage(tag)
+        return TeamPageTeam(tag)

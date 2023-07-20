@@ -13,7 +13,7 @@ class MosffTeamParser(WebParser[TeamPage]):
     def to_rbdata(self):
         result={}
         result['name']=self.page.team.name
-        result['name_raw']=self.page.team.raw_name
+        result['name_raw']=self.page.team.name_raw
         result['team_year']=self.page.team.team_year
         result['id']=self.page.team.id
         return result
