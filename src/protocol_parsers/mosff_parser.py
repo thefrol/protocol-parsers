@@ -70,7 +70,7 @@ class MosffParser(WebParser[Match]):
         return RbdataTounament(
             team_year=team_year,
             tournament_year=self.page.tournament.year,
-            is_cup=self.page.tournament.tournament_is_cup)
+            is_cup=self.page.tournament.is_cup)
 
     def _format_team(self, team:Team):
         try:

@@ -58,7 +58,7 @@ class Tournament(TagMiner):
 
         
     @property
-    def tournament_is_cup(self):
+    def is_cup(self):
         '''returns True if match played in cup'''
         return 'кубок' in self.raw_name.lower()
         
@@ -97,7 +97,7 @@ class Tournament(TagMiner):
         1/8 кубка - 1/8"""
 
         stage_text=self._find_tag(class_='match__round').text
-        if self.tournament_is_cup:
+        if self.is_cup:
             return format_cup_round(stage_name=stage_text)
         else:
             return Regex(
