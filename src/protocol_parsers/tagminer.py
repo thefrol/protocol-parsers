@@ -1,4 +1,4 @@
-from typing import Callable
+from typing import Callable, TypeVar, Generic, List, get_args
 import copy
 
 class TagMiner:
@@ -122,7 +122,15 @@ class TagMiner:
         """called on creation to check if tagminer is healty and log some info if needed"""
         return True
 
+TMiner=TypeVar('TMiner',bound=TagMiner)
 
+class TagMinerList(List[TMiner]):
+    def where(self, compare_func)-> TMiner:
+        return self.__class__(miner for miner in self if compare_func(miner))
+    
+    def count(self, comparer:Callable[[TMiner],bool]):
+        """counts how many times is true camparer for each event"""
+        return sum(comparer(event) for event in self)
 
 ##
 # все могло быть проще, можно было просто расширть класс Beautiful soup

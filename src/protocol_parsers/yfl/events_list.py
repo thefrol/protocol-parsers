@@ -4,7 +4,7 @@ from functools import cached_property
 from ..decorators import trim, to_int, to_int_or_none
 from ..regex import Regex
 
-from ..tagminer import TagMiner
+from ..tagminer import TagMiner, TagMinerList
 from .funcs import get_player_id
 
 class Event(TagMiner):
@@ -75,7 +75,7 @@ class Event(TagMiner):
 
 
 
-class EventsList(list[Event]):
+class EventsList(TagMinerList):
     @classmethod
     def from_tags(cls,tags):
         return cls([Event(tag) for tag in tags])
@@ -83,33 +83,29 @@ class EventsList(list[Event]):
     def get_by_player_id(self, player_id:int):
         return self.__class__([event for event in self if event.author_id==player_id or event.assist_id==player_id])
     
-    def _count(self, comparer:Callable[[Event],bool]):
-        """counts how many times is true camparer for each event"""
-        return sum(comparer(event) for event in self)
-    
     @property
     def yellow_cards(self):
-        return self._count(lambda e: e.is_yellow_card)
+        return self.count(lambda e: e.is_yellow_card)
     
     @property
     def red_cards(self):
-        return self._count(lambda e: e.is_red_card)
+        return self.count(lambda e: e.is_red_card)
                 
     @property
     def goals(self):
-        return self._count(lambda e: e.is_goal)
+        return self.count(lambda e: e.is_goal)
     
     @property
     def autogoals(self):
-        return self._count(lambda e: e.is_autogoal)
+        return self.count(lambda e: e.is_autogoal)
     
     @property
     def penalties(self):
-        return self._count(lambda e: e.is_penalty)
+        return self.count(lambda e: e.is_penalty)
     
     @property
     def failed_penalties(self):
-        return self._count(lambda e: e.is_missed_penalty)
+        return self.count(lambda e: e.is_missed_penalty)
     
     def find_sub_out(self, player_id:int):
         """returns event when current player left field"""

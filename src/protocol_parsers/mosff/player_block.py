@@ -1,7 +1,7 @@
 """represents a player block: a div with class='structure__unit'"""
 from functools import cached_property
 
-from ..tagminer import TagMiner
+from ..tagminer import TagMiner, TagMinerList
 from .player import Player
 
 class PlayerBlock(TagMiner):
@@ -58,10 +58,7 @@ def guest_players(block:PlayerBlock):
     return block.is_players and block.is_away_team
 
 
-class PlayerBlockList(list[PlayerBlock]): #TODO create a tagminer list with some of this funcs
-    def where(self, compare_func)-> PlayerBlock:
-        return PlayerBlockList(block for block in self if compare_func(block))
-    
+class PlayerBlockList(TagMinerList): #TODO create a tagminer list with some of this funcs   
     @cached_property
     def players(self):
         return sum([block.players for block in self],[])

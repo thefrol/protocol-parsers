@@ -170,10 +170,17 @@ class MatchProtocolTabPlayer(TagMiner):
                 
     @property
     def missed_goals(self):
+        def goals_when_on_field(event:Event):
+            return (event.is_goal or event.is_penalty) and self.was_on_the_field_on(event.minute) 
+        def autogoals_when_on_field(event:Event):
+            return event.is_autogoal and self.was_on_the_field_on(event.minute)
+        
         if not self.is_goalkeeper:
             return 0
-        game_goals_count=self.team.opposing_team.events._count(lambda event: (event.is_goal or event.is_penalty) and self.was_on_the_field_on(event.minute) )
-        autogoals_count=self.team.events._count(lambda event: event.is_autogoal and self.was_on_the_field_on(event.minute) )
+        
+        game_goals_count=self.team.opposing_team.events.count(goals_when_on_field)
+        autogoals_count=self.team.events.count(autogoals_when_on_field)
+        
         return game_goals_count+autogoals_count
     
     @property
