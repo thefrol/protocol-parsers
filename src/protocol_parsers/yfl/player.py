@@ -23,7 +23,7 @@ class MatchProtocolTabPlayer(TagMiner):
     @trim
     def raw_amplua(self):
         amplua_tag=self._find_tag('span',class_='match-protocol__member-amplua')
-        return amplua_tag.text if amplua_tag is not None else ''
+        return amplua_tag.text if not amplua_tag.is_empty else ''
     @cached_property
     @trim
     def name(self):
