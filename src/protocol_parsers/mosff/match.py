@@ -186,7 +186,7 @@ class Match(TagMiner): #TODO extract a promo block
         m=re.search(self.team_year_pattern,self.tournament)
         if m is None:
             print(f'cant find team year in tournament title "{self.tournament}", falling back to year of teams. ')
-            new_try=self.promo.home_team.team_year or self.promo.guest_team.team_year
+            new_try=self.promo.home_team.year or self.promo.guest_team.year
             if new_try is None:
                 print('year in teams cant be found')
             return new_try

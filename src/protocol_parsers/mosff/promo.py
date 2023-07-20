@@ -31,7 +31,7 @@ class PromoScore(TagMiner):
 class PromoTeam(MosffTeam):
     @cached_property
     @trim
-    def name_raw(self):
+    def raw_name(self):
         return self._find_tag(class_='match__title').text
     
     @cached_property

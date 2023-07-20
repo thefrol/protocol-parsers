@@ -11,14 +11,14 @@ from ..tagminer import TagMiner
 class MosffTeam(TeamStub, TagMiner):
     """Most shared functions for team naming and getting ids
     override name_raw and relative_url property in your classes"""
-    name_raw=abstractproperty()
+    raw_name=abstractproperty()
     relative_url=abstractproperty()
 
     @cached_property
     def __regex(self):
         return Regex(
             pattern='(?P<team_name>.*) (?P<team_year>\d{4,20}) г.р.',
-            string=self.name_raw
+            string=self.raw_name
         )
 
     @cached_property
@@ -28,17 +28,17 @@ class MosffTeam(TeamStub, TagMiner):
         return self.__regex.get_group('team_name')
         
     @cached_property
-    def team_year(self):
+    def year(self):
         'returns team year of birth'
         return self.__regex.get_group('team_year')
     
     @cached_property
     def name(self):
         """returns name in style of rbdata"""
-        if self.team_year is None or self.name_without_year is None:
-            return self.name_raw
+        if self.year is None or self.name_without_year is None:
+            return self.raw_name
         else:
-            return f'{self.name_without_year} {self.team_year}'
+            return f'{self.name_without_year} {self.year}'
     
    
     @cached_property

@@ -7,7 +7,7 @@ from ..decorators import trim
 class TeamPageTeam(MosffTeam):
     @property
     @trim
-    def name_raw(self):
+    def raw_name(self):
         return self._find_tag(class_='figure-head__title').text
     
     @property

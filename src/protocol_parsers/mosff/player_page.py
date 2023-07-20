@@ -77,7 +77,7 @@ class MosffDate(PageDate):
 class PlayerTeam(MosffTeam): #TODO implement to team.py
     @property
     @trim
-    def name_raw(self):
+    def raw_name(self):
         return self.text
  
     @property

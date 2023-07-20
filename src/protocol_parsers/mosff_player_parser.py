@@ -43,7 +43,7 @@ class MosffPlayerParser(WebParser[PlayerPage]):
         result['team_url_raw']=self.page.team.relative_url
 
         result['team_name']=self.page.team.name
-        result['team_name_raw']=self.page.team.name_raw
-        result['team_year']=self.page.team.team_year
+        result['team_name_raw']=self.page.team.raw_name
+        result['team_year']=self.page.team.year
         
         return result
