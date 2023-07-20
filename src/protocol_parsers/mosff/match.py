@@ -81,7 +81,7 @@ class Match(TagMiner): #TODO extract a promo block
     round_pattern=r'(?P<round_number>\d)+ тур'
     team_year_pattern=r'(?P<team_year>\d+) +г.р.'
 
-    _team_id_pattern=r'/team/(?P<team_id>\d+)\Z'
+    #_team_id_pattern=r'/team/(?P<team_id>\d+)\Z'
     _tournament_id_pattern=r'/tournament/(?P<tournament_id>\d+)\Z'
 
 
@@ -89,19 +89,9 @@ class Match(TagMiner): #TODO extract a promo block
         super().__init__(html_text)
         _soup=self._html
 
-        self.divs_with_names=_soup.find_all("div", {"class":"structure__top-name"})[:2]
-        self.a_with_urls=_soup.find_all("a", {"class":"match__team"})[:2]
-        self.div_with_score=_soup.find("div", {"class":"match__score-main"})
         self.a_with_round=_soup.find("a", {"class":"match__round"})
         self.a_with_tournament=_soup.find("a", {"class":"match__tournament"})
-        self.div_with_date=_soup.find("div", {"class":"match__date"})
 
-        protocol_tab=_soup.find('div',id="match-tabs-protocol")
-        self.divs_with_players=protocol_tab.find_all("div", {"class": "structure__unit"})
-
-        #lazy init of home team. !important we need to get the same object every time for comparison in match.opposing_team()
-        self._home_team=None
-        self._guest_team=None
 
     @cached_property
     def promo(self):
@@ -137,7 +127,8 @@ class Match(TagMiner): #TODO extract a promo block
 
     @property
     def date(self):
-        return MatchPageDate(self.div_with_date.text)
+        date_text=self._find_tag(class_='match__date').text
+        return MatchPageDate(date_text)
     
     @property
     def round(self):
