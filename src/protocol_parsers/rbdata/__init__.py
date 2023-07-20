@@ -14,7 +14,8 @@ class RbdataTounament:
         self.is_cup=is_cup
         try:
             self.U_number=self.tournament_year-self.team_year # ex. U10, U11, U12
-        except Exception:
+        except Exception as e:
+            print('cant form a U_number for tournament(U12,U13) falling to None')
             self.U_number=None
     
     @property
