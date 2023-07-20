@@ -163,9 +163,12 @@ class MosffParser(WebParser[Match]):
         result['home_team_name']=self.page.promo.home_team.name
         result['home_team_score']=self.page.promo.score.home
         result['home_team_id']=self.page.promo.home_team.id
+        result['home_team_image_url']=self.page.promo.home_team.image_url
+
         result['guest_team_name']=self.page.promo.guest_team.name
         result['guest_team_score']=self.page.promo.score.guest
         result['guest_team_id']=self.page.promo.guest_team.id
+        result['guest_team_image_url']=self.page.promo.guest_team.image_url
 
         result['score']=self.page.promo.score.text
 

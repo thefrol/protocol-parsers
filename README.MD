@@ -47,6 +47,9 @@
 
         'home_team_id': 2044,
         'guest_team_id': 2051
+
+        'home_team_image_url': 'https://hb.bizmrg.com/st.mosmff.ru/team/78/logo/63dbb7c7646ea_200x200.png', # логотипы комманд
+        'guest_team_image_url': 'https://hb.bizmrg.com/st.mosmff.ru/team/54/logo/600ea55de3146_200x200.jpg',
         
         'date': { # дата матча
             'iso_string': '2023-05-21 11:30:00', # дата в формате utc
@@ -157,6 +160,7 @@
 в вывод добавлены поля `tournament_round`, `tournament_round_id`, `tournament_round_url`
 Добавлена поддержка номера тура в протоколах ЮФЛ
 дофигища зарефакторено, теперь более четкая логика
+Добавлены поля `home_team_image_url` `guest_team_image_url` с логотипами комманд в выводе протоколов
 
 ## 19.07.23 Обновление 0.3
 Добавлен `Exporter` - класс позволяющий майнить данные по любой поддерживаемой ссылке

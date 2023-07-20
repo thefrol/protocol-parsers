@@ -37,6 +37,10 @@ class PromoTeam(MosffTeam):
     @cached_property
     def relative_url(self):
         return self.href
+    
+    @cached_property
+    def image_url(self):
+        return self._find_tag(class_='match__img').get_param('src')
 
 class Promo(TagMiner):
     @cached_property
