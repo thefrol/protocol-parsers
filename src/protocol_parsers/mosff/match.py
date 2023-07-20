@@ -22,7 +22,7 @@ from ..regex import Regex, Regexes
 from ..tagminer import TagMiner
 
 @trim
-def format_cup_round(stage_name):
+def format_cup_round(stage_name): #TODO - to separate class
     #1 try find known patterns
     cup_text_variations={
         '1/256':'1/256',
@@ -50,19 +50,6 @@ def format_cup_round(stage_name):
     #3 return full name
     return stage_name
 
-@to_int
-def format_tournament_year(tournament_name):
-        """tryes to extract year of tournament from name and fallbacks to current year"""
-        main_pattern=r'\(.*(?P<tournament_year>\d{4})\)'
-        fallback_pattern=r'[с|С]езон (?P<tournament_year>\d{4})'
-        lastchance_pattern=r'(?P<tournament_year>\d{4}) год.{1,5}'
-
-        m=Regexes(tournament_name,
-                   main_pattern,
-                   fallback_pattern,
-                   lastchance_pattern)
-        
-        return m.get_group('tournament_year',default=datetime.now().year)
         
 class MatchPageDate(PageDate):
     @property
@@ -70,12 +57,6 @@ class MatchPageDate(PageDate):
         return r'(?P<day>\d+) (?P<month>\w+) / (?P<week_day>\w+) / (?P<hour>\d+):(?P<minute>\d+)'
     
 class Tournament(TagMiner):
-
-    round_pattern=r'(?P<round_number>\d)+ тур'
-    team_year_pattern=r'(?P<team_year>\d+) +г.р.'
-
-    _tournament_id_pattern=r'/tournament/(?P<tournament_id>\d+)\Z'
-
     @property
     @trim
     def raw_name(self):
@@ -93,7 +74,7 @@ class Tournament(TagMiner):
     @to_int_or_none
     def id(self):
         return Regex(
-            pattern=self._tournament_id_pattern,
+            pattern=r'/tournament/(?P<tournament_id>\d+)\Z',
             string=self.relative_url
         ).get_group('tournament_id')
 
@@ -106,8 +87,18 @@ class Tournament(TagMiner):
     @property
     @to_int_or_none
     def year(self) -> int:
-        """year when tournament hosted ex. 2023, 2024"""
-        return format_tournament_year(self.raw_name)
+        """year when tournament hosted ex. 2023, 2024
+        tries to extract year of tournament from name and fallbacks to current year"""
+        main_pattern=r'\(.*(?P<tournament_year>\d{4})\)'
+        fallback_pattern=r'[с|С]езон (?P<tournament_year>\d{4})'
+        lastchance_pattern=r'(?P<tournament_year>\d{4}) год.{1,5}'
+
+        m=Regexes(self.raw_name,
+                   main_pattern,
+                   fallback_pattern,
+                   lastchance_pattern)
+        
+        return m.get_group('tournament_year',default=datetime.now().year)
     
     @property
     @to_int_or_none
@@ -115,7 +106,7 @@ class Tournament(TagMiner):
         '''returns team year from tournament title if possible,
         otherwise return None'''
         return Regex(
-            pattern=self.team_year_pattern,
+            pattern=r'(?P<team_year>\d+) +г.р.',
             string=self.name
             ).get_group('team_year')
 
@@ -132,7 +123,7 @@ class Tournament(TagMiner):
             return format_cup_round(stage_name=stage_text)
         else:
             return Regex(
-                pattern=self.round_pattern,
+                pattern=r'(?P<round_number>\d)+ тур',
                 string=stage_text
             ).get_group('round_number')
     
