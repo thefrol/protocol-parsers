@@ -86,6 +86,7 @@ class MatchGlobalParams(MatchTest):
     def test_tournament(self):
         self.assertEqual(self.match.tournament.id,484, 'tournament id failed to parse')
         self.assertEqual(self.match.tournament.year,2023)
+        self.assertFalse(self.match.tournament.is_cup)
     def test_date(self):
         self.assertEqual(self.match.date.day,21)
         self.assertEqual(self.match.date.month,5)
@@ -98,7 +99,9 @@ class FancyProtocols(unittest.TestCase):
     def test_no_minute_on_autogoal(self):
         """this protocol lacks minute on autogoal event, so it failed earlier"""
         url='https://mosff.ru/match/34540'
-        self.assertIsNotNone(MosffParser(url).to_rbdata(), 'data not found.')
+        parser=MosffParser(url)
+        self.assertIsNotNone(parser.to_rbdata(), 'data not found.')
+        self.assertTrue(parser.page.tournament.is_cup)
 
         
 
