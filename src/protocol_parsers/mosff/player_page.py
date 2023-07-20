@@ -9,6 +9,7 @@ from ..tagminer import TagMiner
 from .player import FioName #TODO rename FIO
 from ..date import PageDate
 from ..decorators import trim
+from .promo import PromoTeam
 
 
 class PlayerPageProperty(TagMiner):
@@ -73,55 +74,14 @@ class MosffDate(PageDate):
     def is_healthy(self):
         return self.day is not None and self.month is not None and self.year is not None
 
-class MosffTeam(TagMiner): #TODO implement to team.py
-    _team_name_pattern=r'(?P<team_name>.*) (?P<team_year>\d{4,20}) г.р.' #TODO intersects with team.py
-    _team_id_pattern=r'/team/(?P<team_id>\d+)\Z'
+class MosffTeam(PromoTeam): #TODO implement to team.py
     @property
-    def raw_name(self):
+    def name_raw(self):
         return self.text
-    
-    @property
-    def name_without_year(self):
-        'returns team name without year'
-        m=Regex(
-            pattern=self._team_name_pattern,
-            string=self.raw_name
-            )
-        if m.match is None:
-            print('cant resolve team name with year. returning full name')
-            return self.raw_name
-        return m.get_group('team_name')    
-            
-
-    @property
-    def team_year(self):
-        'returns team year of birth'
-        m=Regex(
-            pattern=self._team_name_pattern,
-            string= self.raw_name
-            )
-        if m.match is None:
-            print('cant resolve team year')
-        return m.get_group('team_year')
-    
+ 
     @property
     def relative_url(self):
         return self.a['href']
-    
-    @property
-    def url(self):
-        return 'https://mosff.ru'+self.relative_url
-    
-    @property
-    @to_int
-    def team_id(self):
-        m=Regex(
-            pattern=self._team_id_pattern,
-            string=self.relative_url
-            )
-        if m.match is None:
-            print('cant parse home team id')
-        return m.get_group('team_id')
 
 class PlayerPage(TagMiner):
     """a class representing a html player page"""

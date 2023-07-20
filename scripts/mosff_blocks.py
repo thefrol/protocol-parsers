@@ -12,7 +12,7 @@ def home_players(block:PlayerBlock):
     return block.is_home_team and block.is_players
 
 p=MosffParser(URL)
-b=p.page.player_blocks.home_players
+b=p.page.promo.home_team.team_year
 #print(p.page._find_tag(class_='match__team match__team--right').text)
 
 pprint(b)

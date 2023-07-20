@@ -12,12 +12,6 @@ from .rbdata import RbdataTounament
 from .exceptions import TeamNotFound
 from .webparser import WebParser
 
-def format_team_name(team:Team):
-    if team.team_year is None:
-        return team.name_without_year
-    else:
-        return f'{team.name_without_year} {team.team_year}'
-    
 def format_player_name(player:Player):
     if player.name.first_name is not None:
         return f'{player.name.first_name} {player.name.last_name}'
@@ -164,13 +158,12 @@ class MosffParser(WebParser[Match]):
         result['tournament_round_url']=None
         result['tournament_id']=self.page.tournament_id
 
-        result['home_team_name']=format_team_name(self.page.home_team)
+        result['home_team_name']=self.page.promo.home_team.name
         result['home_team_score']=self.page.promo.score.home
-        result['home_team_id']=self.page.home_team_id
-
-        result['guest_team_name']=format_team_name(self.page.guest_team)
+        result['home_team_id']=self.page.promo.home_team.id
+        result['guest_team_name']=self.page.promo.guest_team.name
         result['guest_team_score']=self.page.promo.score.guest
-        result['guest_team_id']=self.page.guest_team_id
+        result['guest_team_id']=self.page.promo.guest_team.id
 
         result['score']=self.page.promo.score.text
 
