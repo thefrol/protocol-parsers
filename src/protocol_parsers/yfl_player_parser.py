@@ -45,10 +45,21 @@ class YflPlayerParser(WebParser):
         result['role_raw']=None
 
         result['team_id']=page.team.team_id
-        result['team_url']=f'https://yflrussia.ru/{page.team.relative_url}'
+        result['team_url']=f'https://yflrussia.ru{page.team.relative_url}'
         result['team_url_raw']=page.team.relative_url
+        
+        if page.team.name is None:
+            team_name=page.team.name_raw.strip()
+        else:
+            team_name=f'{page.team.name} {page.team.league_name}'
 
-        result['team_name']=f'{page.team.name} {page.team.league_name}'
+        if team_name is not None:
+            team_name=team_name.replace('\u200b','')
+
+        if team_name=='Академия футбола «Рамзан»':
+            team_name='Ахмат МФЛ'
+        result['team_name']=team_name
+        #result['team_name']=f'{page.team.name} {page.team.league_name}'
         result['team_name_raw']=page.team.name_raw
         result['team_year']=page.team.league_name
         

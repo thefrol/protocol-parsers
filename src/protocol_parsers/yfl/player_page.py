@@ -5,7 +5,7 @@ from ..tagminer import TagMiner
 from ..regex import Regex
 from ..names import FioName
 from ..date import PageDate
-from ..decorators import trim,to_int
+from ..decorators import trim,to_int, trim_or_none
 
 class YflPlayerDate(PageDate):
     _date_pattern=r'(?P<date_string>(?P<day>\d+) (?P<month>\w+) (?P<year>\d+))'
@@ -33,9 +33,13 @@ class YflPlayerPageTeam(TagMiner):
         return Regex(pattern=_pattern,string=self.name_raw)
     @property
     def league_name(self):
-        return self.__name_regex.get_group('league_name').replace('-','')
+        league_name=self.__name_regex.get_group('league_name')
+        if league_name is not None:
+            return league_name.replace('-','')
+        else:
+            return None #TODO neeed new logic
     @property
-    @trim
+    @trim_or_none
     def name(self):
         return self.__name_regex.get_group('team_name')
     
