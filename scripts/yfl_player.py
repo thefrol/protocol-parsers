@@ -6,7 +6,7 @@ from protocol_parsers import YflPlayerParser
 
 #url='https://yflrussia.ru/player/5070344' # ufl3
 #url='https://yflrussia.ru/player/4609808' #acron
-url='https://yflrussia.ru/player/4891177' #no birth date
+url='https://yflrussia.ru/player/3098486' #no birth date
 
 page=YflPlayerParser(url)
 
