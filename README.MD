@@ -176,6 +176,8 @@
 
     [ ] https://mosff.ru/player/27840 игрок имеет две команды
     [ ] https://mosff.ru/player/2061 нет команды и фото
+    [ ] https://yflrussia.ru/player/6431134 криво указана команда
+    [ ] https://yflrussia.ru/match/3409643 нет номера у капитана
     [ ] teams withut year
     [x] tournament id
     [ ] mosff substitute info(sub_from, sub_to)
