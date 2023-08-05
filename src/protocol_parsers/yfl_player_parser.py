@@ -49,7 +49,10 @@ class YflPlayerParser(WebParser):
         result['team_url_raw']=page.team.relative_url
         
         if page.team.name is None:
-            team_name=page.team.name_raw.strip()
+            if page.team.name_raw is not None:
+                team_name=page.team.name_raw.strip()
+            else:
+                team_name=None
         else:
             team_name=f'{page.team.name} {page.team.league_name}'
 

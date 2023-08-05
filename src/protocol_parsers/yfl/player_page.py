@@ -66,5 +66,26 @@ class PlayerPage(TagMiner):
         return YflPlayerDate(self.date_raw)
     @cached_property
     def team(self):
+        tag=self._find_tag('tr',class_='table__team-total')
+        if tag is None and 'Биджилов' in self.name_raw:
+            class Object(object):
+                pass
+            ret=Object()
+            ret.relative_url='/team/1084185'
+            ret.team_id=1084185
+            ret.name='ЦСКА ЮФЛ1'
+            ret.league_name='ЮФЛ1'
+            ret.name_raw='ЦСКА (ЮФЛ-1)'
+            return ret # a empty blob if no team found for player #TODO           
+        if tag is None:
+            class Object(object):
+                pass
+            ret=Object()
+            ret.relative_url=None
+            ret.team_id=None
+            ret.name=None
+            ret.league_name=None
+            ret.name_raw=None
+            return ret # a empty blob if no team found for player #TODO
         return YflPlayerPageTeam(self._find_tag('tr',class_='table__team-total'))
     
