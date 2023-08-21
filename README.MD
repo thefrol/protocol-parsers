@@ -8,26 +8,37 @@
 
 ## Универсальный способ
 
-    from protocol_parsers import Exporter
-    data=Exproter('https://yflrussia.ru/match/3409563').to_rbdata()
-    print(data)
+```python
+from protocol_parsers import Exporter
+
+data=Exproter('https://yflrussia.ru/match/3409563').to_rbdata()
+print(data)
+```
+~~да, да импорт экспортер лол~~
 
 ## МФФ
+
+```python
     from protocol_parsers import MosffParser
 
     protocol_data =  MosffParser('http://mosff.ru/match/34992')
     print(protocol_data.to_rbdata()) # вывод формате питона
     print(protocol_data.to_json()) # вывод в формате json строки
+```
 
 Парсинг игроков
+
+```python
     from protocol_parsers import MosffPlayerParser
 
     player=MosffPlayerParser('https://mosff.ru/player/2060')
     print(protocol_data.to_rbdata()) # вывод формате питона
+```
 
 # Формат вывода
 
 ## Протокол МФФ
+```json
     {
 
         'tournament_name': 'MФФ ЛПМ U10(2013)', # название лиги
@@ -113,7 +124,11 @@
             ] ,
         'home_team_players': [...], #состав команды гостей
     }
+```
+
 ## Игрок МФФ
+
+```json
     {
         'birth_date': '2006-06-30 00:00:00', # дата рождения в ISO формате
         'birth_date_dict':  # дата рождения в формате словаря
@@ -137,14 +152,17 @@
 
         'team_year': '2006' # год рождения игроков команды
     }
+```
 
 ## команда МФФ
+
+```json
     {
         'id': 2044, # id команды
         'name': 'ФШМ 2013', # имя в стиле rbdata
         'raw_name': 'ФШМ 2013 г.р.', # имя команды как на сайте
         'team_year': '2013'} # год рождения игроков команды
-
+```
 # Тесты
 
     python -m unittest discover -s ./tests -p '*_test.py'    
@@ -174,6 +192,7 @@
 
 # Проблемы
 
+    [ ] пусть какой-то скрипт вычищает лишнюю инфу из созраненных страниц для тестирования. Там текст скриптов и прочее. Можно столько места освободить
     [ ] https://mosff.ru/player/27840 игрок имеет две команды
     [ ] https://mosff.ru/player/2061 нет команды и фото
     [ ] teams withut year
