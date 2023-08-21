@@ -18,7 +18,11 @@ class MatchProtocolTabPlayer(TagMiner):
     @cached_property
     @trim
     def number(self):
-        return self._find_tag('span',class_='match-protocol__member-number').text
+        tag=self._find_tag('span',class_='match-protocol__member-number')
+        if tag is None:
+            print(f'No number set on player {self.name}')
+            return '0'
+        return tag.text
     @cached_property
     @trim
     def raw_amplua(self):
