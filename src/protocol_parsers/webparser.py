@@ -17,11 +17,13 @@ class WebParser(Generic[TParser]):
         if html_text is None:
             if not re.fullmatch(self.url_pattern,url):
                 print(f'seems like {url} not fits url pattern{self.url_pattern}')
-            
-            page=requests.get(url) 
+            try:
+                page=requests.get(url)
+            except ConnectionError as e:
+                raise ConnectionError(f"Невозможно подключиться к серверу {url}: {e}")
 
             if page.status_code != 200:
-                raise ConnectionError('page not retrieved')
+                raise ConnectionError(f'Запрос не выполнился с кодом 200. Запрос был на адрес {url}')
             html_text=page.text
             
         self._html=BeautifulSoup(html_text, 'html.parser')
