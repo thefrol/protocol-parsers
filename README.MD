@@ -4,6 +4,32 @@
 
     pip install git+https://github.com/thefrol/protocol-parsers
 
+Готово, пользуйтесь!
+
+### Установка для разработчика
+
+Скачивание репозитория
+```
+ git clone https://github.com/thefrol/protocol-parsers
+ cd protocol-parsers
+```
+
+Установка локального окружения
+
+```
+python -m venv .local_env
+source ./.local_env/bin/activate
+pip install -r requirements.txt
+```
+
+Установка пакета в режиме разработки, после чего в системе можно будет делать `import protocol-parsers`
+
+```bash
+pip install -e .
+```
+
+Теперь можно работать!
+
 # Использование
 
 ## Универсальный способ
