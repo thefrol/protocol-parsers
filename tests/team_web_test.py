@@ -26,7 +26,7 @@ class TeamTest(unittest.TestCase):
         for team in self.teams:
             parser=MosffTeamParser(team.url)
             self.assertEqual(parser.page.team.raw_name, team.raw_name,'name parsed wrong')
-            self.assertEqual(parser.page.team.team_year, str(team.team_year),'team_year parsed wrong')
+            self.assertEqual(parser.page.team.year, team.team_year,'team_year parsed wrong')
             self.assertEqual(parser.page.team.name_without_year, team.name_without_year,'name_withou_year parsed wrong')
 
 if __name__ == '__main__':

@@ -27,7 +27,7 @@ class MatchProtocolTabPlayer(TagMiner):
     @trim
     def raw_amplua(self):
         amplua_tag=self._find_tag('span',class_='match-protocol__member-amplua')
-        return amplua_tag.text if amplua_tag is not None else ''
+        return amplua_tag.text if not amplua_tag.is_empty else ''
     @cached_property
     @trim
     def name(self):
@@ -44,12 +44,12 @@ class MatchProtocolTabPlayer(TagMiner):
     @property
     def is_capitain(self):
         capitain_tag=self._find_tag('span',class_='match-protocol__member-captain')
-        return capitain_tag is not None
+        return not capitain_tag.is_empty
     
     @cached_property
     def is_substitute(self):
         """returns true if this player was a substitute, false if was a main player"""
-        return self.find_in_parents(lambda tag: 'match-protocol__substitutes' in tag['class'])
+        return self.find_in_parents(lambda tag: tag.has_class('match-protocol__substitutes')) is not None
     @property
     def is_main_player(self):
         return not self.is_substitute
@@ -174,10 +174,17 @@ class MatchProtocolTabPlayer(TagMiner):
                 
     @property
     def missed_goals(self):
+        def goals_when_on_field(event:Event):
+            return (event.is_goal or event.is_penalty) and self.was_on_the_field_on(event.minute) 
+        def autogoals_when_on_field(event:Event):
+            return event.is_autogoal and self.was_on_the_field_on(event.minute)
+        
         if not self.is_goalkeeper:
             return 0
-        game_goals_count=self.team.opposing_team.events._count(lambda event: (event.is_goal or event.is_penalty) and self.was_on_the_field_on(event.minute) )
-        autogoals_count=self.team.events._count(lambda event: event.is_autogoal and self.was_on_the_field_on(event.minute) )
+        
+        game_goals_count=self.team.opposing_team.events.count(goals_when_on_field)
+        autogoals_count=self.team.events.count(autogoals_when_on_field)
+        
         return game_goals_count+autogoals_count
     
     @property

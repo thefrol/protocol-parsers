@@ -56,6 +56,11 @@ class BasicMatchTest(yfl_base.YFlMatch):
         self.assertEqual(self.page.promo.home_score,2)
         self.assertEqual(self.page.promo.guest_score,3)
 
+        self.assertEqual(self.page.promo.tournament.match_day.number,1)
+        self.assertEqual(self.page.promo.tournament.match_day.id,1057348)
+
+
+
         self.assertEqual(self.page.promo.date.as_datetime,datetime(2023,7,7,15,0),'wrong date')
 
     def test_team_tab(self):

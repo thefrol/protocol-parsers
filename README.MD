@@ -37,13 +37,18 @@ print(data)
 
 # Формат вывода
 
-## Протокол МФФ
+## Протокол
+
 ```javascript
     {
 
         'tournament_name': 'MФФ ЛПМ U10(2013)', // название лиги
-        'tournament_round': '6', // раунд
+
         'tournament_id': 484, // id турнира на сайте мосфф
+        'tournament_round': '6', // раунд int|string
+        'tournament_round_id': 12314 // id раунда
+        'tournament_round_url' : '/tournament/1024231/calendar?round_id=1042374' // ссылка на раунд
+        'tournament_name': 'MФФ ЛПМ U10(2013)', // название лиги
         
         'score': '7:2', //счет в матче
         'home_team_score': 7,
@@ -56,6 +61,9 @@ print(data)
 
         'home_team_id': 2044,
         'guest_team_id': 2051
+
+        'home_team_image_url': 'https://hb.bizmrg.com/st.mosmff.ru/team/78/logo/63dbb7c7646ea_200x200.png', // логотипы комманд
+        'guest_team_image_url': 'https://hb.bizmrg.com/st.mosmff.ru/team/54/logo/600ea55de3146_200x200.jpg',
         
         'date': { // дата матча
             'iso_string': '2023-05-21 11:30:00', // дата в формате utc
@@ -140,6 +148,7 @@ print(data)
 
         'name': 'Иван Ульянов', // имя в формате rbdata
         'name_raw': 'Ульянов Иван Евгеньевич', // имя в формате rbdata
+        'image_url': 'https://st.joinsport.io/player/5865769/photo/640c111e2f812_thumb.png', // фото игрока
 
         'role_raw': 'Вратарь', // амплуа как на сайте
 
@@ -171,8 +180,16 @@ print(data)
 
 # Обновления
 
-## 19.07.23
+## 20.07.23 Обновление 0.4
+в вывод добавлены поля `tournament_round`, `tournament_round_id`, `tournament_round_url`
+Добавлена поддержка номера тура в протоколах ЮФЛ
+дофигища зарефакторено, теперь более четкая логика
+Добавлены поля `home_team_image_url` `guest_team_image_url` с логотипами комманд в выводе протоколов
+Добавлены `image_url` - фото игрока со страницы его профиля(парсинг игрока)
+
+## 19.07.23 Обновление 0.3
 Добавлен `Exporter` - класс позволяющий майнить данные по любой поддерживаемой ссылке
+Протоколы ЮФЛ и МФЛ покрыты тестами на экспорт
 
 ## 18.07.23
 При парсинге протокола выдается информация кого или кем был заменен игрок `sub_from` `sub_to`
@@ -200,8 +217,9 @@ print(data)
     [ ] https://yflrussia.ru/player/6431134 криво указана команда
     [ ] https://yflrussia.ru/match/3409643 нет номера у капитана
     [ ] время выдает на три часа позже в хабе. Видимо надо выдавать utc standart time
-    [ ] teams withut year
+    [ ] teams without year
     [x] tournament id
+    [ ] Кубок МФФ - вовсе не кубок, например
     [ ] mosff substitute info(sub_from, sub_to)
     [ ] players list in team page parser
     [ ] add failed penalties to mosff

@@ -12,12 +12,6 @@ from .rbdata import RbdataTounament
 from .exceptions import TeamNotFound
 from .webparser import WebParser
 
-def format_team_name(team:Team):
-    if team.team_year is None:
-        return team.name_without_year
-    else:
-        return f'{team.name_without_year} {team.team_year}'
-    
 def format_player_name(player:Player):
     if player.name.first_name is not None:
         return f'{player.name.first_name} {player.name.last_name}'
@@ -26,7 +20,7 @@ def format_player_name(player:Player):
     
 def format_date(match:Match):
     date_=match.date
-    year=match.tournament_year
+    year=match.tournament.year
     if year is None:
         print('cant get year from tournamet, returning current year')
         return datetime.now().year
@@ -51,20 +45,32 @@ def format_date(match:Match):
 
     
 
-class MosffParser(WebParser):
+class MosffParser(WebParser[Match]):
     """a class that gets a link and returns a json with needed data"""
     url_pattern=r'https://mosff.ru/match/\d+'
-    page_class=Match
-    def __init__(self, url:str, html_text=None, match_time=None):
-        super().__init__(url=url, html_text=html_text)
+    _match_time=None
 
-        self.match_time=self.tournament.match_time # if not match time specified try to get match time from tournament data
+    @property
+    def match_time(self):
+        if self._match_time is None:
+            return self.tournament.match_time
+        else:
+            return self._match_time
+    
+    @match_time.setter
+    def match_time(self,value):
+        if value<=0:
+            print(f'match time must be >0, attemping to set {value}.Ignoring')
+            return
+        self._match_time=value
 
     @cached_property
     def tournament(self):
+        team_year=self.page.promo.home_team.year or self.page.promo.guest_team.year or self.page.tournament.year
         return RbdataTounament(
-            team_year=self.page.team_year,
-            tournament_year=self.page.tournament_year)
+            team_year=team_year,
+            tournament_year=self.page.tournament.year,
+            is_cup=self.page.tournament.is_cup)
 
     def _format_team(self, team:Team):
         try:
@@ -149,18 +155,22 @@ class MosffParser(WebParser):
         result=dict()
 
         result['tournament_name']=self.tournament.rbdata_name
-        result['tournament_round']=self.page.round
-        result['tournament_id']=self.page.tournament_id
+        result['tournament_round']=self.page.tournament.round
+        result['tournament_round_id']=None #TODO?
+        result['tournament_round_url']=None
+        result['tournament_id']=self.page.tournament.id
 
-        result['home_team_name']=format_team_name(self.page.home_team)
-        result['home_team_score']=self.page.home_score
-        result['home_team_id']=self.page.home_team_id
+        result['home_team_name']=self.page.promo.home_team.name
+        result['home_team_score']=self.page.promo.score.home
+        result['home_team_id']=self.page.promo.home_team.id
+        result['home_team_image_url']=self.page.promo.home_team.image_url
 
-        result['guest_team_name']=format_team_name(self.page.guest_team)
-        result['guest_team_score']=self.page.guest_score
-        result['guest_team_id']=self.page.guest_team_id
+        result['guest_team_name']=self.page.promo.guest_team.name
+        result['guest_team_score']=self.page.promo.score.guest
+        result['guest_team_id']=self.page.promo.guest_team.id
+        result['guest_team_image_url']=self.page.promo.guest_team.image_url
 
-        result['score']=f'{self.page.home_score}:{self.page.guest_score}'
+        result['score']=self.page.promo.score.text
 
         result['time_played']=self.match_time
 

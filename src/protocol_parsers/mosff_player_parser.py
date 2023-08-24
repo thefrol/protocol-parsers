@@ -6,12 +6,11 @@ from bs4 import BeautifulSoup
 
 from .webparser import WebParser
 from .mosff.player_page import PlayerPage
-from .mosff_parser import format_player_name,format_team_name
+from .mosff_parser import format_player_name
 
-class MosffPlayerParser(WebParser):
+class MosffPlayerParser(WebParser[PlayerPage]):
     """a class that gets a link and returns a json with needed data"""
     url_pattern=r'https://mosff.ru/player/\d+'
-    page_class=PlayerPage
     def to_rbdata(self):
         result={}
 
@@ -35,16 +34,18 @@ class MosffPlayerParser(WebParser):
         }
 
         result['name']=format_player_name(self.page)
-        result['name_raw']=self.page.a_with_name.text
+        result['name_raw']=self.page.name.raw_name
+
+        result['image_url']=self.page.image_url
 
         result['role_raw']=self.page.amplua
 
-        result['team_id']=self.page.team.team_id
+        result['team_id']=self.page.team.id
         result['team_url']=self.page.team.url
         result['team_url_raw']=self.page.team.relative_url
 
-        result['team_name']=format_team_name(team=self.page.team)
+        result['team_name']=self.page.team.name
         result['team_name_raw']=self.page.team.raw_name
-        result['team_year']=self.page.team.team_year
+        result['team_year']=str(self.page.team.year) #TODO remove str(), used for tests
         
         return result

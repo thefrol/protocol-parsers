@@ -19,7 +19,7 @@ class MatchTest(unittest.TestCase):
     @classmethod
     def setUpClass(cls) -> None:
         cls.protocol:MosffParser=MosffParser(cls.url)
-        cls.match=cls.protocol._match
+        cls.match=cls.protocol.page
         cls.home_team=cls.match.home_team
         cls.guest_team=cls.match.guest_team
     def find_by_name(self,name:str):
@@ -36,8 +36,8 @@ class AutoGoals(MatchTest):
     '''Testing match with autogoals'''
     url='https://mosff.ru/match/34858'
     def test_scores(self):
-        self.assertEqual(self.match.home_score,7,'Home score not right')
-        self.assertEqual(self.match.guest_score,2,'guest score error')
+        self.assertEqual(self.match.promo.score.home,7,'Home score not right')
+        self.assertEqual(self.match.promo.score.guest,2,'guest score error')
         self.assertEqual(count_team_goals(self.match.home_team,self.match.guest_team),7,'sum of players goals != team score @ home team')
         self.assertEqual(count_team_goals(self.match.guest_team,self.match.home_team),2,'sum of players goals != team score @ guest team')
     def test_autogoals(self):
@@ -46,6 +46,16 @@ class AutoGoals(MatchTest):
     def test_goals(self):
         self.assertEqual(self.find_by_name('Леонид Чемельков').goals,2,'Чемельков должен забить два')
         self.assertEqual(self.find_by_name('Марк Шкурин').goals,1,'Шкурин должен забить один')
+
+
+class AutoGoalsGoalKeeper(MatchTest):
+    '''Testing match with autogoals in goalkeeper'''
+    #insane case
+    url='https://mosff.ru/match/34540'
+    def test_missed(self):
+        self.assertEqual(self.match.promo.score.home,2,'Home score not right')
+        #self.assertEqual(self.find_by_name('Фёдор Старостин').,4,'Старостин пропустил три плюс автогол')
+        #we cant count missed goals here, only in yfl
 
 class Cards(MatchTest):
     '''Testing match with autogoals'''
@@ -65,14 +75,18 @@ class Cards(MatchTest):
 class MatchGlobalParams(MatchTest):
     url='https://mosff.ru/match/34858'
     def test_ids(self):
-        self.assertEqual(self.match.guest_team_id,2051,'guest team id failed')
-        self.assertEqual(self.match.home_team_id,2044,'home team id failed')
+        self.assertEqual(self.match.promo.guest_team.id,2051,'guest team id failed')
+        self.assertEqual(self.match.promo.home_team.id,2044,'home team id failed')
+    def test_raw_names(self):
+        self.assertEqual(self.match.promo.home_team.raw_name, 'ФШМ 2013 г.р.','home team name error')
+        self.assertEqual(self.match.promo.guest_team.raw_name, 'Сокол 2013 г.р.','guest team name error')
     def test_names(self):
-        self.assertEqual(self.match.home_team_name, 'ФШМ 2013 г.р.','home team name error')
-        self.assertEqual(self.match.guest_team_name, 'Сокол 2013 г.р.','guest team name error')
+        self.assertEqual(self.match.promo.home_team.name, 'ФШМ 2013','home team name error')
+        self.assertEqual(self.match.promo.guest_team.name, 'Сокол 2013','guest team name error')
     def test_tournament(self):
-        self.assertEqual(self.match.tournament_id,484, 'tournament id failed to parse')
-        self.assertEqual(self.match.tournament_year,2023)
+        self.assertEqual(self.match.tournament.id,484, 'tournament id failed to parse')
+        self.assertEqual(self.match.tournament.year,2023)
+        self.assertFalse(self.match.tournament.is_cup)
     def test_date(self):
         self.assertEqual(self.match.date.day,21)
         self.assertEqual(self.match.date.month,5)
@@ -85,7 +99,9 @@ class FancyProtocols(unittest.TestCase):
     def test_no_minute_on_autogoal(self):
         """this protocol lacks minute on autogoal event, so it failed earlier"""
         url='https://mosff.ru/match/34540'
-        self.assertIsNotNone(MosffParser(url).to_rbdata(), 'data not found.')
+        parser=MosffParser(url)
+        self.assertIsNotNone(parser.to_rbdata(), 'data not found.')
+        self.assertTrue(parser.page.tournament.is_cup)
 
         
 

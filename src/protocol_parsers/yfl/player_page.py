@@ -89,3 +89,7 @@ class PlayerPage(TagMiner):
             return ret # a empty blob if no team found for player #TODO
         return YflPlayerPageTeam(self._find_tag('tr',class_='table__team-total'))
     
+    @cached_property
+    def image_url(self):
+        return self._find_tag(class_='player-promo__img').get_param('src')
+    
