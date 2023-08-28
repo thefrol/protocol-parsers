@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timedelta
 
 from .webparser import WebParser
 from .yfl import MatchPage,Team
@@ -100,11 +100,14 @@ class YflParser(WebParser[MatchPage]):
             return result
     
     def format_date(self):
+        #returns json with date, where iso_string is UTC_time
         date_=self.page.promo.date
         #year=match.tournament_year
         year=datetime.now().year #TODO get match year not current
         if all([date_.day,date_.month,year]):
-            match_date_time=datetime(day=date_.day,month=date_.month,year=year,hour=date_.hour,minute=date_.minute)
+            utc_offset=timedelta(hours=3)
+            match_date_time=datetime(day=date_.day,month=date_.month,year=year,hour=date_.hour,minute=date_.minute) -utc_offset
+            
         else:
             print('cant get match date')
             match_date_time=None

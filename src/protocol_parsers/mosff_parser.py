@@ -19,8 +19,8 @@ def format_player_name(player:Player):
         return player.name.last_name
     
 def format_date(match:Match):
-    # returns json formatted time of match in UTC timezone
-    
+    # returns json formatted date of match, where ISO string is in UTC timezone
+
     date_=match.date
     year=match.tournament.year
     if year is None:
