@@ -2,7 +2,7 @@ import re
 import requests
 import json
 from itertools import chain
-from datetime import datetime
+from datetime import datetime,timedelta
 from functools import cached_property
 
 from bs4 import BeautifulSoup
@@ -19,13 +19,16 @@ def format_player_name(player:Player):
         return player.name.last_name
     
 def format_date(match:Match):
+    # returns json formatted time of match in UTC timezone
+    
     date_=match.date
     year=match.tournament.year
     if year is None:
         print('cant get year from tournamet, returning current year')
         return datetime.now().year
     if all([date_.day,date_.month,year]):
-        match_date_time=datetime(day=date_.day,month=date_.month,year=year,hour=date_.hour,minute=date_.minute)
+        utc_time_delta=timedelta(hours=3)
+        match_date_time=datetime(day=date_.day,month=date_.month,year=year,hour=date_.hour,minute=date_.minute) - utc_time_delta
     else:
         print('cant get match date')
         match_date_time=None
