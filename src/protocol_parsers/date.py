@@ -3,7 +3,7 @@ from abc import abstractmethod
 
 from .decorators import trim, to_int, lower, to_int_or_none
 
-from datetime import datetime
+from datetime import datetime,timedelta
 
 class PageDate:
     """a class for parsing string from MAtch Page
@@ -104,6 +104,12 @@ class PageDate:
     @property
     def as_datetime(self):
         return datetime(year=self.year, month=self.month, day=self.day, hour=self.hour, minute=self.minute)
+    
+    def as_utc_time(self):
+        # converts current time to UTC time
+        # impying all matche in +3 timezone
+        utc_time_delta=timedelta(hours=3)
+        return self.as_datetime - utc_time_delta
     
 def format_season(date):
         def is_old_system(date_):
