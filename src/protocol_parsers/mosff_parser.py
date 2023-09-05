@@ -158,7 +158,7 @@ class MosffParser(WebParser[Match]):
         result=dict()
 
         result['tournament_name']=self.tournament.rbdata_name
-        result['tournament_round']=self.page.tournament.round
+        result['tournament_round']=str(self.page.tournament.round)
         result['tournament_round_id']=None #TODO?
         result['tournament_round_url']=None
         result['tournament_id']=self.page.tournament.id

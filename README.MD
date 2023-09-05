@@ -71,7 +71,7 @@ print(data)
         'tournament_name': 'MФФ ЛПМ U10(2013)', // название лиги
 
         'tournament_id': 484, // id турнира на сайте мосфф
-        'tournament_round': '6', // раунд int|string
+        'tournament_round': '6', // раунд string
         'tournament_round_id': 12314 // id раунда
         'tournament_round_url' : '/tournament/1024231/calendar?round_id=1042374' // ссылка на раунд
         'tournament_name': 'MФФ ЛПМ U10(2013)', // название лиги
