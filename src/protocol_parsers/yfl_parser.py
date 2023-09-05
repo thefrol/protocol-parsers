@@ -126,7 +126,7 @@ class YflParser(WebParser[MatchPage]):
 
 
         result['tournament_name']=self.page.promo.tournament.name.replace("-","")
-        result['tournament_round']=self.page.promo.tournament.match_day.number
+        result['tournament_round']=str(self.page.promo.tournament.match_day.number)
         result['tournament_round_id']=self.page.promo.tournament.match_day.id #TODO
         result['tournament_round_url']=self.page.promo.tournament.match_day.relative_url
         result['tournament_id']=self.page.promo.tournament.id
@@ -145,6 +145,7 @@ class YflParser(WebParser[MatchPage]):
         result['score']=self.page.promo.score_raw_text
 
         result['time_played']=self.page.time_played
+        result['duration']=self.page.time_played
 
         result['home_team_players']=self._format_team(self.page.home_team)
         result['guest_team_players']=self._format_team(self.page.guest_team)

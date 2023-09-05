@@ -80,7 +80,8 @@ print(data)
         'home_team_score': 7,
         'guest_team_score': 2,
 
-        'time_played': 50, // время на поле
+        'duration': 50, // время на поле
+        'time_player':50 // то же самое, сделано для обратной совместимости
 
         'guest_team_name': 'Сокол 2013',
         'home_team_name': 'ФШМ 2013',

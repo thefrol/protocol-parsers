@@ -176,6 +176,7 @@ class MosffParser(WebParser[Match]):
         result['score']=self.page.promo.score.text
 
         result['time_played']=self.match_time
+        result['duration']=self.match_time
 
         result['home_team_players']=self._format_team(self.page.home_team)
         result['guest_team_players']=self._format_team(self.page.guest_team)
