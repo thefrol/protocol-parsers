@@ -68,64 +68,64 @@ print(data)
 ```javascript
     {
 
-        'tournament_name': 'MФФ ЛПМ U10(2013)', // название лиги
+        "tournament_name": "MФФ ЛПМ U10(2013)", // название лиги
 
-        'tournament_id': 484, // id турнира на сайте мосфф
-        'tournament_round': '6', // раунд string
-        'tournament_round_id': 12314 // id раунда
-        'tournament_round_url' : '/tournament/1024231/calendar?round_id=1042374' // ссылка на раунд
-        'tournament_name': 'MФФ ЛПМ U10(2013)', // название лиги
+        "tournament_id": 484, // id турнира на сайте мосфф
+        "tournament_round": "6", // раунд string
+        "tournament_round_id": 12314 // id раунда
+        "tournament_round_url" : "/tournament/1024231/calendar?round_id=1042374" // ссылка на раунд
+        "tournament_name": "MФФ ЛПМ U10(2013)", // название лиги
         
-        'score': '7:2', //счет в матче
-        'home_team_score': 7,
-        'guest_team_score': 2,
+        "score": "7:2", //счет в матче
+        "home_team_score": 7,
+        "guest_team_score": 2,
 
-        'duration': 50, // время на поле
-        'time_player':50 // то же самое, сделано для обратной совместимости
+        "duration": 50, // время на поле
+        "time_player":50 // то же самое, сделано для обратной совместимости
 
-        'guest_team_name': 'Сокол 2013',
-        'home_team_name': 'ФШМ 2013',
+        "guest_team_name": "Сокол 2013",
+        "home_team_name": "ФШМ 2013",
 
-        'home_team_id': 2044,
-        'guest_team_id': 2051
+        "home_team_id": 2044,
+        "guest_team_id": 2051
 
-        'home_team_image_url': 'https://hb.bizmrg.com/st.mosmff.ru/team/78/logo/63dbb7c7646ea_200x200.png', // логотипы комманд
-        'guest_team_image_url': 'https://hb.bizmrg.com/st.mosmff.ru/team/54/logo/600ea55de3146_200x200.jpg',
+        "home_team_image_url": "https://hb.bizmrg.com/st.mosmff.ru/team/78/logo/63dbb7c7646ea_200x200.png", // логотипы комманд
+        "guest_team_image_url": "https://hb.bizmrg.com/st.mosmff.ru/team/54/logo/600ea55de3146_200x200.jpg",
         
-        'date': { // дата матча
-            'iso_string': '2023-05-21 11:30:00', // дата в формате utc
-            'day': 21,
-            'hour': 11, // тут уже московское время
-            'minute': 30,
-            'month': 5,
-            'year': 2023 // берется из даты турнира, иначе текущий год
+        "date": { // дата матча
+            "iso_string": "2023-05-21 11:30:00", // дата в формате utc
+            "day": 21,
+            "hour": 11, // тут уже московское время
+            "minute": 30,
+            "month": 5,
+            "year": 2023 // берется из даты турнира, иначе текущий год
             },
 
-        'guest_team_players':  //состав команды хозяев
+        "guest_team_players":  //состав команды хозяев
             [
                 {
-                    'name': 'Иван Ничутин', // как зовут в формате имя-фамилия
-                    'number':'71', // номер на поле
-                    'autogoals': 0, // количество автоголов
-                    'goals': 0, // количество забитых
-                    'goals_missed': 5, // количество пропущенных, если вратарь, если полевой - то ноль
-                    'image': 'https://hb.bizmrg.com/st.mosmff.ru/player/27649/photo/639340d953def_200x200.jpg', // фотка с сайта мфф
-                    'is_capitain': False, // игрок капитан
-                    'is_goalkeeper': True, // игрок голкипер
+                    "name": "Иван Ничутин", // как зовут в формате имя-фамилия
+                    "number":"71", // номер на поле
+                    "autogoals": 0, // количество автоголов
+                    "goals": 0, // количество забитых
+                    "goals_missed": 5, // количество пропущенных, если вратарь, если полевой - то ноль
+                    "image": "https://hb.bizmrg.com/st.mosmff.ru/player/27649/photo/639340d953def_200x200.jpg", // фотка с сайта мфф
+                    "is_capitain": False, // игрок капитан
+                    "is_goalkeeper": True, // игрок голкипер
                     
-                    'id': 27649, // id в системе мосфф
-                    'yellow_cards': 0 // количество желтых
-                    'red_cards': 0, // количество красных
+                    "id": 27649, // id в системе мосфф
+                    "yellow_cards": 0 // количество желтых
+                    "red_cards": 0, // количество красных
 
-                    'time_played': 50, // время на поле
-                    'relative_time_played': 0 // относительное время если >0, то не зависит от времени матча,
+                    "time_played": 50, // время на поле
+                    "relative_time_played": 0 // относительное время если >0, то не зависит от времени матча,
                                               // если меньше нуля, то time_played= match_time+relative_time_played
                                               //
                                               // none - игрок не играл, то сыграл вообще ноль
                                               // 0 - играл весь матч
                                               // -14 играл весь матч без 14 минут
                                               // 14 сыграл 14 минут
-                    'relative_time_out': 0 // время ухода с поля по тем же правилам
+                    "relative_time_out": 0 // время ухода с поля по тем же правилам
                                            // 0 - играл до конца
                                            // 14 ушел на 14 минуте
                                            // отрицательные значения не выдает
@@ -135,19 +135,19 @@ print(data)
                                            // чтобы не путаться, относительно время выхода на поле не указано, 
                                            // иначе можно перепутать 0 - это конец матча, или начало
                                            // а указывать none как начало матча это слишком усложняет дело
-                    'time_in':0, // минута появления на поле, или none если на поле не выходил
-                    'time_out':50 // минута ухода с поля или none если не играл
+                    "time_in":0, // минута появления на поле, или none если на поле не выходил
+                    "time_out":50 // минута ухода с поля или none если не играл
 
-                    'sub_from': { // Информация о том, кого заменил игрок. None в случае если никого
-                        'id': 3098674, // id игрока
-                        'minute': 62, //минута замены
-                        'number': '72'}, //номер замененного игрока
-                    'sub_to': None, // информация о игроке, который заменил этого
+                    "sub_from": { // Информация о том, кого заменил игрок. None в случае если никого
+                        "id": 3098674, // id игрока
+                        "minute": 62, //минута замены
+                        "number": "72"}, //номер замененного игрока
+                    "sub_to": None, // информация о игроке, который заменил этого
 
-                    'events':[
+                    "events":[
                         {
-                            'time':20,  // время события
-                            'type':'yellow-card' // тип события
+                            "time":20,  // время события
+                            "type":"yellow-card" // тип события
                                                  // sub-in, sub-out - замены
                                                  // yellow-card, red-card - карточки
                                                  // goal, autogoal - голы и автоголы
@@ -157,7 +157,7 @@ print(data)
                 },
                 {...},
             ] ,
-        'home_team_players': [...], //состав команды гостей
+        "home_team_players": [...], //состав команды гостей
     }
 ```
 
