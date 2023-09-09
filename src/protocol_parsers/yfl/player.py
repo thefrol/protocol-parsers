@@ -19,7 +19,7 @@ class MatchProtocolTabPlayer(TagMiner):
     @trim
     def number(self):
         tag=self._find_tag('span',class_='match-protocol__member-number')
-        if tag is None:
+        if tag.is_empty:
             print(f'No number set on player {self.name}')
             return '0'
         return tag.text
