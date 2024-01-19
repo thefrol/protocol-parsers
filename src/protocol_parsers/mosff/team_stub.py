@@ -50,6 +50,6 @@ class MosffTeam(TeamStub, TagMiner):
     @to_int_or_none
     def id(self):
         return Regex(
-            pattern=r'/team/(?P<team_id>\d+)',
+            pattern=r'/teams?/(?P<team_id>\d+)', # может быть teams или team
             string=self.relative_url
         ).get_group('team_id')
