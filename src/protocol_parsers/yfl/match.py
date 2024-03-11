@@ -35,8 +35,8 @@ class Tournament(TagMiner):
     
     @cached_property
     def match_day(self):
-        return (MatchDay(self._find_tag(class_='match-promo__tour'))
-                | Tour(self._find_tag(class_='match-promo__round')))
+        return (MatchDay(self._find_tag(class_='game__tour'))
+                | Tour(self._find_tag(class_='game__round')))
     
 class Tour(TagMiner):
     @cached_property
@@ -127,7 +127,7 @@ class Promo(TagMiner):
     @cached_property
     @trim
     def score_raw_text(self)->str:
-        return self._find_tag('div',class_='score__list').text.replace(' ','')
+        return self._find_tag('div',class_='score__list').text.replace('\n\n',':') # todo : unsafe
     @cached_property
     def scores(self)-> list[str]:
         return self.score_raw_text.split(':')
@@ -214,7 +214,7 @@ class MatchPage(TagMiner):
     
     @cached_property
     def events(self) -> EventsList:
-        tags=self._find_all_tags('li',class_='vertical-timeline__event-item')
+        tags=self._find_all_tags('li',class_='timeline__item')
         return EventsList.from_tags(tags)
     
     def find_player_by_id(self, id_)->MatchProtocolTabPlayer:
