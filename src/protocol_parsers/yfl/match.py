@@ -20,13 +20,13 @@ class Tournament(TagMiner):
     @cached_property
     @trim
     def name_raw(self)->str:
-        return self._find_tag('a',class_='match-promo__tournament').text
+        return self._find_tag('a',class_='game__tournament').text
     @property
     def name(self):
-        return self.name_raw.split(' ')[0]
+        return self.name_raw
     @cached_property
     def relative_url(self):
-        return self._find_tag('a',class_='match-promo__tournament')['href']
+        return self._find_tag('a',class_='game__tournament')['href']
     @cached_property
     @to_int
     def id(self):
@@ -35,8 +35,8 @@ class Tournament(TagMiner):
     
     @cached_property
     def match_day(self):
-        return (MatchDay(self._find_tag(class_='match-promo__tour'))
-                | Tour(self._find_tag(class_='match-promo__round')))
+        return (MatchDay(self._find_tag(class_='game__tour'))
+                | Tour(self._find_tag(class_='game__round')))
     
 class Tour(TagMiner):
     @cached_property
@@ -121,13 +121,13 @@ class PromoDate(PageDate):
         return datetime.datetime.now().year
     @property
     def _date_pattern(self):
-        return r'(?P<day>\d+) (?P<month>\w+) / (?P<week_day>\w+) / (?P<hour>\d+):(?P<minute>\d+)'   
+        return r'(?P<day>\d+) (?P<month>\w+) (?P<week_day>\w+) (?P<hour>\d+):(?P<minute>\d+)'   
 
 class Promo(TagMiner):
     @cached_property
     @trim
     def score_raw_text(self)->str:
-        return self._find_tag('div',class_='match-promo__score-main').text.replace(' ','')
+        return self._find_tag('div',class_='score__list').text.replace('\n\n',':') # todo : unsafe
     @cached_property
     def scores(self)-> list[str]:
         return self.score_raw_text.split(':')
@@ -140,28 +140,37 @@ class Promo(TagMiner):
     @to_int
     def guest_score(self)->int:
         return self.scores[1]
+
+    @cached_property
+    def team_tags(self):
+        return self._html.findAll('a', class_='game__team-link')
     
     @cached_property
     def home_team(self):
-        wrapper=self._find_tag('div', class_='match-promo__team-text--right') ## the left-text means align left so right team aligns to left. need to change to something more logical
-        team_tag=wrapper.a
-        return PromoTeam(team_tag)
+        return PromoTeam(self.team_tags[0])
 
     @cached_property
     def guest_team(self):
-        wrapper=self._find_tag('div', class_='match-promo__team-text--left') ## the left-text means align left so right team aligns to left. need to change to something more logical
-        team_tag=wrapper.a
-        return PromoTeam(team_tag)
+        return PromoTeam(self.team_tags[1])
+
 
     @cached_property
     def tournament(self):
-        return Tournament(self._find_tag('div',class_='match-promo__tournament-wrapper'))
+        return Tournament(self._find_tag('div',class_='game__bottom'))
     
     @property
     def date(self)->PromoDate:
-        date_tag=self._find_tag('div',class_='match-promo__date-time')
+
+        # hotfix:
+        #
+        #
+        date_tag=self._find_tag('ul',class_='game__info')
+        text=date_tag.text
+        text=re.sub("\s+"," ",text)
+        text=text.strip()
+
         if date_tag is not None:
-            return PromoDate(date_tag.text)
+            return PromoDate(text)
         else:
             return None
 
@@ -174,7 +183,7 @@ class MatchPage(TagMiner):
         team_from=home|guest"""
         positive_values=['guest','home']
         if team_from in positive_values:
-            tag=self._html.find('div',{'class':'match-protocol'})
+            tag=self._html.find('div',{'class':'protocol'})
             return Team(tag,'left' if team_from == 'home' else 'right',parent_match=self)
         else:
             raise ValueError(f'team_from must be one of {positive_values}')
@@ -196,7 +205,8 @@ class MatchPage(TagMiner):
     
     @cached_property
     def promo(self):
-        return Promo(self._find_tag('section',class_='match-promo'))
+        p=self._find_tag('section',class_='game')
+        return Promo(self._find_tag('section',class_='game'))
     
     @property
     def score(self):
@@ -204,7 +214,7 @@ class MatchPage(TagMiner):
     
     @cached_property
     def events(self) -> EventsList:
-        tags=self._find_all_tags('li',class_='vertical-timeline__event-item')
+        tags=self._find_all_tags('li',class_='timeline__item')
         return EventsList.from_tags(tags)
     
     def find_player_by_id(self, id_)->MatchProtocolTabPlayer:

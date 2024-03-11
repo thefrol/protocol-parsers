@@ -18,7 +18,7 @@ class MatchProtocolTabPlayer(TagMiner):
     @cached_property
     @trim
     def number(self):
-        tag=self._find_tag('span',class_='match-protocol__member-number')
+        tag=self._find_tag('span',class_='protocol__number-text')
         if tag.is_empty:
             print(f'No number set on player {self.name}')
             return '0'
@@ -26,15 +26,15 @@ class MatchProtocolTabPlayer(TagMiner):
     @cached_property
     @trim
     def raw_amplua(self):
-        amplua_tag=self._find_tag('span',class_='match-protocol__member-amplua')
+        amplua_tag=self._find_tag('span',class_='protocol__role')
         return amplua_tag.text if not amplua_tag.is_empty else ''
     @cached_property
     @trim
     def name(self):
-        return self._find_tag('a',class_='match-protocol__member-name').text
+        return self._find_tag('div',class_='protocol__name').text
     @cached_property
     def relative_url(self):
-        return self._find_tag('a',class_='match-protocol__member-name')['href']
+        return self._find_tag('a',class_='protocol__link')['href']
     
     @cached_property
     @to_int
@@ -43,13 +43,13 @@ class MatchProtocolTabPlayer(TagMiner):
     
     @property
     def is_capitain(self):
-        capitain_tag=self._find_tag('span',class_='match-protocol__member-captain')
+        capitain_tag=self._find_tag('div',class_='protocol_captain')
         return not capitain_tag.is_empty
     
     @cached_property
     def is_substitute(self):
         """returns true if this player was a substitute, false if was a main player"""
-        return self.find_in_parents(lambda tag: tag.has_class('match-protocol__substitutes')) is not None
+        return self.find_in_parents(lambda tag: tag.has_class('protocol__block--additional')) is not None
     @property
     def is_main_player(self):
         return not self.is_substitute
