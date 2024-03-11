@@ -18,7 +18,7 @@ class MatchProtocolTabPlayer(TagMiner):
     @cached_property
     @trim
     def number(self):
-        tag=self._find_tag('span',class_='match-protocol__member-number')
+        tag=self._find_tag('span',class_='protocol__number-text')
         if tag.is_empty:
             print(f'No number set on player {self.name}')
             return '0'
@@ -26,15 +26,15 @@ class MatchProtocolTabPlayer(TagMiner):
     @cached_property
     @trim
     def raw_amplua(self):
-        amplua_tag=self._find_tag('span',class_='match-protocol__member-amplua')
+        amplua_tag=self._find_tag('span',class_='protocol__role')
         return amplua_tag.text if not amplua_tag.is_empty else ''
     @cached_property
     @trim
     def name(self):
-        return self._find_tag('a',class_='match-protocol__member-name').text
+        return self._find_tag('div',class_='protocol__name').text
     @cached_property
     def relative_url(self):
-        return self._find_tag('a',class_='match-protocol__member-name')['href']
+        return self._find_tag('a',class_='protocol__link')['href']
     
     @cached_property
     @to_int
