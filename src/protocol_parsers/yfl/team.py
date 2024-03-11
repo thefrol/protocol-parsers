@@ -29,20 +29,30 @@ class Team:
     @cached_property
     def name(self):
         """returns left or right team name"""
-        if self.location=='left':
+        if self._location=='left':
             index=0
-        elif self.location=='right':
+        elif self._location=='right':
             index=1
         else:
             index=0
 
-        tags=self._html.find('a',{"class":"game-header__team"})
+        tags=self._html.find_all('div',{"class":"game-header__text"})
         return tags[index]['title'] #TODO failures#
     
     @cached_property
     def players(self)-> list[MatchProtocolTabPlayer]:
+        #lineups_block=self._html.find({"class":"protocol__block--main"})
+        #bench_block=self._html.find({"class":"protocol__block-additional"})
+        if self._location=='left':
+            tag_query=".protocol__unit:not(.protocol__unit--right)"
+        else:
+            tag_query=".protocol__unit--right"
+        lineups=self._html.select(f".protocol__block--main {tag_query} li.protocol__item:not(.protocol__item--empty)") # some cells are empty
+        bench=self._html.select(f".protocol__block--additional {tag_query} li.protocol__item:not(.protocol__item--empty)")
+
+        tags=lineups+bench
+
         result=[]
-        tags=self._html.find_all('li',{'class':f'match-protocol__member--{self._location}'}) #TODO failures#
         for tag in tags:
             new_player=MatchProtocolTabPlayer(tag)
             new_player.events=self._parent_match.events.get_by_player_id(new_player.id)
