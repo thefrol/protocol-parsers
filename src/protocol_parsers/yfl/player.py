@@ -43,13 +43,13 @@ class MatchProtocolTabPlayer(TagMiner):
     
     @property
     def is_capitain(self):
-        capitain_tag=self._find_tag('span',class_='match-protocol__member-captain')
+        capitain_tag=self._find_tag('div',class_='protocol_captain')
         return not capitain_tag.is_empty
     
     @cached_property
     def is_substitute(self):
         """returns true if this player was a substitute, false if was a main player"""
-        return self.find_in_parents(lambda tag: tag.has_class('match-protocol__substitutes')) is not None
+        return self.find_in_parents(lambda tag: tag.has_class('protocol__block--additional')) is not None
     @property
     def is_main_player(self):
         return not self.is_substitute
