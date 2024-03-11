@@ -22,41 +22,41 @@ class YflParser(WebParser[MatchPage]):
                     new_player_dict['id']=player.id
                     new_player_dict['number']=player.number
 
-                    new_player_dict['yellow_cards']=0 #player.events.yellow_cards
-                    new_player_dict['red_cards']=0 #player.events.red_cards if player.events.yellow_cards<2 else 0
-                    new_player_dict['goals']=0 #player.goals
-                    new_player_dict['autogoals']=0 #player.events.autogoals
-                    new_player_dict['goals_missed']=0 #player.missed_goals
-                    new_player_dict['is_capitain']=False #player.is_capitain
-                    new_player_dict['is_goalkeeper']=False #player.is_goalkeeper
+                    new_player_dict['yellow_cards']=player.events.yellow_cards
+                    new_player_dict['red_cards']=player.events.red_cards if player.events.yellow_cards<2 else 0
+                    new_player_dict['goals']=player.goals
+                    new_player_dict['autogoals']=player.events.autogoals
+                    new_player_dict['goals_missed']=player.missed_goals
+                    new_player_dict['is_capitain']=player.is_capitain
+                    new_player_dict['is_goalkeeper']=player.is_goalkeeper
 
-                    new_player_dict['time_played']=90 #player.time_on_field
+                    new_player_dict['time_played']=player.time_on_field
 
-                    new_player_dict['time_in']=0 #player.time_in
-                    new_player_dict['time_out']=90 #player.time_out
+                    new_player_dict['time_in']=player.time_in
+                    new_player_dict['time_out']=player.time_out
 
-                    # #substitutions
-                    # sub_in_event=player.sub_in_event
-                    # sub_from= team._parent_match.find_player_by_id(player.sub_from_id)
-                    # if sub_from is not None:
-                    #     new_player_dict['sub_from']={
-                    #         'id':sub_from.id,
-                    #         'number':sub_from.number,
-                    #         'minute':sub_in_event.minute
-                    #     }
-                    # else:
-                    #     new_player_dict['sub_from']=None
+                    #substitutions
+                    sub_in_event=player.sub_in_event
+                    sub_from= team._parent_match.find_player_by_id(player.sub_from_id)
+                    if sub_from is not None:
+                        new_player_dict['sub_from']={
+                            'id':sub_from.id,
+                            'number':sub_from.number,
+                            'minute':sub_in_event.minute
+                        }
+                    else:
+                        new_player_dict['sub_from']=None
 
-                    # sub_out_event= player.sub_out_event
-                    # sub_to= team._parent_match.find_player_by_id(player.sub_to_id)
-                    # if sub_to is not None:
-                    #     new_player_dict['sub_to']={
-                    #         'id':sub_to.id,
-                    #         'number':sub_to.number,
-                    #         'minute':sub_out_event.minute
-                    #     }
-                    # else:
-                    #     new_player_dict['sub_to']=None
+                    sub_out_event= player.sub_out_event
+                    sub_to= team._parent_match.find_player_by_id(player.sub_to_id)
+                    if sub_to is not None:
+                        new_player_dict['sub_to']={
+                            'id':sub_to.id,
+                            'number':sub_to.number,
+                            'minute':sub_out_event.minute
+                        }
+                    else:
+                        new_player_dict['sub_to']=None
 
 
 
