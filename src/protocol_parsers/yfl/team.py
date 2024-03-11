@@ -29,7 +29,16 @@ class Team:
     @cached_property
     def name(self):
         """returns left or right team name"""
-        return self._html.find('a',{'class':f'match-protocol__team-name--{self._location}'})['title'] #TODO failures#
+        if self.location=='left':
+            index=0
+        elif self.location=='right':
+            index=1
+        else:
+            index=0
+
+        tags=self._html.find('a',{"class":"game-header__team"})
+        return tags[index]['title'] #TODO failures#
+    
     @cached_property
     def players(self)-> list[MatchProtocolTabPlayer]:
         result=[]
