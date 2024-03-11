@@ -8,19 +8,22 @@ from ..tagminer import TagMiner, TagMinerList
 from .funcs import get_player_id
 
 class Event(TagMiner):
-    _minute_pattern=r'(?P<minute>\d+)\''
+    _minute_pattern=r'(?P<minute>\d+)(\+(?P<add>\d+))?\''
     @cached_property
     @to_int
     def minute(self):
-        raw_text=self._find_tag('div',class_='vertical-timeline__event-minute').text
-        return Regex(pattern=self._minute_pattern, string=raw_text).get_group('minute',0)
+        raw_text=self._find_tag('div',class_='timeline__minute').text
+        match= Regex(pattern=self._minute_pattern, string=raw_text)
+        main_time=int(match.get_group('minute',0))
+        add_time=int(match.get_group('add',0))
+        return main_time+add_time
     @cached_property
     @to_int_or_none
     def author_id(self):
         """id of author of event, goal and substitutions
         
         for substitutions author id - player went on field"""
-        tag=self._find_tag('a',class_='vertical-timeline__event-author')
+        tag=self._find_tag('a',class_='timeline__name')
         relative_url=tag['href']
         return get_player_id(relative_url)
     @cached_property
@@ -28,15 +31,18 @@ class Event(TagMiner):
     def assist_id(self):
         """id of author of event, goal and substitutions
         for substitutions assist id - player left field"""
-        tag=self._find_tag('a',class_='vertical-timeline__event-assist')
-        if tag.is_empty:
+        tag=self._find_tag('a',class_='timeline__text')
+
+        # for red cards and so a tags dont have a href
+        if tag.is_empty or tag.href is None:
             return None
+
         relative_url=tag['href']
         return get_player_id(relative_url)
     @cached_property
     @trim
     def raw_text(self):
-        return self._find_tag('div',class_='event-item').get_param('title')
+        return self._find_tag('div',class_='timeline__icon').get_param('title')
         
     def __str__(self):
         return f"event {self.author_id} {self.assist_id} {self.raw_text}"
