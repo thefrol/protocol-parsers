@@ -24,7 +24,7 @@ from .tournament import Tournament
 class MatchPageDate(PageDate):
     @property
     def _date_pattern(self):
-        return r'(?P<day>\d+) (?P<month>\w+) / (?P<week_day>\w+) / (?P<hour>\d+):(?P<minute>\d+)'
+        return r'(?P<day>\d+) (?P<month>\w+) / (?P<week_day>\w+)( / (?P<hour>\d+):(?P<minute>\d+))?'
     
 
     

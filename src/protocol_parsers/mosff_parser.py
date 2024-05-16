@@ -28,7 +28,8 @@ def format_date(match:Match):
         return datetime.now().year
     if all([date_.day,date_.month,year]):
         utc_time_delta=timedelta(hours=3)
-        match_date_time=datetime(day=date_.day,month=date_.month,year=year,hour=date_.hour,minute=date_.minute) - utc_time_delta
+        # if time is none, setting to 12:00, so woint be problems with uts deltas
+        match_date_time=datetime(day=date_.day,month=date_.month,year=year,hour=date_.hour or 12,minute=date_.minute or  0) - utc_time_delta
     else:
         print('cant get match date')
         match_date_time=None
