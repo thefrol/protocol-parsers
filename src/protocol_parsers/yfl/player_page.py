@@ -48,7 +48,7 @@ class PlayerPage(TagMiner):
     @cached_property
     @trim
     def name_raw(self):
-        return self._find_tag('p',class_='player-promo__name').text
+        return self._find_tag(class_='player-promo__name-main').text
     @cached_property
     def name(self):
         return FioName(self.name_raw)
