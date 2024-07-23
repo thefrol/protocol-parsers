@@ -54,7 +54,7 @@ class PlayerPage(TagMiner):
         return FioName(self.name_raw)
     @cached_property
     def date_raw(self):
-        html=self._find_tag('p','player-promo__item--birth')
+        html=self._find_tag('li','player-promo__item--birth')
         if html is None:
             print('date of birth not specified on page, returning None')
             return None
