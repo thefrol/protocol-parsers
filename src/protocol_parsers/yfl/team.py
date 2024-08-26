@@ -48,7 +48,12 @@ class Team:
         else:
             tag_query=".protocol__unit--right"
         lineups=self._html.select(f".protocol__block--main {tag_query} li.protocol__item:not(.protocol__item--empty)") # some cells are empty
-        bench=self._html.select(f".protocol__block--additional {tag_query} li.protocol__item:not(.protocol__item--empty)")
+
+        #
+        # Sometmes bench has no players, and there is not empry cell with players, so we check 
+        # for links in players cells with #has(...)
+        #
+        bench=self._html.select(f".protocol__block--additional {tag_query} li.protocol__item:not(.protocol__item--empty):has(a.protocol__link)")
 
         tags=lineups+bench
 
