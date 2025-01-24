@@ -1,5 +1,39 @@
-"""a class for interacting with player web page on mosff website
+"""
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+WARNING: DEPRECATED
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+a class for interacting with player web page on mosff website
 link looks like this https://mosff.ru/player/2060"""
+
+
 
 from functools import cached_property
 
@@ -18,7 +52,7 @@ class PlayerPageProperty(TagMiner):
     @property
     @trim
     def name(self)->str:
-        return self._find_tag('div',class_='profile__property').text
+        return self._find_tag('dt',class_='caption').text
     
     @property
     @trim
@@ -27,7 +61,7 @@ class PlayerPageProperty(TagMiner):
 
     @property
     def value_tag(self):
-        return self._find_tag('div',class_='profile__value')
+        return self._find_tag('dd',class_='player-info__item-value')
 
     @property
     def is_birth_date(self):
@@ -88,7 +122,7 @@ class PlayerPage(TagMiner):
     """a class representing a html player page"""
     @cached_property
     def properties(self):
-        li_with_properties=self._find_tag("ul", class_="profile__list")._find_all_tags("li", class_="profile__item")
+        li_with_properties=self._find_tag("div", class_="player-info")._find_all_tags(class_="player-info__item")
         return PlayerPagePropertiesList(li_with_properties)
     @property
     def name(self):
