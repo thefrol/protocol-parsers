@@ -34,15 +34,15 @@ class PlayerTest(unittest.TestCase):
     def test_birth(self):
         for player in self.players:
             parser=MosffPlayerParser(player.url)
-            day=parser.page.birth_date.day
-            month=parser.page.birth_date.month
-            year=parser.page.birth_date.year
+            day=parser.birth_date.day
+            month=parser.birth_date.month
+            year=parser.birth_date.year
             self.assertEqual((day,month,year),player.birth_date,'wrong birth date parsed')
 
     def test_raw_name(self):
         for player in self.players:
             parser=MosffPlayerParser(player.url)
-            self.assertAlmostEqual(parser.page.name.raw_name, player.raw_name,'name parsed wrong')
+            self.assertAlmostEqual(parser.name, player.raw_name,'name parsed wrong')
 
 if __name__ == '__main__':
     unittest.main()
