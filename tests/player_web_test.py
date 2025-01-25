@@ -37,6 +37,9 @@ class PlayerTest(unittest.TestCase):
             day=parser.birth_date.day
             month=parser.birth_date.month
             year=parser.birth_date.year
+
+            # TODO: add tests so name is first name + last name
+            # in that sequence
             self.assertEqual((day,month,year),player.birth_date,'wrong birth date parsed')
 
     def test_raw_name(self):

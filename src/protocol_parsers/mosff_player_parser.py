@@ -102,10 +102,32 @@ class MosffPlayerParser(WebParser[PlayerPage]):
             return None
         date = datetime.strptime(date_string, '%d.%m.%Y')
         return date
-    
+
+
+    @property
+    def raw_name(self) -> str:
+        """ A raw name received from mosff
+        
+        Фамилия Имя Отчество"""
+        return self.player_data["name"]
+
     @property
     def name(self):
-        return self.player_data["name"]
+        """ A prepared player name
+        First Name + Last Name
+        a standard for rbdata"""
+
+        parts = self.raw_name.split(" ")
+
+        # returning first and last
+        # 
+        # may be can be done smarter
+        if len(parts)==1:
+            return parts[0]
+        else:
+            last_name = parts[0] # goes first in string
+            first_name = parts[1] # goes second
+            return f"{first_name} {last_name}"
     
     @property
     def team_url(self)-> str | None:
@@ -142,7 +164,7 @@ class MosffPlayerParser(WebParser[PlayerPage]):
         }
 
         result['name']= self.name
-        result['name_raw']=self.name
+        result['name_raw']=self.raw_name
 
         result['image_url']=self.player_data["photo"]
 
