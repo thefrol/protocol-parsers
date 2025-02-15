@@ -8,7 +8,7 @@ class Event(TagMiner):
     """class for working with event html data"""
     @property
     def title(self):
-        return self.get_param('title')
+        return self._find_tag(class_="structure__event-desc").text.strip()
     
     @cached_property
     def _regex(self):
