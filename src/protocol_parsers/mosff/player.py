@@ -47,7 +47,7 @@ class Player(TagMiner):
     @property
     def relative_url(self):
         '''a relative link to mosff website with player info'''
-        return self._find_tag(class_="structure__player").href
+        return self._find_tag(class_="structure-name").href
     
     @property
     def full_url(self):
