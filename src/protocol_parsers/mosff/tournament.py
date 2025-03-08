@@ -96,11 +96,14 @@ class Tournament(TagMiner):
         
         1/8 кубка - 1/8"""
 
-        stage_text=self._find_tag(class_='match__round').text
+        stage_text:str = self._find_tag(class_='match__round').text
         if self.is_cup:
             return format_cup_round(stage_name=stage_text)
         else:
-            return Regex(
+            round: str =  Regex(
                 pattern=r'(?P<round_number>\d)+ тур',
                 string=stage_text
             ).get_group('round_number')
+
+            if round is None:
+                return stage_text.strip()
