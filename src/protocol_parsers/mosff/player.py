@@ -23,12 +23,12 @@ class Player(TagMiner):
     @cached_property
     def _img(self):
         """returns a img tag, need for mining name data and photo"""
-        return self._find_tag('img')
+        return self._find_tag('img', class_ = 'structure__img') # the photo of a player in this tag, image also contains name in `alt`
     
     @cached_property
     def text_name(self):
         "taken from div"
-        name_div=self._find_tag('div',class_="structure__name-text")
+        name_div=self._find_tag('div',class_="structure__name-block") # the most accurate position for name, in some carer in `structure__name-text` there are subsequent blocks wil legioner info
         return TwoPartName(next(name_div.stripped_strings))
 
     @property
