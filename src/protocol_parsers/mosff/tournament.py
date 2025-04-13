@@ -107,3 +107,5 @@ class Tournament(TagMiner):
 
             if round is None:
                 return stage_text.strip()
+            
+            return round
