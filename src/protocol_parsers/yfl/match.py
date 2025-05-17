@@ -127,7 +127,7 @@ class Promo(TagMiner):
     @cached_property
     @trim
     def score_raw_text(self)->str:
-        return self._find_tag('div',class_='score__list').text.replace('\n\n',':') # todo : unsafe
+        return self._find_tag('a',class_='score__list').text.replace('\n\n',':') # todo : unsafe
     @cached_property
     def scores(self)-> list[str]:
         return self.score_raw_text.split(':')
